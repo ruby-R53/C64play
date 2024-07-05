@@ -1,6 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
+ * Copyright 2024 Erika Lima
  * Copyright 2012-2015 Leandro Nini
  * Copyright 2000 Simon White
  *
@@ -19,7 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-int _kbhit (void);
+int _kbhit(void);
 
 enum {
     A_NONE = 0,
