@@ -42,6 +42,9 @@ enum {
     A_QUIT,
 	A_GOTO,
 	A_REPLAY,
+	A_RESTORE,
+	A_INCREASE,
+	A_DECREASE,
 
     /* Debug */
     A_TOGGLE_VOICE1,

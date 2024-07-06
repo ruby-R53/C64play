@@ -454,7 +454,8 @@ bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
             std::string title = getFileName(tuneInfo, WavFile::extension());
             WavFile* wav = new WavFile(title);
             if (m_driver.info && (tuneInfo->numberOfInfoStrings() == 3))
-                wav->setInfo(tuneInfo->infoString(0), tuneInfo->infoString(1), tuneInfo->infoString(2));
+                wav->setInfo(tuneInfo->infoString(0), tuneInfo->infoString(1),
+				             tuneInfo->infoString(2));
             m_driver.device = wav;
         }
         catch (std::bad_alloc const &ba) {
@@ -479,7 +480,7 @@ bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
     // Audio driver failed
     if (!m_driver.device) {
         m_driver.device = &m_driver.null;
-        displayError (ERR_NOT_ENOUGH_MEMORY);
+        displayError(ERR_NOT_ENOUGH_MEMORY);
         return false;
     }
 
@@ -487,7 +488,7 @@ bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
 
     // Configure with user settings
     m_driver.cfg.frequency = m_engCfg.frequency;
-    m_driver.cfg.channels = m_channels ? m_channels : tuneChannels;
+    m_driver.cfg.channels  = m_channels ? m_channels : tuneChannels;
     m_driver.cfg.precision = m_precision;
     m_driver.cfg.bufSize   = 0; // Recalculate
 
@@ -546,7 +547,7 @@ bool ConsolePlayer::createSidEmu (SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
             m_engCfg.sidEmulation = rs;
             if (!rs->getStatus()) goto createSidEmu_error;
-            rs->create ((m_engine.info ()).maxsids());
+            rs->create ((m_engine.info()).maxsids());
             if (!rs->getStatus()) goto createSidEmu_error;
 
 #ifdef FEAT_CW_STRENGTH
@@ -648,7 +649,7 @@ bool ConsolePlayer::createSidEmu (SIDEMUS emu, const SidTuneInfo *tuneInfo) {
     case EMU_EXSID:
     {
         try {
-            exSIDBuilder *hs = new exSIDBuilder( EXSID_ID );
+            exSIDBuilder *hs = new exSIDBuilder(EXSID_ID);
 
             m_engCfg.sidEmulation = hs;
             if (!hs->getStatus()) goto createSidEmu_error;
@@ -760,7 +761,7 @@ bool ConsolePlayer::open (void) {
             m_timer.stop += m_timer.start;
     } else { // Check to make start time dosen't exceed end
         if ((m_timer.stop != 0) && (m_timer.start >= m_timer.stop)) {
-            displayError ("ERROR: Start time exceeds song length!");
+            displayError("ERROR: Start time exceeds song length!");
             return false;
         }
     }
@@ -790,7 +791,8 @@ void ConsolePlayer::close() {
     m_engine.load  (nullptr);
     m_engine.config(m_engCfg);
 
-    if (m_quietLevel < 2) { // Correctly leave ansi mode and get prompt to
+    if (m_quietLevel < 2) {
+		// Correctly leave ansi mode and get prompt to
         // end up in a suitable location
         if ((m_iniCfg.console()).ansi)
 			cerr << "\x1b[?25h";
@@ -873,16 +875,18 @@ uint_least32_t ConsolePlayer::getBufSize() {
     if (m_timer.starting && (m_timer.current >= m_timer.start)) {
         m_timer.starting = false;
         m_driver.selected = m_driver.device;
-        memset(m_driver.selected->buffer (), 0, m_driver.cfg.bufSize);
+        memset(m_driver.selected->buffer(), 0, m_driver.cfg.bufSize);
         m_speed.current = 1;
         m_engine.fastForward(100);
         if (m_cpudebug)
-            m_engine.debug (true, nullptr);
-    } else if ((m_timer.stop != 0) && (m_timer.current >= m_timer.stop)) {
+            m_engine.debug(true, nullptr);
+    }
+	else if ((m_timer.stop != 0) && (m_timer.current >= m_timer.stop)) {
         m_state = playerExit;
         for (;;) {
             if (m_track.single)
                 return 0;
+
             // Move to next track
             m_track.selected++;
             if (m_track.selected > m_track.songs)
@@ -897,6 +901,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
     } else {
         uint_least32_t remaining = m_timer.stop - m_timer.current;
         uint_least32_t bufSize = remaining * m_driver.cfg.bytesPerMillis();
+
         if (bufSize < m_driver.cfg.bufSize)
             return bufSize;
     }
@@ -962,6 +967,7 @@ void ConsolePlayer::decodeKeys() {
 		break;
 
         case A_UP_ARROW:     
+		case A_INCREASE:
             m_speed.current *= 2;
             if (m_speed.current > m_speed.max)
                 m_speed.current = m_speed.max;
@@ -970,6 +976,14 @@ void ConsolePlayer::decodeKeys() {
         break;
 
         case A_DOWN_ARROW:
+		case A_DECREASE:
+			if (m_speed.current > 1)
+				m_speed.current /= 2;
+
+			m_engine.fastForward(100 * m_speed.current);
+		break;
+
+		case A_RESTORE:
             m_speed.current = 1;
             m_engine.fastForward(100);
         break;
@@ -987,7 +1001,7 @@ void ConsolePlayer::decodeKeys() {
         case A_PAUSED:
             if (m_state == playerPaused) {
                 cerr << "\b\b\b\b\b\b\b\b\b";
-                // Just to make sure PAUSED is removed from screen
+                // Just to make sure the text is removed from screen
                 cerr << "         ";
                 cerr << "\b\b\b\b\b\b\b\b\b";
                 m_state  = playerRunning;

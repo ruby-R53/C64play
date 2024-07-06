@@ -88,6 +88,9 @@ static char keytable[] = {
 	'q',0,                  A_QUIT,
 	'g',0,                  A_GOTO,
 	'r',0,                  A_REPLAY,
+	'0',0,                  A_RESTORE,
+	'=',0,                  A_INCREASE, // '=' because it's annoying to use shift
+	'-',0,                  A_DECREASE,
 
     0,                      A_END_LIST
 };
