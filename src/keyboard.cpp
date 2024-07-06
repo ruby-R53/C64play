@@ -1,6 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
+ * Copyright 2024 Erika Lima
  * Copyright 2012-2016 Leandro Nini
  * Copyright 2000 Simon White
  *
@@ -33,7 +34,7 @@
 #include <sys/types.h>
 #include <termios.h>
 #include <unistd.h>
-int _getch (void);
+int _getch(void);
 
 #define MAX_CMDLEN 10
 #define ESC '\033'
