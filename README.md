@@ -13,7 +13,7 @@ A music player for Commodore 64 tunes, based on [sidplayfp](https://github.com/l
   - With the exception of the 2nd and 3rd items, they're displayed in binary.
 - Changes to the keybinds:
   - Replay a tune by hitting the `r` key
-  - YouTube player-like keybinds
+  - YouTube player-like keybinds:
     - Hit `j` to go to the previous subtune;
     - `k` to pause a subtune;
     - and `l` to go to the next subtune.
@@ -25,17 +25,17 @@ A music player for Commodore 64 tunes, based on [sidplayfp](https://github.com/l
   - The console cursor is now hidden.
   - Prefix a `~` to the note if the frequency doesn't match one of
     the ones in the frequency table.
-  - Slightly wider interface, as a result of my additions to the UI
+  - Slightly wider interface, as a result of my additions to the UI.
 
 ### What I removed
 
-- Support for Windows
+- Support for Windows:
   - I'm thinking of making a new UI for that.
   - Plus, as I'm still a beginner, I needed to simplify stuff...
 - Display configuration file location
   - I didn't find any use for this, as there's no command-line option
     to load a custom configuration file and the file is always loaded
-	from the same location ¯\_(ツ)_/¯
+	from the same location ¯\\_(ツ)_/¯
 - STILView
   - Never used it, don't wanna take care of something I never messed
     with...

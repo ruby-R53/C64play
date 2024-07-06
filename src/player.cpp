@@ -557,11 +557,13 @@ bool ConsolePlayer::createSidEmu (SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 #ifdef FEAT_FILTER_RANGE
             double frange = m_filter.filterRange6581;
 
+			/*
             if (m_autofilter && (tuneInfo->numberOfInfoStrings() == 3)) {
                 frange = getRecommendedFilterRange(tuneInfo->infoString(1));
                 if (m_verboseLevel > 1)
                     cerr << "Recommended filter range: " << frange << endl;
             }
+			*/
 
             if ((frange < 0.0) || (frange > 1.0)) {
                 cerr << "Invalid 6581 filter range: " << frange << endl;
@@ -573,7 +575,7 @@ bool ConsolePlayer::createSidEmu (SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
             // 6581
             double fcurve = m_filter.filterCurve6581;
-
+/*
 #ifndef FEAT_FILTER_RANGE
             if (m_autofilter && (tuneInfo->numberOfInfoStrings() == 3)) {
                 fcurve = getRecommendedFilterCurve(tuneInfo->infoString(1));
@@ -581,6 +583,10 @@ bool ConsolePlayer::createSidEmu (SIDEMUS emu, const SidTuneInfo *tuneInfo) {
                     cerr << "Recommended filter curve: " << fcurve << endl;
             }
 #endif
+* commenting those two out just so that
+* i can think of a way to show them on
+* the menu instead
+*/
 
             if (m_fcurve >= 0.0) {
                 fcurve = m_fcurve;
@@ -900,7 +906,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
             m_state = playerRestart;
     } else {
         uint_least32_t remaining = m_timer.stop - m_timer.current;
-        uint_least32_t bufSize = remaining * m_driver.cfg.bytesPerMillis();
+        uint_least32_t bufSize   = remaining * m_driver.cfg.bytesPerMillis();
 
         if (bufSize < m_driver.cfg.bufSize)
             return bufSize;
@@ -923,9 +929,9 @@ void ConsolePlayer::updateDisplay() {
              << std::setfill('0') << (seconds % 60) << std::flush;
 
 		// this hack has to be done because for some
-		// reason at level 1 it appends the current time
-		// to the previous instead of writing over it
-		if (m_verboseLevel == 1)
+		// reason at both levels 1 and 0 it appends to
+		// the timer instead of writing over it
+		if (m_verboseLevel <= 1)
         	cerr << "\b\b\b\b\b";
     }
 
