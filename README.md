@@ -11,35 +11,41 @@ A music player for Commodore 64 tunes, based on [sidplayfp](https://github.com/l
   - Filter resonance;
   - Filter cutoff;
   - With the exception of the 2nd and 3rd items, they're displayed in binary.
-- Replay a tune by hitting the `r` key
-- YouTube player-like keybinds
-  - Hit `j` to go to the previous subtune;
-  - `k` to pause a subtune;
-  - and `l` to go to the next subtune.
-- Use `g` to jump to a specific subtune instead of repeatedly hitting `j` or `k`.
+- Changes to the keybinds:
+  - Replay a tune by hitting the `r` key
+  - YouTube player-like keybinds
+    - Hit `j` to go to the previous subtune;
+    - `k` to pause a subtune;
+    - and `l` to go to the next subtune.
+  - Hit `g` to jump to a specific subtune instead of repeatedly hitting `j` or `k`.
+  - Hit `=` to double the playback speed of a tune.
+    - You can then hit `-` to halve it;
+    - Or `0` to go all the way back to the normal speed!
 - Other visual changes:
   - The console cursor is now hidden.
   - Prefix a `~` to the note if the frequency doesn't match one of
     the ones in the frequency table.
+  - Slightly wider interface, as a result of my additions to the UI
 
 ### What I removed
 
 - Support for Windows
-  - I'm thinking of making a new UI for that
-  - Plus, as I'm a beginner, I needed to simplify things
+  - I'm thinking of making a new UI for that.
+  - Plus, as I'm still a beginner, I needed to simplify stuff...
 - Display configuration file location
   - I didn't find any use for this, as there's no command-line option
     to load a custom configuration file and the file is always loaded
-	from the same location...
+	from the same location ¯\_(ツ)_/¯
 - STILView
-  - I never used that and don't wanna take care of something I never
-    messed with...
+  - Never used it, don't wanna take care of something I never messed
+    with...
 
 ### Requirements
 
 - autotools
 - libsidplayfp
 - pod2man
+- patience
 - and a decent computer to better enjoy the emulation!
 
 ### Building
