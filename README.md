@@ -22,6 +22,9 @@ A music player for Commodore 64 tunes, based on [sidplayfp](https://github.com/l
     - You can then hit `-` to halve it;
     - Or `0` to go all the way back to the normal speed!
 - Other visual changes:
+  - Changes to the color palette.
+  - You can now see the filter curve and/or range value on the main UI.
+  - The "DigiBoost" field now only appears if a tune uses the 8580 chip.
   - The console cursor is now hidden.
   - Prefix a `~` to the note if the frequency doesn't match one of
     the ones in the frequency table.
@@ -40,13 +43,13 @@ A music player for Commodore 64 tunes, based on [sidplayfp](https://github.com/l
     to load a custom configuration file and the file is always loaded
 	from the same location ¯\\_(ツ)\_/¯
 - STILView
-  - Never used it, don't wanna take care of something I never messed
+  - Never used it, didn't wanna take care of something I never messed
     with...
 
 ### Requirements
 
 - autotools
-- libsidplayfp
+- libsidplayfp (version 2.0.0 or higher)
 - pod2man
 - patience
 - and a decent computer to better enjoy the emulation!

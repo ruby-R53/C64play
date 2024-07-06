@@ -381,11 +381,13 @@ void ConsolePlayer::menu() {
 		}
 #endif
 
-        consoleTable (tableMiddle);
-        consoleColour(yellow, true);
-        cerr << " DigiBoost    : ";
-        consoleColour(white, false);
-        cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled") << endl;
+		if (getModel(tuneInfo->sidModel(0)) == SID8580) {
+        	consoleTable (tableMiddle);
+        	consoleColour(yellow, true);
+        	cerr << " DigiBoost    : ";
+        	consoleColour(white, false);
+        	cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled") << endl;
+		}
 
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
@@ -460,7 +462,7 @@ void ConsolePlayer::menu() {
         consoleTable(tableMiddle);
 		unsigned int movLines = (m_verboseLevel > 2) ? (tuneInfo->sidChips() * 6):
 		                                               (tuneInfo->sidChips() * 3);
-		cerr << "          Note  PW      Control reg.        Waveform(s)" << endl;
+		cerr << "  Voice   Note  PW    Control registers     Waveform(s)" << endl;
 
         for (int i = 0; i < movLines; ++i) {
             consoleTable(tableMiddle);
@@ -475,15 +477,6 @@ void ConsolePlayer::menu() {
         cerr << info_file << ": ";
     else
 		cerr << info_play << " Time: ";
-
-	/*
-    // Get all the text to the screen so music playback
-    // is not disturbed.
-    if (!m_quietLevel)
-        cerr << "00:00";
-	// it still works without it somehow
-	// still keeping it commented out if needed tho'
-	*/
 
     cerr << flush;
 }
@@ -511,13 +504,13 @@ void ConsolePlayer::refreshRegDump() {
 
             for (int i=0; i < 3; ++i) {
                 consoleTable (tableMiddle);
-                consoleColour(red, true);
 
-                cerr << " Voice " << (j * 3 + i+1) << hex;
+                cerr << "    " << (j * 3 + i+1) << hex;
+				cerr << "    ";
 
-                consoleColour(yellow, true);
+                consoleColour(cyan, false);
 
-                cerr << " " << setw(4) << setfill(' ')
+                cerr << setw(4) << setfill(' ')
 					 << getNote(registers[0x00 + i * 0x07] |
 						       (registers[0x01 + i * 0x07] << 8));
 
@@ -528,56 +521,56 @@ void ConsolePlayer::refreshRegDump() {
 				cerr << "  ";
 
                 // gate changed ?
-                consoleColour((oldCtl[i] & 0x01) ? green : red, true);
+                consoleColour((oldCtl[i] & 0x01) ? green : yellow, false);
                 // gate on ?
                 cerr << ((registers[0x04 + i * 0x07] & 0x01) ? "GATE" : "gate");
 
 				cerr << " ";
 
                 // sync changed ?
-                consoleColour((oldCtl[i] & 0x02) ? green : red, true);
+                consoleColour((oldCtl[i] & 0x02) ? green : yellow, false);
                 // sync on ?
                 cerr << ((registers[0x04 + i * 0x07] & 0x02) ? "SYNC" : "sync");
 
 				cerr << " ";
 
                 // ring changed ?
-                consoleColour((oldCtl[i] & 0x04) ? green : red, true);
+                consoleColour((oldCtl[i] & 0x04) ? green : yellow, false);
                 // ring on ?
                 cerr << ((registers[0x04 + i * 0x07] & 0x04) ? "RING" : "ring");
 
 				cerr << " ";
 
                 // test changed ?
-                consoleColour((oldCtl[i] & 0x08) ? green : red, true);
+                consoleColour((oldCtl[i] & 0x08) ? green : yellow, false);
                 // test on ?
                 cerr << ((registers[0x04 + i * 0x07] & 0x08) ? "TEST" : "test");
 
 				cerr << "  ";
 
                 // triangle changed ?
-                consoleColour((oldCtl[i] & 0x10) ? green : red, true);
+                consoleColour((oldCtl[i] & 0x10) ? green : blue, false);
                 // triangle on ?
                 cerr << ((registers[0x04 + i * 0x07] & 0x10) ? "TRI" : "___");
 
 				cerr << " ";
 
                 // sawtooth changed ?
-                consoleColour((oldCtl[i] & 0x20) ? green : red, true);
+                consoleColour((oldCtl[i] & 0x20) ? green : blue, false);
                 // sawtooth on ?
                 cerr << ((registers[0x04 + i * 0x07] & 0x20) ? "SAW" : "___");
 
 				cerr << " ";
 
                 // pulse changed ?
-                consoleColour((oldCtl[i] & 0x40) ? green : red, true);
+                consoleColour((oldCtl[i] & 0x40) ? green : blue, false);
                 // pulse on ?
                 cerr << ((registers[0x04 + i * 0x07] & 0x40) ? "PUL" : "___");
 
 				cerr << " ";
 
                 // noise changed ?
-                consoleColour((oldCtl[i] & 0x80) ? green : red, true);
+                consoleColour((oldCtl[i] & 0x80) ? green : blue, false);
                 // noise on ?
                 cerr << ((registers[0x04 + i * 0x07] & 0x80) ? "NOI" : "___");
 
@@ -619,7 +612,7 @@ void ConsolePlayer::refreshRegDump() {
 
             // binary volume meter, helps partially visualizing samples
 			// yeah, i know it's a quite weird idea
-	        consoleColour(red, true);
+	        consoleColour(yellow, false);
 	        cerr << "          %";
             {
     	        for (int c = 3; c >= 0; --c) {
@@ -708,7 +701,7 @@ void ConsolePlayer::consoleColour(player_colour_t colour, bool bold) {
 
 // Display menu outline
 void ConsolePlayer::consoleTable(player_table_t table) {
-    consoleColour (white, true);
+    consoleColour(white, true);
     switch (table) {
     case tableStart:
         cerr << (m_iniCfg.console()).topLeft << setw(tableWidth)

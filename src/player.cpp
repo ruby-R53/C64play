@@ -402,8 +402,7 @@ std::string ConsolePlayer::getFileName(const SidTuneInfo *tuneInfo, const char* 
 
     if (m_outfile != nullptr) {
         title = m_outfile;
-        if (title.compare("-") != 0
-                && title.find_last_of('.') == std::string::npos)
+        if (title.compare("-") != 0 && title.find_last_of('.') == std::string::npos)
             title.append(ext);
     } else {
         // Generate a name for the wav file
@@ -426,7 +425,7 @@ std::string ConsolePlayer::getFileName(const SidTuneInfo *tuneInfo, const char* 
 // Create the output object to process sound buffer
 bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
     // Remove old audio driver
-    m_driver.null.close ();
+    m_driver.null.close();
     m_driver.selected = &m_driver.null;
     if (m_driver.device != nullptr) {
         if (m_driver.device != &m_driver.null)
@@ -528,7 +527,7 @@ bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
 
 
 // Create the sid emulation
-bool ConsolePlayer::createSidEmu (SIDEMUS emu, const SidTuneInfo *tuneInfo) {
+bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
     // Remove old driver and emulation
     if (m_engCfg.sidEmulation) {
         sidbuilder *builder   = m_engCfg.sidEmulation;
@@ -543,7 +542,7 @@ bool ConsolePlayer::createSidEmu (SIDEMUS emu, const SidTuneInfo *tuneInfo) {
     case EMU_RESIDFP:
     {
         try {
-            ReSIDfpBuilder *rs = new ReSIDfpBuilder( RESIDFP_ID );
+            ReSIDfpBuilder *rs = new ReSIDfpBuilder(RESIDFP_ID);
 
             m_engCfg.sidEmulation = rs;
             if (!rs->getStatus()) goto createSidEmu_error;
@@ -676,7 +675,7 @@ bool ConsolePlayer::createSidEmu (SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
     if (!m_engCfg.sidEmulation) {
         if (emu > EMU_DEFAULT) {   // No sid emulation?
-            displayError (ERR_NOT_ENOUGH_MEMORY);
+            displayError(ERR_NOT_ENOUGH_MEMORY);
             return false;
         }
     }
@@ -706,8 +705,8 @@ bool ConsolePlayer::open (void) {
 
     // Select the required song
     m_track.selected = m_tune.selectSong(m_track.selected);
-    if (!m_engine.load (&m_tune)) {
-        displayError (m_engine.error());
+    if (!m_engine.load(&m_tune)) {
+        displayError(m_engine.error());
         return false;
     }
 
@@ -738,7 +737,7 @@ bool ConsolePlayer::open (void) {
     // Start the player. Do this by fast
     // forwarding to the start position
     m_driver.selected = &m_driver.null;
-    m_speed.current   = m_speed.max;
+    //m_speed.current   = m_speed.max;
     m_engine.fastForward(100 * m_speed.current);
 
     m_engine.mute(0, 0, vMute[0]);
@@ -779,13 +778,14 @@ bool ConsolePlayer::open (void) {
     // Update display
     menu();
     updateDisplay();
+
     return true;
 }
 
 void ConsolePlayer::close() {
     m_engine.stop();
     if (m_state == playerExit) { // Natural finish
-        emuflush ();
+        emuflush();
         if (m_driver.file)
             cerr << (char) 7; // Bell
     } else // Destroy buffers
@@ -798,7 +798,7 @@ void ConsolePlayer::close() {
     m_engine.config(m_engCfg);
 
     if (m_quietLevel < 2) {
-		// Correctly leave ansi mode and get prompt to
+		// Correctly leave ANSI mode and get prompt to
         // end up in a suitable location
         if ((m_iniCfg.console()).ansi)
 			cerr << "\x1b[?25h";
@@ -855,7 +855,7 @@ bool ConsolePlayer::play() {
         // fall-through
     case playerPaused:
         // Check for a keypress (approx 250ms rate, but really depends
-        // on music buffer sizes).  Don't do this for high quiet levels
+        // on music buffer sizes). Don't do this for high quiet levels
         // as chances are we are under remote control.
         if ((m_quietLevel < 3) && _kbhit())
             decodeKeys();
@@ -1020,16 +1020,16 @@ void ConsolePlayer::decodeKeys() {
 
 		case A_GOTO:
 	        cerr << "\x1b[2K\r";
-            cerr << "Go to tune: ";
+            cerr << "Jumping to subtune: ";
 	        keyboard_disable_raw();
 	        std::cin >> m_track.query;
 	        keyboard_enable_raw();
 	        cerr << "\x1b[2K\r" << "\x1b[1A";
 	        if (m_track.query <= m_track.songs) {
-	            m_state = playerFastRestart;
                 m_track.selected = m_track.query;
+	            m_state = playerFastRestart;
 	        } else {
-	            cerr << "Tune #" << m_track.query << " not found!";
+	            cerr << "Subtune #" << m_track.query << " not found!";
 	            sleep(1);
 	        }
 	    break;
