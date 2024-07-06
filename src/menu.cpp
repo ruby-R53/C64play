@@ -175,7 +175,7 @@ void ConsolePlayer::menu() {
 
 	// then the description
     header.clear();
-    header.append("C64play v" VERSION ", using ").append(info.name()).append(" v")
+    header.append("Version " VERSION ", using ").append(info.name()).append(" v")
 	      .append(info.version());
     cerr << setw(tableWidth/2 + header.length()/2) << header << endl;
 
@@ -290,11 +290,12 @@ void ConsolePlayer::menu() {
 
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
-        cerr << " Addresses    : " << hex;
-        cerr.setf(std::ios::uppercase);
+        cerr << " Addresses    : ";
         consoleColour(white, false);
 
         // Display PSID Driver location
+		cerr << hex;
+		cerr.setf(std::ios::uppercase);
         cerr << "DRIVER: ";
         if (info.driverAddr() == 0)
             cerr << "Not present!";
@@ -320,7 +321,7 @@ void ConsolePlayer::menu() {
         if (tuneInfo->playAddr() != 0xffff)
             cerr << ", PLAY: $" << setw(4) << setfill('0') << tuneInfo->playAddr();
 
-        cerr << dec << endl;
+        cerr << endl;
 
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
@@ -335,10 +336,10 @@ void ConsolePlayer::menu() {
 				consoleColour(white, false);
 			}
 			
-			cerr << "SID #" << i+1 << ": $" << hex << tuneInfo->sidChipBase(i)
-			     << dec;
-			cerr << ", model: " << getModel(tuneInfo->sidModel(i)) << endl;
+			cerr << "SID #" << i+1 << ": $" << tuneInfo->sidChipBase(i)
+				 << ", model: " << getModel(tuneInfo->sidModel(i)) << endl;
 		}
+		cerr << dec;
 		cerr.unsetf(std::ios::uppercase);
 
         consoleTable (tableSeparator);
@@ -462,6 +463,7 @@ void ConsolePlayer::menu() {
         consoleTable(tableMiddle);
 		unsigned int movLines = (m_verboseLevel > 2) ? (tuneInfo->sidChips() * 6):
 		                                               (tuneInfo->sidChips() * 3);
+
 		cerr << "  Voice   Note  PW    Control registers     Waveform(s)" << endl;
 
         for (int i = 0; i < movLines; ++i) {
@@ -488,7 +490,7 @@ void ConsolePlayer::refreshRegDump() {
 								  (tuneInfo->sidChips() * 6 + 1):
 							      (tuneInfo->sidChips() * 3 + 1);
 
-    cerr << "\x1b[" << movLines << "A\r"; // Moves cursor X lines up
+    cerr << "\x1b[" << movLines << "A\r"; // Moves cursor for updating the displays
 
     for (int j=0; j < tuneInfo->sidChips(); ++j) {
     	uint8_t* registers = m_registers[j];
@@ -505,16 +507,15 @@ void ConsolePlayer::refreshRegDump() {
             for (int i=0; i < 3; ++i) {
                 consoleTable (tableMiddle);
 
-                cerr << "    " << (j * 3 + i+1) << hex;
-				cerr << "    ";
+                cerr << "    " << (j * 3 + i+1) << "    ";
 
                 consoleColour(cyan, false);
 
-                cerr << setw(4) << setfill(' ')
+				cerr << setw(4) << setfill(' ')
 					 << getNote(registers[0x00 + i * 0x07] |
 						       (registers[0x01 + i * 0x07] << 8));
 
-				cerr << "  $" << setw(3) << setfill('0')
+				cerr << hex << "  $" << setw(3) << setfill('0')
 					 << (registers[0x02 + i * 0x07] |
 						((registers[0x03 + i * 0x07] & 0x0f) << 8));
 
@@ -572,13 +573,15 @@ void ConsolePlayer::refreshRegDump() {
                 // noise changed ?
                 consoleColour((oldCtl[i] & 0x80) ? green : blue, false);
                 // noise on ?
-                cerr << ((registers[0x04 + i * 0x07] & 0x80) ? "NOI" : "___");
+                cerr << ((registers[0x04 + i * 0x07] & 0x80) ? "NOI" : "___")
 
-                cerr << dec << endl;
+					 << '\n';
             }
+			cerr << dec;
         } else {
 			for (int i=0; i < 3; ++i) {
-                consoleTable(tableMiddle); cerr << "???\n";
+                consoleTable(tableMiddle);
+				cerr << "???\n";
 		    }
         }
 	}
@@ -663,12 +666,12 @@ void ConsolePlayer::refreshRegDump() {
 					cerr << ((registers[0x16] & regBit[a]) ? "1" : "0");
 				}
             }
-	        cerr << dec << '\n';
+	        cerr << '\n';
 	    }
         consoleTable(tableEnd);
 	} else
 #endif
-        cerr << "\r";
+        cerr << '\r';
 
     if (m_driver.file)
         cerr << info_file << ": ";
@@ -729,7 +732,7 @@ void ConsolePlayer::consoleTable(player_table_t table) {
     }
 
     // Move back to begining of row and skip first char
-    cerr << "\n";
+    cerr << '\n';
 }
 
 
