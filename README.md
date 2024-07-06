@@ -2,6 +2,8 @@
 
 A music player for Commodore 64 tunes, based on [sidplayfp](https://github.com/libsidplayfp/sidplayfp).
 
+See what I've done plus the requirements for this program down below!
+
 ### What I added
 
 - Extra displays:
@@ -24,7 +26,7 @@ A music player for Commodore 64 tunes, based on [sidplayfp](https://github.com/l
 - Other visual changes:
   - Changes to the color palette.
   - You can now see the filter curve and/or range value on the main UI.
-  - The "DigiBoost" field now only appears if a tune uses the 8580 chip.
+  - The `DigiBoost` field now only appears if a tune uses the 8580 chip.
   - The console cursor is now hidden.
   - Prefix a `~` to the note if the frequency doesn't match one of
     the ones in the frequency table.
@@ -53,25 +55,3 @@ A music player for Commodore 64 tunes, based on [sidplayfp](https://github.com/l
 - pod2man
 - patience
 - and a decent computer to better enjoy the emulation!
-
-### Building
-
-1. Create a directory named `build`. Not really a required step, it's just
-to make things easier if doing a cleanup later.
-
-2. Change to that directory.
-
-3. Run `autoreconf -i ..`. This will generate the `configure` script,
-which is necessary to our build.
-
-4. Run `../configure`. If curious, you can check the options by running
-`../configure --help` beforehand.
-
-5. After configuring, run `make`. This is where the actual build begins.
-You can add `-j` followed by the number of CPU cores you have to
-accelerate that process.
-
-6. After building, run `make install` as root if necessary.
-7. You're set!! Enjoy your SID tunes by simply running `c64play <tune>`.
-See the man page of C64play and its configuration file c64play.ini
-for more details.
