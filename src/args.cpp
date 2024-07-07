@@ -38,10 +38,6 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-#ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-#  include <sidplayfp/builders/hardsid.h>
-#endif
-
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
 #  include <sidplayfp/builders/exsid.h>
 #endif
@@ -358,13 +354,6 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESID_H
 
             // Hardware selection
-#ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-            else if (strcmp (&argv[i][1], "-hardsid") == 0) {
-                m_driver.sid    = EMU_HARDSID;
-                m_driver.output = OUT_NULL;
-            }
-#endif // HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
             else if (strcmp (&argv[i][1], "-exsid") == 0) {
                 m_driver.sid    = EMU_EXSID;
@@ -434,7 +423,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
     // Check to see if we are trying to generate an audio file
     // whilst using a hardware emulation
-    if (m_driver.file && (m_driver.sid >= EMU_HARDSID)) {
+    if (m_driver.file && (m_driver.sid >= EMU_EXSID)) {
         displayError("ERROR: can't generate audio files using hardware emulation");
         return -1;
     }
@@ -457,8 +446,8 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             return -1;
         }
         if (!m_timer.valid) {
-            m_timer.length = m_driver.file ? (m_iniCfg.sidplay2()).recordLength
-                                           : (m_iniCfg.sidplay2()).playLength;
+            m_timer.length = m_driver.file ? (m_iniCfg.playercfg()).recordLength
+                                           : (m_iniCfg.playercfg()).playLength;
 
             songlengthDB = SLDB_NONE;
             bool dbOpened = false;
@@ -471,16 +460,16 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
             if (!dbOpened) {
                 // Try load user configured songlength DB
-                if ((m_iniCfg.sidplay2()).database.length() != 0) {
+                if ((m_iniCfg.playercfg()).database.length() != 0) {
                     // Try loading the database specificed by the user
-                    const char *database = (m_iniCfg.sidplay2()).database.c_str();
+                    const char *database = (m_iniCfg.playercfg()).database.c_str();
 
                     if (!m_database.open(database)) {
                         displayError(m_database.error());
                         return -1;
                     }
 
-                    if (m_iniCfg.sidplay2().database.find(TEXT(".md5")) != SID_STRING::npos)
+                    if (m_iniCfg.playercfg().database.find(TEXT(".md5")) != SID_STRING::npos)
                         songlengthDB = SLDB_MD5;
                 }
             }
@@ -554,13 +543,6 @@ void ConsolePlayer::displayArgs (const char *arg) {
     out << "--resid            use reSID emulation" << endl;
 #endif
 
-#ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-    {
-        HardSIDBuilder hs("");
-        if (hs.availDevices ())
-            out << "--hardsid          enable hardsid support" << endl;
-    }
-#endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
     {
         exSIDBuilder hs("");

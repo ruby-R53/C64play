@@ -1,5 +1,5 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console player for SID tunes.
  *
  * Copyright 2000 Simon White
  *

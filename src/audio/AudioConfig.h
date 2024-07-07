@@ -1,6 +1,7 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console player for SID tunes.
  *
+ * Copyright 2024 Erika Lima
  * Copyright 2000 Simon White
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,21 +24,20 @@
 
 #include <stdint.h>
 
-class AudioConfig
-{
+class AudioConfig {
 public:
     uint_least32_t frequency;
-    int            precision;
+    int            depth;
     int            channels;
-    uint_least32_t bufSize;       // sample buffer size
+    uint_least32_t bufSize;   // sample buffer size
 
     AudioConfig() :
         frequency(48000),
-        precision(16),
+        depth(16),
         channels(1),
         bufSize(0) {}
 
-    uint_least32_t bytesPerMillis() const { return (precision/8 * channels * frequency) / 1000; }
+    uint_least32_t bytesPerMillis() const { return (depth/8 * channels * frequency) / 1000; }
 };
 
 #endif  // AUDIOCONFIG_H

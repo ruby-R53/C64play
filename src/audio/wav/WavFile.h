@@ -29,15 +29,13 @@
 
 #include "../AudioBase.h"
 
-struct riffHeader                       // little endian format
-{
+struct riffHeader {                     // little endian format
     char mainChunkID[4];                // 'RIFF' (ASCII)
     unsigned char length[4];            // file length
     char chunkID[4];                    // 'WAVE' (ASCII)
 };
 
-struct wavHeader                        // little endian format
-{
+struct wavHeader {                      // little endian format
     char subChunkID[4];                 // 'fmt ' (ASCII)
     char subChunkLen[4];                // length of subChunk, always 16 bytes
     unsigned char format[2];            // 1 = PCM, 3 = IEEE float
@@ -53,8 +51,7 @@ struct wavHeader                        // little endian format
     unsigned char dataChunkLen[4];      // length of data
 };
 
-struct listInfo                         // little endian format
-{
+struct listInfo {                       // little endian format
     char mainChunkID[4];                // 'LIST' (ASCII)
 
     unsigned char length[4];            // chunk length
@@ -77,8 +74,7 @@ struct listInfo                         // little endian format
  * A basic WAV output file type
  * Initial implementation by Michael Schwendt <mschwendt@yahoo.com>
  */
-class WavFile: public AudioBase
-{
+class WavFile: public AudioBase {
 private:
     std::string name;
 
@@ -96,13 +92,13 @@ private:
     std::ostream *file;
     bool headerWritten;
     bool hasListInfo;
-    int precision;
+    int  depth;
 
 public:
     WavFile(const std::string &name);
     ~WavFile() override { close(); }
 
-    static const char *extension () { return ".wav"; }
+    static const char *extension() { return ".wav"; }
 
     // Only signed 16-bit and 32bit float samples are supported.
     // Endian-ess is adjusted if necessary.
@@ -121,7 +117,7 @@ public:
 
     // Stream state.
     bool fail() const { return (file->fail() != 0); }
-    bool bad()  const { return (file->bad()  != 0); }
+    bool bad () const { return (file->bad()  != 0); }
 
     void setInfo(const char* title, const char* author, const char* released);
 };

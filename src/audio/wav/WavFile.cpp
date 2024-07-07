@@ -31,45 +31,38 @@
 #include <cstring>
 
 // Get the lo byte (8 bit) in a dword (32 bit)
-inline uint8_t endian_32lo8 (uint_least32_t dword)
-{
+inline uint8_t endian_32lo8(uint_least32_t dword) {
     return (uint8_t) dword;
 }
 
 // Get the hi byte (8 bit) in a dword (32 bit)
-inline uint8_t endian_32hi8 (uint_least32_t dword)
-{
+inline uint8_t endian_32hi8 (uint_least32_t dword) {
     return (uint8_t) (dword >> 8);
 }
 
 // Get the hi word (16bit) in a dword (32 bit)
-inline uint_least16_t endian_32hi16 (uint_least32_t dword)
-{
+inline uint_least16_t endian_32hi16 (uint_least32_t dword) {
     return (uint_least16_t) (dword >> 16);
 }
 
 // Get the lo byte (8 bit) in a word (16 bit)
-inline uint8_t endian_16lo8 (uint_least16_t word)
-{
+inline uint8_t endian_16lo8 (uint_least16_t word) {
     return (uint8_t) word;
 }
 
 // Set the hi byte (8 bit) in a word (16 bit)
-inline uint8_t endian_16hi8 (uint_least16_t word)
-{
+inline uint8_t endian_16hi8 (uint_least16_t word) {
     return (uint8_t) (word >> 8);
 }
 
 // Write a little-endian 16-bit word to two bytes in memory.
-inline void endian_little16 (uint8_t ptr[2], uint_least16_t word)
-{
+inline void endian_little16 (uint8_t ptr[2], uint_least16_t word) {
     ptr[0] = endian_16lo8 (word);
     ptr[1] = endian_16hi8 (word);
 }
 
 // Write a little-endian 32-bit word to four bytes in memory.
-inline void endian_little32 (uint8_t ptr[4], uint_least32_t dword)
-{
+inline void endian_little32 (uint8_t ptr[4], uint_least32_t dword) {
     uint_least16_t word = 0;
     ptr[0] = endian_32lo8  (dword);
     ptr[1] = endian_32hi8  (dword);
@@ -78,16 +71,14 @@ inline void endian_little32 (uint8_t ptr[4], uint_least32_t dword)
     ptr[3] = endian_16hi8  (word);
 }
 
-const riffHeader WavFile::defaultRiffHdr =
-{
+const riffHeader WavFile::defaultRiffHdr = {
     // ASCII keywords are hexified.
     {0x52,0x49,0x46,0x46}, // 'RIFF'
     {0,0,0,0},             // length
     {0x57,0x41,0x56,0x45}, // 'WAVE'
 };
 
-const wavHeader WavFile::defaultWavHdr =
-{
+const wavHeader WavFile::defaultWavHdr = {
     {0x66,0x6d,0x74,0x20}, // 'fmt '
     {16,0,0,0},            // length
     {1,0},                 // AudioFormat (PCM)
@@ -100,8 +91,7 @@ const wavHeader WavFile::defaultWavHdr =
     {0,0,0,0}              // length
 };
 
-const listInfo WavFile::defaultListInfo =
-{
+const listInfo WavFile::defaultListInfo = {
     // ASCII keywords are hexified.
     {0x4C,0x49,0x53,0x54}, // 'LIST'
     {124,0,0,0},           // length
@@ -126,15 +116,14 @@ WavFile::WavFile(const std::string &name) :
     file(nullptr),
     headerWritten(false),
     hasListInfo(false),
-    precision(32)
+    depth(32)
 {}
 
-bool WavFile::open(AudioConfig &cfg)
-{
-    precision = cfg.precision;
+bool WavFile::open(AudioConfig &cfg) {
+    depth = cfg.depth;
 
-    unsigned short bits       = precision;
-    unsigned short format     = (precision == 16) ? 1 : 3;
+    unsigned short bits       = depth;
+    unsigned short format     = (depth == 16) ? 1 : 3;
     unsigned short channels   = cfg.channels;
     unsigned long  freq       = cfg.frequency;
     unsigned short blockAlign = (bits>>3)*channels;
@@ -150,12 +139,10 @@ bool WavFile::open(AudioConfig &cfg)
     dataSize = 0;
 
     // We need to make a buffer for the user
-    try
-    {
+    try {
         _sampleBuffer = new short[bufSize];
     }
-    catch (std::bad_alloc const &ba)
-    {
+    catch (std::bad_alloc const &ba) {
         setError("Unable to allocate memory for sample buffers.");
         return false;
     }
@@ -170,12 +157,9 @@ bool WavFile::open(AudioConfig &cfg)
     endian_little16(wavHdr.bitsPerSample, bits);
     endian_little32(wavHdr.dataChunkLen, 0);
 
-    if (name.compare("-") == 0)
-    {
+    if (name.compare("-") == 0) {
         file = &std::cout;
-    }
-    else
-    {
+    } else {
         file = new std::ofstream(name.c_str(), std::ios::out|std::ios::binary|std::ios::trunc);
     }
 
@@ -183,13 +167,10 @@ bool WavFile::open(AudioConfig &cfg)
     return true;
 }
 
-bool WavFile::write(uint_least32_t size)
-{
-    if (file && !file->fail())
-    {
+bool WavFile::write(uint_least32_t size) {
+    if (file && !file->fail()) {
         unsigned long int bytes = size;
-        if (!headerWritten)
-        {
+        if (!headerWritten) {
             file->write((char*)&riffHdr, sizeof(riffHeader));
             if (hasListInfo)
                 file->write((char*)&listHdr, sizeof(listInfo));
@@ -198,18 +179,14 @@ bool WavFile::write(uint_least32_t size)
         }
 
         /* XXX endianness... */
-        if (precision == 16)
-        {
+        if (depth == 16) {
             bytes *= 2;
             file->write((char*)_sampleBuffer, bytes);
-        }
-        else
-        {
+        } else {
             std::vector<float> buffer(size);
             bytes *= 4;
             // normalize floats
-            for (unsigned long i=0; i<size; i++)
-            {
+            for (unsigned long i=0; i<size; i++) {
                 buffer[i] = ((float)_sampleBuffer[i])/32768.f;
             }
             file->write((char*)&buffer.front(), bytes);
@@ -219,18 +196,15 @@ bool WavFile::write(uint_least32_t size)
     return true;
 }
 
-void WavFile::close()
-{
-    if (file && !file->fail())
-    {
+void WavFile::close() {
+    if (file && !file->fail()) {
         // update length fields in header
         unsigned long int headerSize = sizeof(riffHeader)+sizeof(wavHeader)-8;
         if (hasListInfo)
             headerSize += sizeof(listInfo);
         endian_little32(riffHdr.length, headerSize+dataSize);
         endian_little32(wavHdr.dataChunkLen, dataSize);
-        if (file != &std::cout)
-        {
+        if (file != &std::cout) {
             file->seekp(0, std::ios::beg);
             file->write((char*)&riffHdr, sizeof(riffHeader));
             if (hasListInfo)
@@ -243,8 +217,7 @@ void WavFile::close()
     }
 }
 
-void WavFile::setInfo(const char* title, const char* author, const char* released)
-{
+void WavFile::setInfo(const char* title, const char* author, const char* released) {
     hasListInfo = true;
     memcpy(listHdr.name, title, 32);
     memcpy(listHdr.artist, author, 32);

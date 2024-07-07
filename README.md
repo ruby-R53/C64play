@@ -2,7 +2,7 @@
 
 A music player for Commodore 64 tunes, based on [sidplayfp](https://github.com/libsidplayfp/sidplayfp).
 
-See what I've done plus the requirements for this program down below!
+See what I've done down below and see how you can contribute to the project!
 
 ### What I added
 
@@ -21,6 +21,8 @@ See what I've done plus the requirements for this program down below!
     - and `l` to go to the next subtune.
   - Hit `g` to jump to a specific subtune instead of repeatedly hitting `j` or `k`.
   - Hit `=` to double the playback speed of a tune.
+    - You know I actually meant `+`, but pressing shift is kinda awkward,
+	  so I just made it `=` instad.
     - You can then hit `-` to halve it;
     - Or `0` to go all the way back to the normal speed!
 - Other visual changes:
@@ -37,7 +39,7 @@ See what I've done plus the requirements for this program down below!
 
 ### What I removed
 
-- Support for Windows:
+- Support for Windows
   - I'm thinking of making a new UI for that.
   - Plus, as I'm still a beginner, I needed to simplify stuff...
 - Display configuration file location
@@ -47,11 +49,23 @@ See what I've done plus the requirements for this program down below!
 - STILView
   - Never used it, didn't wanna take care of something I never messed
     with...
+- Support for emulating with a real SID (e.g. exSID)
+  - I'm actually only *considering* to drop support for those, as I currently
+    don't have any of those devices. However, if you, the reader, do have at
+	least one of them, lemme know! (as if an enthusiast would actually see
+	my project at all, not sure why I'm writing this...)
+  - UPDATE (2024/7/7): I found out that HardSID support is untested on
+    libsidplayfp. Why bother?? xD
+- AU file support
+  - I only knew this file format existed after digging into sidplayfp's source
+    code, really. I've never seen it being used at all, and it's an old one.
+	Most software nowadays are probably incompatible with it.
 
-### Requirements
+### Contributing
 
-- autotools
-- libsidplayfp (version 2.0.0 or higher)
-- pod2man
-- patience
-- and a decent computer to better enjoy the emulation!
+If you have any ideas to enhance the program, found any bugs, wanna point out
+a detail that I missed, or just ask a question, feel free to open an issue or
+make a pull request, that would be very appreciated!!
+
+But just by using this program you're already contributing to it in a way tho'
+:)

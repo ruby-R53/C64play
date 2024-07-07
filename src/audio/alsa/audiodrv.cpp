@@ -32,34 +32,27 @@ Audio_ALSA::Audio_ALSA() :
     outOfOrder();
 }
 
-Audio_ALSA::~Audio_ALSA()
-{
-    close ();
+Audio_ALSA::~Audio_ALSA() {
+    close();
 }
 
-void Audio_ALSA::outOfOrder()
-{
+void Audio_ALSA::outOfOrder() {
     // Reset everything.
     clearError();
     _audioHandle = nullptr;
 }
 
-void Audio_ALSA::checkResult(int err)
-{
-    if (err < 0)
-    {
+void Audio_ALSA::checkResult(int err) {
+    if (err < 0) {
         throw error(snd_strerror(err));
     }
 }
 
-bool Audio_ALSA::open(AudioConfig &cfg)
-{
+bool Audio_ALSA::open(AudioConfig &cfg) {
     snd_pcm_hw_params_t *hw_params = nullptr;
 
-    try
-    {
-        if (_audioHandle != nullptr)
-        {
+    try {
+        if (_audioHandle != nullptr) {
             throw error("Device already in use");
         }
 
@@ -96,12 +89,10 @@ bool Audio_ALSA::open(AudioConfig &cfg)
         snd_pcm_hw_params_free(hw_params);
         hw_params = nullptr;
 
-        try
-        {
+        try {
             _sampleBuffer = new short[snd_pcm_frames_to_bytes(_audioHandle, tmpCfg.bufSize)];
         }
-        catch (std::bad_alloc const &ba)
-        {
+        catch (std::bad_alloc const &ba) {
             throw error("Unable to allocate memory for sample buffers.");
         }
 
@@ -111,8 +102,7 @@ bool Audio_ALSA::open(AudioConfig &cfg)
         getConfig (cfg);
         return true;
     }
-    catch(error const &e)
-    {
+    catch(error const &e) {
         setError(e.message());
 
         if (hw_params)
@@ -126,30 +116,24 @@ bool Audio_ALSA::open(AudioConfig &cfg)
 
 // Close an opened audio device, free any allocated buffers and
 // reset any variables that reflect the current state.
-void Audio_ALSA::close()
-{
-    if (_audioHandle != nullptr)
-    {
+void Audio_ALSA::close() {
+    if (_audioHandle != nullptr) {
         snd_pcm_close(_audioHandle);
         delete[] _sampleBuffer;
         outOfOrder ();
     }
 }
 
-bool Audio_ALSA::write(uint_least32_t size)
-{
-    if (_audioHandle == nullptr)
-    {
+bool Audio_ALSA::write(uint_least32_t size) {
+    if (_audioHandle == nullptr) {
         setError("Device not open.");
         return false;
     }
 
     int err = snd_pcm_writei(_audioHandle, _sampleBuffer, size);
-    if (err < 0)
-    {
+    if (err < 0) {
         err = snd_pcm_recover(_audioHandle, err, 0);
-        if (err < 0)
-        {
+        if (err < 0) {
             setError(snd_strerror(err));
             return false;
         }

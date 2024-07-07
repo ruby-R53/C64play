@@ -44,7 +44,6 @@ using std::string;
 #include <sidplayfp/SidInfo.h>
 #include <sidplayfp/SidTuneInfo.h>
 
-#ifdef FEAT_REGS_DUMP_SID
 const char *noteName[] = {
 	"---",
     "C-0", "C#0", "D-0", "D#0", "E-0", "F-0", "F#0", "G-0", "G#0", "A-0", "A#0", "B-0",
@@ -56,7 +55,6 @@ const char *noteName[] = {
     "C-6", "C#6", "D-6", "D#6", "E-6", "F-6", "F#6", "G-6", "G#6", "A-6", "A#6", "B-6",
     "C-7", "C#7", "D-7", "D#7", "E-7", "F-7", "F#7", "G-7", "G#7", "A-7", "A#7", "B-7",
 };
-#endif
 
 const char SID6581[] = "MOS6581";
 const char SID8580[] = "CSG8580";
@@ -114,7 +112,6 @@ string trimString(const char* str, unsigned int maxLen) {
     return data;
 }
 
-#ifdef FEAT_REGS_DUMP_SID
 string ConsolePlayer::getNote(uint16_t freq) {
     if (freq) {
         uint16_t distance = 0xffff;
@@ -137,7 +134,6 @@ string ConsolePlayer::getNote(uint16_t freq) {
     }
     return noteName[0];
 }
-#endif
 
 // Display console menu
 void ConsolePlayer::menu() {
@@ -364,7 +360,9 @@ void ConsolePlayer::menu() {
 
 		// check if filter curve is provided by the command line
 		// or by the config file
-		double cfgFilter = ((getModel(tuneInfo->sidModel(0)) == SID6581) ?
+		double cfgFilter = ((getModel(tuneInfo->sidModel(0)) == SID6581
+		                    || (getModel(m_engCfg.defaultSidModel) == SID6581
+								&& m_engCfg.forceSidModel)) ?
 		                   m_filter.filterCurve6581 : m_filter.filterCurve8580);
 		consoleTable (tableMiddle);
 		consoleColour(yellow, true);
@@ -373,7 +371,9 @@ void ConsolePlayer::menu() {
 		cerr << ((m_fcurve == -1) ? cfgFilter : m_fcurve) << endl;
 
 #ifdef FEAT_FILTER_RANGE
-		if (getModel(tuneInfo->sidModel(0)) == SID6581) {
+		if (getModel(tuneInfo->sidModel(0)) == SID6581
+			|| (getModel(m_engCfg.defaultSidModel) == SID6581
+				&& m_engCfg.forceSidModel)) {
 			consoleTable (tableMiddle);
 			consoleColour(yellow, true);
 			cerr << " Filter range : ";
@@ -382,7 +382,9 @@ void ConsolePlayer::menu() {
 		}
 #endif
 
-		if (getModel(tuneInfo->sidModel(0)) == SID8580) {
+		if (getModel(tuneInfo->sidModel(0)) == SID8580
+			|| (getModel(m_engCfg.defaultSidModel) == SID8580
+				&& m_engCfg.forceSidModel)) {
         	consoleTable (tableMiddle);
         	consoleColour(yellow, true);
         	cerr << " DigiBoost    : ";
@@ -451,7 +453,6 @@ void ConsolePlayer::menu() {
     }
     cerr << endl;
 
-#ifdef FEAT_REGS_DUMP_SID
     if (m_quietLevel >= 1) {
 	    consoleTable(tableEnd);
         cerr << info_play;
@@ -471,7 +472,6 @@ void ConsolePlayer::menu() {
 			cerr << endl; // reserve space for Voice 3 status
         }
     }
-#endif
 
     consoleTable(tableEnd);
 
@@ -484,7 +484,6 @@ void ConsolePlayer::menu() {
 }
 
 void ConsolePlayer::refreshRegDump() {
-#ifdef FEAT_REGS_DUMP_SID
     const SidTuneInfo* tuneInfo = m_tune.getInfo();
 	const unsigned int movLines = (m_verboseLevel > 2) ?
 								  (tuneInfo->sidChips() * 6 + 1):
@@ -670,7 +669,6 @@ void ConsolePlayer::refreshRegDump() {
 	    }
         consoleTable(tableEnd);
 	} else
-#endif
         cerr << '\r';
 
     if (m_driver.file)

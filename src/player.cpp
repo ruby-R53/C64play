@@ -41,7 +41,6 @@ using std::endl;
 #include "utils.h"
 #include "keyboard.h"
 #include "audio/AudioDrv.h"
-#include "audio/au/auFile.h"
 #include "audio/wav/WavFile.h"
 #include "ini/types.h"
 
@@ -71,17 +70,11 @@ const char ConsolePlayer::RESIDFP_ID[] = "ReSIDfp";
 const char ConsolePlayer::RESID_ID[] = "ReSID";
 #endif
 
-#ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-#   include <sidplayfp/builders/hardsid.h>
-const char ConsolePlayer::HARDSID_ID[] = "HardSID";
-#endif
-
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
 #   include <sidplayfp/builders/exsid.h>
 const char ConsolePlayer::EXSID_ID[] = "exSID";
 #endif
 
-#ifdef FEAT_REGS_DUMP_SID
 uint16_t freqTablePal[] = {
     // C       C#      D       D#      E       F       F#      G       G#      A       A#      B
     0x0117, 0x0127, 0x0139, 0x014b, 0x015f, 0x0174, 0x018a, 0x01a1, 0x01ba, 0x01d4, 0x01f0, 0x020e, // 1
@@ -105,7 +98,6 @@ uint16_t freqTableNtsc[] = {
     0x4310, 0x4710, 0x4b50, 0x4fc0, 0x5480, 0x5980, 0x5ee0, 0x6480, 0x6a90, 0x70d0, 0x7790, 0x7ea0, // 7
     0x8620, 0x8e20, 0x96a0, 0x9f80, 0xa900, 0xb300, 0xbdc0, 0xc900, 0xd520, 0xe1a0, 0xef20, 0xfd40, // 8
 };
-#endif
 
 // This tables contains chip-profiles which allow us to adjust
 // certain settings that varied wildly between 6581 chips, even
@@ -294,14 +286,11 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
     m_outfile(nullptr),
     m_filename(""),
     m_fcurve(-1.0),
-    m_quietLevel(0),
     songlengthDB(SLDB_NONE),
     m_cpudebug(false),
     m_autofilter(false)
 {
-#ifdef FEAT_REGS_DUMP_SID
     memset(m_registers, 0, 32*3);
-#endif
     // Other defaults
     m_filter.enabled = true;
     m_driver.device  = nullptr;
@@ -361,13 +350,6 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
                 m_driver.sid    = EMU_RESID;
             }
 
-#ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-            else if (emulation.engine.compare(TEXT("HARDSID")) == 0) {
-                m_driver.sid    = EMU_HARDSID;
-                m_driver.output = OUT_NULL;
-            }
-#endif
-
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
             else if (emulation.engine.compare(TEXT("EXSID")) == 0) {
                 m_driver.sid    = EMU_EXSID;
@@ -380,16 +362,17 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
         }
     }
 
-    m_verboseLevel = (m_iniCfg.sidplay2()).verboseLevel;
+    m_verboseLevel = m_iniCfg.playercfg().verboseLevel;
+	m_quietLevel   = m_iniCfg.playercfg().quietLevel;
 
     createOutput(OUT_NULL, nullptr);
     createSidEmu(EMU_NONE, nullptr);
 
-    uint8_t *kernalRom  = loadRom((m_iniCfg.sidplay2()).kernalRom, 8192,
+    uint8_t *kernalRom  = loadRom((m_iniCfg.playercfg()).kernalRom, 8192,
 	                      TEXT("kernal"));
-    uint8_t *basicRom   = loadRom((m_iniCfg.sidplay2()).basicRom, 8192,
+    uint8_t *basicRom   = loadRom((m_iniCfg.playercfg()).basicRom, 8192,
 	                      TEXT("basic"));
-    uint8_t *chargenRom = loadRom((m_iniCfg.sidplay2()).chargenRom, 4096,
+    uint8_t *chargenRom = loadRom((m_iniCfg.playercfg()).chargenRom, 4096,
 	                      TEXT("chargen"));
     m_engine.setRoms(kernalRom, basicRom, chargenRom);
     delete [] kernalRom;
@@ -462,15 +445,17 @@ bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
         }
     break;
 
+/*
     case OUT_AU:
         try {
             std::string title = getFileName(tuneInfo, auFile::extension());
-            m_driver.device = new auFile(title);
+            m_driver.device   = new auFile(title);
         }
         catch (std::bad_alloc const &ba) {
             m_driver.device = nullptr;
         }
     break;
+*/
 
     default:
         break;
@@ -488,7 +473,7 @@ bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
     // Configure with user settings
     m_driver.cfg.frequency = m_engCfg.frequency;
     m_driver.cfg.channels  = m_channels ? m_channels : tuneChannels;
-    m_driver.cfg.precision = m_precision;
+    m_driver.cfg.depth     = m_precision;
     m_driver.cfg.bufSize   = 0; // Recalculate
 
     {   // Open the hardware
@@ -634,22 +619,6 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
     }
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESID_H
 
-#ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-    case EMU_HARDSID:
-    {
-        try {
-            HardSIDBuilder *hs = new HardSIDBuilder( HARDSID_ID );
-
-            m_engCfg.sidEmulation = hs;
-            if (!hs->getStatus()) goto createSidEmu_error;
-            hs->create ((m_engine.info()).maxsids());
-            if (!hs->getStatus()) goto createSidEmu_error;
-        }
-        catch (std::bad_alloc const &ba) {}
-        break;
-    }
-#endif // HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
     case EMU_EXSID:
     {
@@ -681,7 +650,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
     }
 
     if (m_engCfg.sidEmulation) {
-        /* set up SID filter. HardSID just ignores call with def. */
+        // set up SID filter
         m_engCfg.sidEmulation->filter(m_filter.enabled);
     }
 
@@ -714,8 +683,10 @@ bool ConsolePlayer::open (void) {
     const SidTuneInfo *tuneInfo = m_tune.getInfo();
     if (!m_track.single)
         m_track.songs = tuneInfo->songs();
+
     if (!createOutput(m_driver.output, tuneInfo))
         return false;
+
     if (!createSidEmu(m_driver.sid, tuneInfo))
         return false;
 
@@ -725,19 +696,18 @@ bool ConsolePlayer::open (void) {
         return false;
     }
 
-#ifdef FEAT_REGS_DUMP_SID
 	if (m_engCfg.defaultC64Model == SidConfig::NTSC && m_engCfg.forceC64Model
 		|| tuneInfo->clockSpeed() != SidTuneInfo::CLOCK_PAL
 		|| tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_NTSC)
 		m_freqTable = freqTableNtsc;
 	else
 		m_freqTable = freqTablePal;
-#endif
 
     // Start the player. Do this by fast
     // forwarding to the start position
     m_driver.selected = &m_driver.null;
     //m_speed.current   = m_speed.max;
+	//it still works without it :shrug:
     m_engine.fastForward(100 * m_speed.current);
 
     m_engine.mute(0, 0, vMute[0]);
@@ -810,12 +780,6 @@ void ConsolePlayer::close() {
 // Flush any hardware sid fifos so all music is played
 void ConsolePlayer::emuflush() {
     switch (m_driver.sid) {
-#ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-    case EMU_HARDSID:
-        ((HardSIDBuilder *)m_engCfg.sidEmulation)->flush ();
-        break;
-#endif // HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
     case EMU_EXSID:
         ((exSIDBuilder *)m_engCfg.sidEmulation)->flush ();

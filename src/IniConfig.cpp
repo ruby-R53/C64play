@@ -74,14 +74,14 @@ IniConfig::~IniConfig() {
 }
 
 void IniConfig::clear() {
-    sidplay2_s.version      = 1;               // INI File Version
-    sidplay2_s.database.clear();
-    sidplay2_s.playLength   = 0;               // infinite play time
-	sidplay2_s.recordLength = (5 * 60) * 1000; // 5 minutes default for recording
-    sidplay2_s.kernalRom.clear();
-    sidplay2_s.basicRom.clear();
-    sidplay2_s.chargenRom.clear();
-    sidplay2_s.verboseLevel = 0;
+    player_s.database.clear();
+    player_s.playLength   = 0;               // infinite play time
+	player_s.recordLength = (5 * 60) * 1000; // 5 minutes default for recording
+    player_s.kernalRom.clear();
+    player_s.basicRom.clear();
+    player_s.chargenRom.clear();
+    player_s.verboseLevel = 0;
+	player_s.quietLevel   = 0;
 
     console_s.ansi          = false;
     console_s.topLeft       = '+';
@@ -267,35 +267,31 @@ IniCofig_readTime_error:
 }
 
 
-void IniConfig::readSidplay2(iniHandler &ini) {
-    if (!ini.setSection(TEXT("C64play")))
-        ini.addSection(TEXT("C64play"));
+void IniConfig::readPlayer(iniHandler &ini) {
+    if (!ini.setSection(TEXT("Player")))
+        ini.addSection(TEXT("Player"));
 
-    int version = sidplay2_s.version;
-    readInt(ini, TEXT("Version"), version);
-    if (version > 0)
-        sidplay2_s.version = version;
+    player_s.database = readString(ini, TEXT("Songlength DB"));
 
-    sidplay2_s.database = readString(ini, TEXT("Songlength DB"));
-
-    if (sidplay2_s.database.empty()) {
+    if (player_s.database.empty()) {
         SID_STRING buffer(utils::getDataPath());
         buffer.append(SEPARATOR).append(DIR_NAME).append(SEPARATOR).append("Songlengths.md5");
         if (::access(buffer.c_str(), R_OK) == 0)
-            sidplay2_s.database.assign(buffer);
+            player_s.database.assign(buffer);
     }
 
     int time;
     if (readTime(ini, TEXT("Default play time"), time))
-        sidplay2_s.playLength = time;
+        player_s.playLength = time;
     if (readTime(ini, TEXT("Default record time"), time))
-        sidplay2_s.recordLength = time;
+        player_s.recordLength = time;
 
-    sidplay2_s.kernalRom  = readString(ini, TEXT("Kernal ROM"));
-    sidplay2_s.basicRom   = readString(ini, TEXT("BASIC ROM"));
-    sidplay2_s.chargenRom = readString(ini, TEXT("Chargen ROM"));
+    player_s.kernalRom  = readString(ini, TEXT("Kernal ROM"));
+    player_s.basicRom   = readString(ini, TEXT("BASIC ROM"));
+    player_s.chargenRom = readString(ini, TEXT("Chargen ROM"));
 
-    readInt(ini, TEXT("Output level"), sidplay2_s.verboseLevel);
+    readInt(ini, TEXT("Verboseness"), player_s.verboseLevel);
+	readInt(ini, TEXT("Quietness"), player_s.quietLevel);
 }
 
 
@@ -482,7 +478,7 @@ void IniConfig::read() {
         }
     }
 
-    readSidplay2 (ini);
+    readPlayer   (ini);
     readConsole  (ini);
     readAudio    (ini);
     readEmulation(ini);

@@ -1,5 +1,5 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console player for SID tunes.
  *
  * Copyright 2000 Simon White
  * Copyright 2013-2016 Leandro Nini
@@ -31,9 +31,15 @@
 #endif
 
 // Unix Sound Drivers
-#include "pulse/audiodrv.h"
-#include "alsa/audiodrv.h"
-#include "oss/audiodrv.h"
+#ifdef HAVE_PULSE
+#  include "pulse/audiodrv.h"
+#endif
+#ifdef HAVE_ALSA
+#  include "alsa/audiodrv.h"
+#endif
+#ifdef HAVE_OSS
+#  include "oss/audiodrv.h"
+#endif
 
 // Warn if a sound driver is not found
 // and fall back to the null driver

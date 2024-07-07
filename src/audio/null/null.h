@@ -1,6 +1,7 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console player for SID tunes.
  *
+ * Copyright 2024 Erika Lima
  * Copyright 2016 Leandro Nini
  * Copyright 2000-2001 Simon White
  *
@@ -26,7 +27,7 @@
 #  include "config.h"
 #endif
 
-#if defined(HAVE_SIDPLAYFP_BUILDERS_HARDSID_H) || defined(HAVE_SIDPLAYFP_BUILDERS_EXSID_H)
+#if defined(HAVE_SIDPLAYFP_BUILDERS_EXSID_H)
 #  ifndef AudioDriver
 #    define AudioDriver Audio_Null
 #  endif
@@ -35,7 +36,7 @@
 #include "../AudioBase.h"
 
 /*
- * Null audio driver used for hardsid, exSID
+ * Null audio driver used for exSID
  * and songlength detection
  */
 class Audio_Null: public AudioBase
@@ -47,11 +48,11 @@ public:  // --------------------------------------------------------- public
     Audio_Null();
     ~Audio_Null() override;
 
-    bool open  (AudioConfig &cfg) override;
-    void close () override;
-    void reset () override {}
-    bool write (uint_least32_t size) override;
-    void pause () override {}
+    bool open (AudioConfig &cfg) override;
+    void close() override;
+    void reset() override {}
+    bool write(uint_least32_t size) override;
+    void pause() override {}
 };
 
 #endif // AUDIO_NULL_H

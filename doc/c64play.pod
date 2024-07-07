@@ -153,7 +153,8 @@ automatically.
 
 =item B<--au>I<< [name] >>
 
-Record selected tune to an AU file. Works like I<-w>.
+Record selected tune to an AU file. Uses the same naming convention
+as I<-w>.
 
 =item B<--resid>
 
@@ -162,10 +163,6 @@ Use the reSID emulation engine, made by the VICE project.
 =item B<--residfp>
 
 Use the reSIDfp emulation engine, which is the default.
-
-=item B<--hardsid>
-
-Use a HardSID device.
 
 =item B<--exsid>
 
@@ -291,9 +288,9 @@ L<c64play.ini(5)>
 
 =head1 NOTES
 
-Due to Copyright laws, C64play doesn't ship with ROM dumps. Check
-L<c64play.ini> for more details like search paths and configuration
-stuff.
+Due to Copyright laws, C64play isn't shipped with ROM dumps.
+
+Check L<c64play.ini> for more details like search paths and configuration stuff.
 
 
 =head1 AUTHORS

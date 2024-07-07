@@ -79,7 +79,7 @@ typedef enum {
     /* The following require a soundcard */
     EMU_DEFAULT, EMU_RESIDFP, EMU_RESID,
     /* The following should disable the soundcard */
-    EMU_HARDSID, EMU_EXSID, EMU_SIDSTATION, EMU_COMMODORE,
+    EMU_EXSID, EMU_SIDSTATION, EMU_COMMODORE,
     EMU_SIDSYN, EMU_END
 } SIDEMUS;
 
@@ -106,7 +106,7 @@ typedef enum {
     SLDB_MD5
 } sldb_t;
 
-void displayError (const char *arg0, unsigned int num);
+void displayError(const char *arg0, unsigned int num);
 
 // Grouped global variables
 class ConsolePlayer {
@@ -116,9 +116,6 @@ private:
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
     static const char  RESID_ID[];
-#endif
-#ifdef HAVE_SIDPLAYFP_BUILDERS_HARDSID_H
-    static const char  HARDSID_ID[];
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
     static const char  EXSID_ID[];
@@ -158,6 +155,7 @@ private:
     unsigned int       m_precision;
 
     struct m_filter_t {
+        bool           enabled;
         // Filter parameter for reSID
         double         bias;
         // Filter parameters for reSIDfp
@@ -166,8 +164,6 @@ private:
         double         filterRange6581;
 #endif
         double         filterCurve8580;
-
-        bool           enabled;
     } m_filter;
 
     struct m_driver_t {

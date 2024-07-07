@@ -41,13 +41,13 @@ int _getch(void);
 
 // Special Extended Key Definitions
 enum {
-    PCK_HOME          = '\107',
-    PCK_UP            = '\110',
-    PCK_LEFT          = '\113',
-    PCK_RIGHT         = '\115',
-    PCK_END           = '\117',
-    PCK_DOWN          = '\120',
-    PCK_EXTENDED      = '\340'
+    PCK_HOME     = '\107',
+    PCK_UP       = '\110',
+    PCK_LEFT     = '\113',
+    PCK_RIGHT    = '\115',
+    PCK_END      = '\117',
+    PCK_DOWN     = '\120',
+    PCK_EXTENDED = '\340'
 };
 
 static char keytable[] = {
@@ -89,7 +89,7 @@ static char keytable[] = {
 	'g',0,                  A_GOTO,
 	'r',0,                  A_REPLAY,
 	'0',0,                  A_RESTORE,
-	'=',0,                  A_INCREASE, // '=' because it's annoying to use shift
+	'=',0,                  A_INCREASE, // '=' because it's annoying to hit shift
 	'-',0,                  A_DECREASE,
 
     0,                      A_END_LIST
@@ -104,7 +104,7 @@ static int keyboard_search(char *cmd) {
     char *q;
     int   a;
 
-    for (p = keytable, q = cmd;;  p++, q++) {
+    for (p = keytable, q = cmd;;  ++p, ++q) {
         if (*p == *q) {
             /*
              * Current characters match.
@@ -153,7 +153,7 @@ static int keyboard_search(char *cmd) {
             while (*p++ != '\0')
                 continue;
             while (*p == A_SKIP)
-                p++;
+                ++p;
             q = cmd-1;
         }
     }
@@ -178,7 +178,7 @@ int keyboard_decode() {
     else if (c == ESC) {
         cmd[nch++] = c;
         if (_kbhit ())
-            c = _getch ();
+            c = _getch();
     }
 
     while (c >= 0) {
@@ -188,9 +188,9 @@ int keyboard_decode() {
 
         if (action != A_PREFIX)
             break;
-        if (!_kbhit ())
+        if (!_kbhit())
             break;
-        c = _getch ();
+        c = _getch();
     }
     return action;
 }
@@ -198,26 +198,26 @@ int keyboard_decode() {
 // Simulate Standard Microsoft Extensions under Unix
 static int infd = -1;
 
-int _kbhit (void) {
-    if (infd >= 0) {   // Set no delay
+int _kbhit(void) {
+    if (infd >= 0) { // Set no delay
         static struct timeval tv = {0, 0};
         fd_set rdfs;
 
         // See if key has been pressed
-        FD_ZERO (&rdfs);
-        FD_SET  (infd, &rdfs);
-        if (select  (infd + 1, &rdfs, nullptr, nullptr, &tv) <= 0)
+        FD_ZERO(&rdfs);
+        FD_SET (infd, &rdfs);
+        if (select(infd + 1, &rdfs, nullptr, nullptr, &tv) <= 0)
             return 0;
-        if (FD_ISSET (infd, &rdfs))
+        if (FD_ISSET(infd, &rdfs))
             return 1;
     }
     return 0;
 }
 
-int _getch (void) {
+int _getch(void) {
     char ch = -1;
     if (infd >= 0)
-        read (infd, &ch, 1);
+        read(infd, &ch, 1);
     return ch;
 }
 
@@ -236,8 +236,7 @@ void keyboard_enable_raw() {
         infd = STDIN_FILENO;
     else if (isatty (STDERR_FILENO))
         infd = STDERR_FILENO;
-    else
-    {   // Try opening a terminal directly
+    else { // Try opening a terminal directly
         infd = open("/dev/tty", O_RDONLY);
         if (infd < 0)
             return;
@@ -255,11 +254,9 @@ void keyboard_enable_raw() {
 }
 
 void keyboard_disable_raw() {
-    if (infd >= 0)
-    {   // Restore old terminal settings
-        tcsetattr (infd, TCSAFLUSH, &term);
-        switch (infd)
-        {
+    if (infd >= 0) { // Restore old terminal settings
+        tcsetattr(infd, TCSAFLUSH, &term);
+        switch (infd) {
         case STDIN_FILENO:
         case STDERR_FILENO:
             break;

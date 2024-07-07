@@ -32,7 +32,7 @@ using std::endl;
 #include "keyboard.h"
 
 // Function prototypes
-static void sighandler (int signum);
+static void sighandler(int signum);
 static ConsolePlayer *g_player;
 
 int main(int argc, char *argv[]) {
@@ -48,13 +48,13 @@ int main(int argc, char *argv[]) {
     }
 
 main_restart:
-    if (!player.open ())
+    if (!player.open())
         goto main_error;
 
     // Install signal error handlers
-    if ((signal (SIGINT,  &sighandler) == SIG_ERR)
-     || (signal (SIGABRT, &sighandler) == SIG_ERR)
-     || (signal (SIGTERM, &sighandler) == SIG_ERR)) {
+    if ((signal(SIGINT,  &sighandler) == SIG_ERR)
+		|| (signal(SIGABRT, &sighandler) == SIG_ERR)
+		|| (signal(SIGTERM, &sighandler) == SIG_ERR)) {
         displayError(argv[0], ERR_SIGHANDLER);
         goto main_error;
     }
@@ -72,8 +72,8 @@ main_restart:
 
     // Restore default signal error handlers
     if ((signal (SIGINT,  SIG_DFL) == SIG_ERR)
-     || (signal (SIGABRT, SIG_DFL) == SIG_ERR)
-     || (signal (SIGTERM, SIG_DFL) == SIG_ERR)) {
+     	|| (signal (SIGABRT, SIG_DFL) == SIG_ERR)
+     	|| (signal (SIGTERM, SIG_DFL) == SIG_ERR)) {
         displayError(argv[0], ERR_SIGHANDLER);
         goto main_error;
     }

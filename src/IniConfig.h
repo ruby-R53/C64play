@@ -31,12 +31,11 @@
 #include <sidplayfp/SidConfig.h>
 
 /*
- * Sidplayfp config file reader.
+ * C64play's config file reader
  */
 class IniConfig {
 public:
-    struct sidplay2_section {
-        int            version;
+    struct player_section {
         SID_STRING     database;
         uint_least32_t playLength;
         uint_least32_t recordLength;
@@ -44,6 +43,7 @@ public:
         SID_STRING     basicRom;
         SID_STRING     chargenRom;
         int            verboseLevel;
+		int            quietLevel;
     };
 
     struct console_section { // [Console] section
@@ -88,7 +88,7 @@ public:
     };
 
 protected:
-    struct sidplay2_section  sidplay2_s;
+    struct player_section    player_s;
     struct console_section   console_s;
     struct audio_section     audio_s;
     struct emulation_section emulation_s;
@@ -96,7 +96,7 @@ protected:
 protected:
     void clear();
 
-    void readSidplay2 (iniHandler &ini);
+    void readPlayer   (iniHandler &ini);
     void readConsole  (iniHandler &ini);
     void readAudio    (iniHandler &ini);
     void readEmulation(iniHandler &ini);
@@ -112,8 +112,8 @@ public:
 
     void read();
 
-    // Sidplayfp Specific Section
-    const sidplay2_section&  sidplay2 () { return sidplay2_s; }
+    // Configuration sections for C64play
+    const player_section&    playercfg() { return player_s; }
     const console_section&   console  () { return console_s; }
     const audio_section&     audio    () { return audio_s; }
     const emulation_section& emulation() { return emulation_s; }

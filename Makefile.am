@@ -52,8 +52,6 @@ src/audio/AudioDrv.h \
 src/audio/IAudio.h \
 src/audio/alsa/audiodrv.cpp \
 src/audio/alsa/audiodrv.h \
-src/audio/au/auFile.cpp \
-src/audio/au/auFile.h \
 src/audio/null/null.cpp \
 src/audio/null/null.h \
 src/audio/oss/audiodrv.cpp \
@@ -93,7 +91,7 @@ DISTCLEANFILES = $(dist_man_MANS)
 
 .pod.1:
 	@mkdir -p $(@D)
-	pod2man -c "User Programs" -s 1 $< > $@
+	pod2man -c "User programs" -s 1 $< > $@
 
 .pod.5:
 	@mkdir -p $(@D)

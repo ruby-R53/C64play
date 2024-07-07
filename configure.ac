@@ -57,7 +57,7 @@ AS_IF([test "x$ac_cv_header_soundcard_h" = "xyes"],
 
 AC_SUBST(AUDIO_LDFLAGS)
 
-PKG_CHECK_MODULES(SIDPLAYFP, [libsidplayfp >= 2.0])
+PKG_CHECK_MODULES(SIDPLAYFP, [libsidplayfp >= 2.0.0])
 
 USE_LIBOUT123=no
 AC_ARG_WITH([out123], AS_HELP_STRING([--with-out123], [Build with out123 library (default: enabled)]))
@@ -79,7 +79,6 @@ CPPFLAGS="$CPPFLAGS $C64PLAY_CFLAGS"
 
 AC_CHECK_HEADERS([sidplayfp/builders/residfp.h \
 sidplayfp/builders/resid.h \
-sidplayfp/builders/hardsid.h \
 sidplayfp/builders/exsid.h])
 
 CPPFLAGS=$saveCPPFLAGS

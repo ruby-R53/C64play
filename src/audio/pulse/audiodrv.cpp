@@ -1,6 +1,7 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console player for SID tunes.
  *
+ * Copyright 2024 Erika Lima
  * Copyright 2013-2016 Leandro Nini
  * Copyright 2008 Antti Lankila
  *
@@ -21,8 +22,6 @@
 
 #include "audiodrv.h"
 
-#ifdef HAVE_PULSE
-
 #include <new>
 #include <pulse/error.h>
 
@@ -32,7 +31,7 @@ Audio_Pulse::Audio_Pulse() :
 }
 
 Audio_Pulse::~Audio_Pulse() {
-    close ();
+    close();
 }
 
 void Audio_Pulse::outOfOrder() {
@@ -47,7 +46,7 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
     pacfg.rate = cfg.frequency;
     pacfg.format = PA_SAMPLE_S16NE;
 
-    // Set sample precision and type of encoding.
+    // Set bit depth and type of encoding.
     int err;
     _audioHandle = pa_simple_new(
         nullptr,
@@ -66,13 +65,13 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
             throw error(pa_strerror(err));
         }
 
-        cfg.bufSize = 4096;
+        cfg.bufSize = 8192;
 
         try {
             _sampleBuffer = new short[cfg.bufSize];
         }
         catch (std::bad_alloc const &ba) {
-            throw error("Unable to allocate memory for sample buffers.");
+            throw error("Unable to allocate memory for sample buffers!");
         }
 
         _settings = cfg;
@@ -100,7 +99,7 @@ void Audio_Pulse::close() {
 
     if (_sampleBuffer != nullptr) {
         delete [] _sampleBuffer;
-        outOfOrder ();
+        outOfOrder();
     }
 }
 
@@ -113,9 +112,9 @@ bool Audio_Pulse::write(uint_least32_t size) {
     int err;
     if (pa_simple_write(_audioHandle, _sampleBuffer, size * 2, &err) < 0) {
         setError(pa_strerror(err));
+		return false;
         // FIXME should we return false here?
+		// let's give it a try :)
     }
     return true;
 }
-
-#endif // HAVE_PULSE

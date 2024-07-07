@@ -1,7 +1,16 @@
-### Building
+# Building
 
-This program currently uses autotools for its building process. To build and
-install it, do the following:
+Check the requirements below and follow the steps to build the program.
+
+### Requirements
+
+- autotools
+- libsidplayfp (version 2.2 or higher)
+- pod2man
+- patience
+- and a decent computer to better enjoy the emulation!
+
+### Build
 
 1. Create a directory named `build`. Not really a required step, it's just
 to make things easier if doing a cleanup later.
@@ -20,5 +29,5 @@ accelerate that process.
 
 6. After building, run `make install` as root if necessary.
 7. You're set!! Enjoy your SID tunes by simply running `c64play <tune>`.
-See the man page of C64play and its configuration file c64play.ini
+See the man page of C64play and its configuration file `c64play.ini`
 for more details.
