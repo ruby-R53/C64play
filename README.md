@@ -17,12 +17,12 @@ See what I've done down below and see how you can contribute to the project!
   - Replay a tune by hitting the `r` key.
   - YouTube player-like keybinds:
     - Hit `j` to go to the previous subtune;
-    - `k` to pause a subtune;
+    - `k` to pause one;
     - and `l` to go to the next subtune.
-  - Hit `g` to jump to a specific subtune instead of repeatedly hitting `j` or `k`.
+  - Hit `g` to jump to a specific subtune instead of repeatedly hitting `j` or `l`.
   - Hit `=` to double the playback speed of a tune.
     - You know I actually meant `+`, but pressing shift is kinda awkward,
-	  so I just made it `=` instad.
+	  so I just made it `=` instead.
     - You can then hit `-` to halve it;
     - Or `0` to go all the way back to the normal speed!
 - Other visual changes:
