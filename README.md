@@ -13,6 +13,7 @@ See what I've done down below and see how you can contribute to the project!
   - Filter resonance;
   - Filter cutoff;
   - With the exception of the 2nd and 3rd items, they're displayed in binary.
+
 - Changes to the keybinds:
   - Replay a tune by hitting the `r` key.
   - YouTube player-like keybinds:
@@ -25,6 +26,7 @@ See what I've done down below and see how you can contribute to the project!
 	  so I just made it `=` instead.
     - You can then hit `-` to halve it;
     - Or `0` to go all the way back to the normal speed!
+
 - Other visual changes:
   - Changes to the color palette.
   - You can now see the filter curve and/or range value on the main UI.
@@ -42,13 +44,16 @@ See what I've done down below and see how you can contribute to the project!
 - Support for Windows
   - I'm thinking of making a new UI for that.
   - Plus, as I'm still a beginner, I needed to simplify stuff...
+
 - Display configuration file location
   - I didn't find any use for this, as there's no command-line option
     to load a custom configuration file and the file is always loaded
 	from the same location ¯\\_(ツ)\_/¯
+
 - STILView
   - Never used it, didn't wanna take care of something I never messed
     with...
+
 - Support for emulating with a real SID (e.g. exSID)
   - I'm actually only *considering* to drop support for those, as I currently
     don't have any of those devices. However, if you, the reader, do have at
@@ -56,6 +61,7 @@ See what I've done down below and see how you can contribute to the project!
 	my project at all, not sure why I'm writing this...)
   - UPDATE (2024/7/7): I found out that HardSID support is untested on
     libsidplayfp. Why bother?? xD
+
 - AU file support
   - I only knew this file format existed after digging into sidplayfp's source
     code, really. I've never seen it being used at all, and it's an old one.
