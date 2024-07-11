@@ -177,7 +177,7 @@ int keyboard_decode() {
         c = '\340'; // 224
     else if (c == ESC) {
         cmd[nch++] = c;
-        if (_kbhit ())
+        if (_kbhit())
             c = _getch();
     }
 
@@ -232,9 +232,9 @@ void keyboard_enable_raw() {
         return;
 
     // Determine if stdin/stderr has been redirected
-    if (isatty (STDIN_FILENO))
+    if (isatty(STDIN_FILENO))
         infd = STDIN_FILENO;
-    else if (isatty (STDERR_FILENO))
+    else if (isatty(STDERR_FILENO))
         infd = STDERR_FILENO;
     else { // Try opening a terminal directly
         infd = open("/dev/tty", O_RDONLY);

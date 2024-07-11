@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     g_player = &player;
 
     { // Decode the command line args
-        const int ret = player.args (argc - 1, const_cast<const char**>(argv + 1));
+        const int ret = player.args(argc - 1, const_cast<const char**>(argv + 1));
         if (ret < 0)
             goto main_error;
         else if (!ret)
@@ -52,7 +52,7 @@ main_restart:
         goto main_error;
 
     // Install signal error handlers
-    if ((signal(SIGINT,  &sighandler) == SIG_ERR)
+    if ((signal(SIGINT, &sighandler) == SIG_ERR)
 		|| (signal(SIGABRT, &sighandler) == SIG_ERR)
 		|| (signal(SIGTERM, &sighandler) == SIG_ERR)) {
         displayError(argv[0], ERR_SIGHANDLER);

@@ -27,9 +27,9 @@ const char* codeConvert::convert(const char* src) {
     if (cd == (iconv_t) -1)
         return src;
 
-    char *srcPtr = const_cast<char*>(src);
+    char *srcPtr   = const_cast<char*>(src);
     size_t srcLeft = strlen(src);
-    char *outPtr = buffer;
+    char *outPtr   = buffer;
     size_t outLeft = sizeof (buffer)-1;
 
     while (srcLeft > 0) {

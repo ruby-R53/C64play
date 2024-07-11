@@ -100,11 +100,13 @@ enum {
     ERR_FILE_OPEN
 };
 
+/*
 // Songlength DB.
 typedef enum {
     SLDB_NONE = 0,
     SLDB_MD5
 } sldb_t;
+*/
 
 void displayError(const char *arg0, unsigned int num);
 
@@ -112,63 +114,65 @@ void displayError(const char *arg0, unsigned int num);
 class ConsolePlayer {
 private:
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
-    static const char  RESIDFP_ID[];
+    static const char RESIDFP_ID[];
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
-    static const char  RESID_ID[];
+    static const char RESID_ID[];
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
-    static const char  EXSID_ID[];
+    static const char EXSID_ID[];
 #endif
 
-    const char* const  m_name;
-    sidplayfp          m_engine;
-    SidConfig          m_engCfg;
-    SidTune            m_tune;
-    player_state_t     m_state;
-    const char*        m_outfile;
-    std::string        m_filename;
+    const char* const m_name;
+    sidplayfp         m_engine;
+    SidConfig         m_engCfg;
+    SidTune           m_tune;
+    player_state_t    m_state;
+    const char*       m_outfile;
+    std::string       m_filename;
 
-    IniConfig          m_iniCfg;
-    SidDatabase        m_database;
+    IniConfig         m_iniCfg;
+    SidDatabase       m_database;
 
-    double             m_fcurve;
+    double            m_fcurve;
 
 #ifdef FEAT_CW_STRENGTH
-    SidConfig::sid_cw_t m_combinedWaveformsStrength;
+    SidConfig::
+	sid_cw_t          m_combinedWaveformsStrength;
 #endif
 
-    uint8_t            m_registers[3][32];
-    uint16_t*          m_freqTable;
+    uint8_t           m_registers[3][32];
+    uint16_t*         m_freqTable;
 
     // Display parameters
-    uint_least8_t      m_quietLevel;
-    uint_least8_t      m_verboseLevel;
+    uint_least8_t     m_quietLevel;
+    uint_least8_t     m_verboseLevel;
 
-    sldb_t             songlengthDB;
+	bool              songlengthDB;
+    //sldb_t            songlengthDB;
 
-    bool               m_cpudebug;
-    bool               m_autofilter;
-    bool               vMute[9];
+    bool              m_cpudebug;
+    bool              m_autofilter;
+    bool              vMute[9];
 
-    unsigned int       m_channels;
-    unsigned int       m_precision;
+    unsigned int      m_channels;
+    unsigned int      m_precision;
 
     struct m_filter_t {
-        bool           enabled;
+        bool          enabled;
         // Filter parameter for reSID
-        double         bias;
+        double        bias;
         // Filter parameters for reSIDfp
-        double         filterCurve6581;
+        double        filterCurve6581;
 #ifdef FEAT_FILTER_RANGE
-        double         filterRange6581;
+        double        filterRange6581;
 #endif
-        double         filterCurve8580;
+        double        filterCurve8580;
     } m_filter;
 
     struct m_driver_t {
         OUTPUTS     output;   // Selected output type
-        SIDEMUS     sid;      // Sid emulation
+        SIDEMUS     sid;      // SID emulation
         bool        file;     // File based driver
         bool        info;     // File metadata
         AudioConfig cfg;
@@ -221,16 +225,15 @@ private:
 
     uint_least32_t getBufSize();
 
-    //const char *getNote(uint16_t freq);
 	std::string getNote(uint16_t freq);
 
     std::string getFileName(const SidTuneInfo *tuneInfo, const char* ext);
 
     inline bool tryOpenTune(const char *hvscBase);
-    inline bool tryOpenDatabase(const char *hvscBase, const char *suffix);
+    inline bool tryOpenDatabase(const char *hvscBase);
 
 public:
-    ConsolePlayer (const char * const name);
+    ConsolePlayer(const char * const name);
     virtual ~ConsolePlayer() = default;
 
     int  args (int argc, const char *argv[]);

@@ -113,9 +113,9 @@ public:
     void read();
 
     // Configuration sections for C64play
-    const player_section&    playercfg() { return player_s; }
-    const console_section&   console  () { return console_s; }
-    const audio_section&     audio    () { return audio_s; }
+    const player_section&    playercfg() { return player_s;    }
+    const console_section&   console  () { return console_s;   }
+    const audio_section&     audio    () { return audio_s;     }
     const emulation_section& emulation() { return emulation_s; }
 };
 

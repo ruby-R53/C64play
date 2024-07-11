@@ -36,7 +36,6 @@ private:
 public:
     static SID_STRING getDataPath();
     static SID_STRING getConfigPath();
-
 };
 
 #endif

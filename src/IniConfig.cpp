@@ -97,12 +97,12 @@ void IniConfig::clear() {
     audio_s.channels  = 0;
     audio_s.precision = 16;
 
-    emulation_s.modelDefault  = SidConfig::PAL;
-    emulation_s.modelForced   = false;
-    emulation_s.sidModel      = SidConfig::MOS6581;
-    emulation_s.forceModel    = false;
-    emulation_s.ciaModel      = SidConfig::MOS6526;
-    emulation_s.filter        = true;
+    emulation_s.modelDefault = SidConfig::PAL;
+    emulation_s.modelForced  = false;
+    emulation_s.sidModel     = SidConfig::MOS6581;
+    emulation_s.forceModel   = false;
+    emulation_s.ciaModel     = SidConfig::MOS6526;
+    emulation_s.filter       = true;
     emulation_s.engine.clear();
 
     emulation_s.bias            = 0.5;
@@ -296,7 +296,7 @@ void IniConfig::readPlayer(iniHandler &ini) {
 
 
 void IniConfig::readConsole(iniHandler &ini) {
-    if (!ini.setSection (TEXT("Console")))
+    if (!ini.setSection(TEXT("Console")))
         ini.addSection(TEXT("Console"));
 
     readBool(ini, TEXT("ANSI"),                console_s.ansi);
@@ -312,7 +312,7 @@ void IniConfig::readConsole(iniHandler &ini) {
 
 
 void IniConfig::readAudio(iniHandler &ini) {
-    if (!ini.setSection (TEXT("Audio")))
+    if (!ini.setSection(TEXT("Audio")))
         ini.addSection(TEXT("Audio"));
 
     readInt(ini, TEXT("Sample rate"), audio_s.frequency);
@@ -322,13 +322,13 @@ void IniConfig::readAudio(iniHandler &ini) {
 
 
 void IniConfig::readEmulation(iniHandler &ini) {
-    if (!ini.setSection (TEXT("Emulation")))
+    if (!ini.setSection(TEXT("Emulation")))
         ini.addSection(TEXT("Emulation"));
 
-    emulation_s.engine = readString (ini, TEXT("Engine"));
+    emulation_s.engine = readString(ini, TEXT("Engine"));
 
     {
-        SID_STRING str = readString (ini, TEXT("Video mode"));
+        SID_STRING str = readString(ini, TEXT("Video mode"));
         if (!str.empty()) {
             if (str.compare(TEXT("PAL")) == 0)
                 emulation_s.modelDefault = SidConfig::PAL;

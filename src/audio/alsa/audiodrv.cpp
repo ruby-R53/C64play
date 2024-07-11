@@ -99,7 +99,7 @@ bool Audio_ALSA::open(AudioConfig &cfg) {
         // Setup internal Config
         _settings = tmpCfg;
         // Update the users settings
-        getConfig (cfg);
+        getConfig(cfg);
         return true;
     }
     catch(error const &e) {

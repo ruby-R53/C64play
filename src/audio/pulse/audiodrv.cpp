@@ -53,7 +53,7 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
         "C64play",
         PA_STREAM_PLAYBACK,
         nullptr,
-        "C64play",
+        "Playing",
         &pacfg,
         nullptr,
         nullptr,
@@ -65,7 +65,7 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
             throw error(pa_strerror(err));
         }
 
-        cfg.bufSize = 8192;
+        cfg.bufSize = 4096;
 
         try {
             _sampleBuffer = new short[cfg.bufSize];

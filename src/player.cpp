@@ -286,7 +286,7 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
     m_outfile(nullptr),
     m_filename(""),
     m_fcurve(-1.0),
-    songlengthDB(SLDB_NONE),
+    songlengthDB(false),
     m_cpudebug(false),
     m_autofilter(false)
 {
@@ -368,11 +368,11 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
     createOutput(OUT_NULL, nullptr);
     createSidEmu(EMU_NONE, nullptr);
 
-    uint8_t *kernalRom  = loadRom((m_iniCfg.playercfg()).kernalRom, 8192,
+    uint8_t *kernalRom  = loadRom(m_iniCfg.playercfg().kernalRom, 8192,
 	                      TEXT("kernal"));
-    uint8_t *basicRom   = loadRom((m_iniCfg.playercfg()).basicRom, 8192,
+    uint8_t *basicRom   = loadRom(m_iniCfg.playercfg().basicRom, 8192,
 	                      TEXT("basic"));
-    uint8_t *chargenRom = loadRom((m_iniCfg.playercfg()).chargenRom, 4096,
+    uint8_t *chargenRom = loadRom(m_iniCfg.playercfg().chargenRom, 4096,
 	                      TEXT("chargen"));
     m_engine.setRoms(kernalRom, basicRom, chargenRom);
     delete [] kernalRom;
@@ -444,18 +444,6 @@ bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
             m_driver.device = nullptr;
         }
     break;
-
-/*
-    case OUT_AU:
-        try {
-            std::string title = getFileName(tuneInfo, auFile::extension());
-            m_driver.device   = new auFile(title);
-        }
-        catch (std::bad_alloc const &ba) {
-            m_driver.device = nullptr;
-        }
-    break;
-*/
 
     default:
         break;
@@ -531,7 +519,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
             m_engCfg.sidEmulation = rs;
             if (!rs->getStatus()) goto createSidEmu_error;
-            rs->create ((m_engine.info()).maxsids());
+            rs->create (m_engine.info().maxsids());
             if (!rs->getStatus()) goto createSidEmu_error;
 
 #ifdef FEAT_CW_STRENGTH
@@ -609,7 +597,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
             m_engCfg.sidEmulation = rs;
             if (!rs->getStatus()) goto createSidEmu_error;
-            rs->create ((m_engine.info()).maxsids());
+            rs->create(m_engine.info().maxsids());
             if (!rs->getStatus()) goto createSidEmu_error;
 
             rs->bias(m_filter.bias);
@@ -627,7 +615,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
             m_engCfg.sidEmulation = hs;
             if (!hs->getStatus()) goto createSidEmu_error;
-            hs->create ((m_engine.info()).maxsids());
+            hs->create(m_engine.info().maxsids());
             if (!hs->getStatus()) goto createSidEmu_error;
         }
         catch (std::bad_alloc const &ba) {}
@@ -643,7 +631,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
     }
 
     if (!m_engCfg.sidEmulation) {
-        if (emu > EMU_DEFAULT) {   // No sid emulation?
+        if (emu > EMU_DEFAULT) { // No SID emulation?
             displayError(ERR_NOT_ENOUGH_MEMORY);
             return false;
         }
@@ -770,7 +758,7 @@ void ConsolePlayer::close() {
     if (m_quietLevel < 2) {
 		// Correctly leave ANSI mode and get prompt to
         // end up in a suitable location
-        if ((m_iniCfg.console()).ansi)
+        if (m_iniCfg.console().ansi)
 			cerr << "\x1b[?25h";
             cerr << "\x1b[0m";
         cerr << endl;
@@ -843,7 +831,7 @@ void ConsolePlayer::stop() {
 uint_least32_t ConsolePlayer::getBufSize() {
 	// Switch audio drivers.
     if (m_timer.starting && (m_timer.current >= m_timer.start)) {
-        m_timer.starting = false;
+        m_timer.starting  = false;
         m_driver.selected = m_driver.device;
         memset(m_driver.selected->buffer(), 0, m_driver.cfg.bufSize);
         m_speed.current = 1;
@@ -858,7 +846,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
                 return 0;
 
             // Move to next track
-            m_track.selected++;
+            ++m_track.selected;
             if (m_track.selected > m_track.songs)
                 m_track.selected = 1;
             if (m_track.selected == m_track.first)
@@ -974,7 +962,7 @@ void ConsolePlayer::decodeKeys() {
                 // Just to make sure the text is removed from screen
                 cerr << "         ";
                 cerr << "\b\b\b\b\b\b\b\b\b";
-                m_state  = playerRunning;
+                m_state = playerRunning;
             } else {
                 cerr << "(paused)";
                 m_state = playerPaused;

@@ -42,7 +42,7 @@ using std::endl;
 #  include <sidplayfp/builders/exsid.h>
 #endif
 
-// Wide-chars are not yet supported here
+// Wide-chars are not supported here yet 
 #undef SEPARATOR
 #define SEPARATOR "/"
 
@@ -65,11 +65,11 @@ bool ConsolePlayer::tryOpenTune(const char *hvscBase) {
 /**
  * Try load songlength DB from HVSC_BASE
  */
-bool ConsolePlayer::tryOpenDatabase(const char *hvscBase, const char *suffix) {
+bool ConsolePlayer::tryOpenDatabase(const char *hvscBase) {
     std::string newFileName(hvscBase);
 
     newFileName.append(SEPARATOR).append("DOCUMENTS").append(SEPARATOR)
-	           .append("Songlengths.").append(suffix);
+	           .append("Songlengths.md5");
 
     return m_database.open(newFileName.c_str());
 }
@@ -298,9 +298,8 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 } else {
                     m_verboseLevel = atoi(&argv[i][2]);
                 }
-                m_engCfg.forceC64Model = ((argv[i]
-				                           [((argv[i][2] == 'f') ? 2 : 3)] == 'f')?
-										   true : false);
+                m_engCfg.forceC64Model = ((argv[i][((argv[i][2] == 'f') ? 
+										 2 : 3)] == 'f') ?  true : false);
             }
 
             else if (strncmp (&argv[i][1], "-delay=", 7) == 0) {
@@ -328,13 +327,6 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 m_driver.file   = true;
                 if (argv[i][5] != '\0')
                     m_outfile = &argv[i][5];
-            }
-
-            else if (strncmp (&argv[i][1], "-au", 3) == 0) {
-                m_driver.output = OUT_AU;
-                m_driver.file   = true;
-                if (argv[i][4] != '\0')
-                    m_outfile = &argv[i][4];
             }
 
             else if (strncmp (&argv[i][1], "-info", 5) == 0) {
@@ -391,7 +383,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
         }
 
         if (err) {
-            displayArgs (argv[i]);
+            displayArgs(argv[i]);
             return -1;
         }
 
@@ -433,7 +425,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
     }
 
     // Select the desired track
-    m_track.first    = m_tune.selectSong (m_track.first);
+    m_track.first    = m_tune.selectSong(m_track.first);
     m_track.selected = m_track.first;
     if (m_track.single)
         m_track.songs = 1;
@@ -442,27 +434,27 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
     // and set default lengths in case it's not found in there.
     {   // Time of 0 provided for wav generation?
         if (m_driver.file && m_timer.valid && !m_timer.length) {
-            displayError ("ERROR: can't use -t0 if recording!");
+            displayError("ERROR: can't use -t0 if recording!");
             return -1;
         }
         if (!m_timer.valid) {
-            m_timer.length = m_driver.file ? (m_iniCfg.playercfg()).recordLength
-                                           : (m_iniCfg.playercfg()).playLength;
+            m_timer.length = m_driver.file ? m_iniCfg.playercfg().recordLength
+                                           : m_iniCfg.playercfg().playLength;
 
-            songlengthDB = SLDB_NONE;
+            songlengthDB  = false;
             bool dbOpened = false;
             if (hvscBase) {
-                if (tryOpenDatabase(hvscBase, "md5")) {
+                if (tryOpenDatabase(hvscBase)) {
                     dbOpened = true;
-                    songlengthDB = SLDB_MD5;
+                    songlengthDB = true;
                 }
             }
 
             if (!dbOpened) {
                 // Try load user configured songlength DB
-                if ((m_iniCfg.playercfg()).database.length() != 0) {
+                if (m_iniCfg.playercfg().database.length() != 0) {
                     // Try loading the database specificed by the user
-                    const char *database = (m_iniCfg.playercfg()).database.c_str();
+                    const char *database = m_iniCfg.playercfg().database.c_str();
 
                     if (!m_database.open(database)) {
                         displayError(m_database.error());
@@ -470,15 +462,15 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                     }
 
                     if (m_iniCfg.playercfg().database.find(TEXT(".md5")) != SID_STRING::npos)
-                        songlengthDB = SLDB_MD5;
+                        songlengthDB = true;
                 }
             }
         }
     }
 
     // Configure engine with settings
-    if (!m_engine.config (m_engCfg)) { // Config failed
-        displayError (m_engine.error());
+    if (!m_engine.config(m_engCfg)) { // Config failed
+        displayError(m_engine.error());
         return -1;
     }
     return 1;
@@ -489,7 +481,7 @@ void ConsolePlayer::displayArgs (const char *arg) {
     std::ostream &out = arg ? cerr : cout;
 
     if (arg)
-        out << "Option error: " << arg << endl;
+        out << "Invalid option: " << arg << endl;
     else
         out << "Syntax: " << m_name << " [option(s)] <file>" << endl;
 
@@ -502,7 +494,7 @@ void ConsolePlayer::displayArgs (const char *arg) {
         << SidConfig::DEFAULT_SAMPLING_FREQ << endl
         << "-D<addr>           set address of SID #2 (e.g. -ds0xd420)" << endl
         << "-T<addr>           set address of SID #3 (e.g. -ts0xd440)" << endl
-        << "-u<num>            mute voice <num> (e.g. -u1 -u2)" << endl
+        << "-m<num>            mute voice <num> (e.g. -u1 -u2)" << endl
         << "-nf                disable filter emulation" << endl
         << "-o<l|s>            loop and/or make it single track" << endl
         << "-o<num>            start track (default: preset)" << endl
@@ -531,8 +523,6 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		<< "                   [auto]matically change it for you" << endl
         << "-w[name]           create a .wav file, with default layout" << endl
 		<< "                   being <file>[n].wav" << endl
-        << "--au[name]         create an .au file, with default layout" << endl
-		<< "                   being <datafile>[n].au" << endl
         << "--info             add metadata to .wav file" << endl;
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
@@ -546,8 +536,8 @@ void ConsolePlayer::displayArgs (const char *arg) {
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
     {
         exSIDBuilder hs("");
-        if (hs.availDevices ())
-            out << " --exsid           enable exSID support" << endl;
+        if (hs.availDevices())
+            out << "--exsid           enable exSID support" << endl;
     }
 #endif
     out << endl
