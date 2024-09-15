@@ -31,6 +31,8 @@ using std::endl;
 
 #include "keyboard.h"
 
+const char* ERR_SIGHANDLER = "ERROR: could not install signal handler!";
+
 // Function prototypes
 static void sighandler(int signum);
 static ConsolePlayer *g_player;
@@ -55,7 +57,7 @@ main_restart:
     if ((signal(SIGINT, &sighandler) == SIG_ERR)
 		|| (signal(SIGABRT, &sighandler) == SIG_ERR)
 		|| (signal(SIGTERM, &sighandler) == SIG_ERR)) {
-        displayError(argv[0], ERR_SIGHANDLER);
+        player.displayError(ERR_SIGHANDLER);
         goto main_error;
     }
 
@@ -74,7 +76,7 @@ main_restart:
     if ((signal (SIGINT,  SIG_DFL) == SIG_ERR)
      	|| (signal (SIGABRT, SIG_DFL) == SIG_ERR)
      	|| (signal (SIGTERM, SIG_DFL) == SIG_ERR)) {
-        displayError(argv[0], ERR_SIGHANDLER);
+        player.displayError(ERR_SIGHANDLER);
         goto main_error;
     }
 
@@ -99,32 +101,6 @@ void sighandler(int signum) {
         // Exit now!
         g_player->stop();
         break;
-    default: break;
-    }
-}
-
-
-void displayError(const char *arg0, unsigned int num) {
-    cerr << arg0 << ": ";
-
-    switch (num) {
-    case ERR_SYNTAX:
-        cerr << "command line syntax error" << endl
-             << "Try `" << arg0 << " --help' for more information." << endl;
-        break;
-
-    case ERR_NOT_ENOUGH_MEMORY:
-        cerr << "ERROR: Not enough memory." << endl;
-        break;
-
-    case ERR_SIGHANDLER:
-        cerr << "ERROR: Could not install signal handler." << endl;
-        break;
-
-    case ERR_FILE_OPEN:
-        cerr << "ERROR: Could not open file for binary input." << endl;
-        break;
-
     default: break;
     }
 }

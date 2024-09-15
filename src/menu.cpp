@@ -62,7 +62,7 @@ const char SID8580[] = "CSG8580";
 const unsigned char tableWidth = 58;
 
 const char info_file[] = "Writing audio file";
-const char info_play[] = "Prev. [j] Pause [k] Next [l] Quit [q] Go to [g]";
+const char info_play[] = "Prev. [j] Pause [k] Next [l] Go to [g] Quit [q]";
 
 const char* getModel(SidTuneInfo::model_t model) {
     switch (model) {
@@ -120,6 +120,8 @@ string ConsolePlayer::getNote(uint16_t freq) {
             uint16_t d = abs(freq - m_freqTable[i]);
             if (d < distance)
                 distance = d;
+			// check if frequency matches exactly or off by a bit
+			// so that a ~ is displayed or not
 			else if (d <= (m_freqTable[i] - m_freqTable[i-1])*(m_freqTable[i] / m_freqTable[i-1])) {
 				result += noteName[i];
 				return result;
@@ -239,14 +241,20 @@ void ConsolePlayer::menu() {
 
     consoleTable (tableMiddle);
     consoleColour(green, true);
-    cerr << " Subtune      : ";
-    consoleColour(white, false);
 
-    cerr << tuneInfo->currentSong() << '/' << tuneInfo->songs() << " "
-		 << "(starting subtune: " << tuneInfo->startSong() << ")";
+	if (tuneInfo->songs() == 1) {
+		cerr << " On loop?     : ";
+    	consoleColour(white, false);
 
-    if (m_track.loop)
-        cerr << " - looping";
+		cerr << ((m_track.loop) ? "Yes" : "No");
+	} else {
+    	cerr << " Subtune      : ";
+    	consoleColour(white, false);
+
+    	cerr << tuneInfo->currentSong() << '/' << tuneInfo->songs() << " "
+		     << "(starting subtune: " << tuneInfo->startSong() << ")"
+			 << ((m_track.loop) ? " - looping" : "");
+	}
 
     cerr << endl;
 

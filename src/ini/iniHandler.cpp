@@ -24,6 +24,17 @@
 #include <iostream>
 #include <algorithm>
 
+template<class T>
+class compare {
+private:
+	SID_STRING s;
+
+public:
+    compare(const TCHAR *str) : s(str) {}
+
+    bool operator() (T const &p) { return s.compare(p.first) == 0; }
+};
+
 iniHandler::iniHandler() :
     changed(false)
 {}

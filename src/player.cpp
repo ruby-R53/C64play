@@ -50,15 +50,14 @@ using std::endl;
 #include <sidplayfp/SidInfo.h>
 #include <sidplayfp/SidTuneInfo.h>
 
-#ifdef HAVE_CXX11
-#  include <unordered_map>
-    typedef std::unordered_map<std::string, double> filter_map_t;
-    typedef std::unordered_map<std::string, double>::const_iterator filter_map_iter_t;
-#else
-#  include <map>
-    typedef std::map<std::string, double> filter_map_t;
-    typedef std::map<std::string, double>::const_iterator filter_map_iter_t;
-#endif
+#include <unordered_map>
+
+#include <unordered_map>
+
+using filter_map_t = std::unordered_map<std::string, double>;
+using filter_map_iter_t = std::unordered_map<std::string, double>::const_iterator;
+
+const char* ERR_NOT_ENOUGH_MEMORY = "ERROR: not enough memory!";
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 #  include <sidplayfp/builders/residfp.h>
@@ -129,7 +128,7 @@ static const filter_map_t filterRangeMap = {
     { "Geir Tjelta",                         0.50 },
     { "Geoff Follin",                        0.85 },
     { "Georg Feil",                          0.20 },
-    { "Glenn Rune Gallefoss",                0.20 },
+    { "Glenn Rune Gallefoss",                1.30 },
     { "Graham Jarvis & Rob Hartshorne",      0.25 },
     { "Jason Page",                          0.35 },
     { "Jeroen Tel",                          0.35 },
@@ -547,18 +546,6 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
             // 6581
             double fcurve = m_filter.filterCurve6581;
-/*
-#ifndef FEAT_FILTER_RANGE
-            if (m_autofilter && (tuneInfo->numberOfInfoStrings() == 3)) {
-                fcurve = getRecommendedFilterCurve(tuneInfo->infoString(1));
-                if (m_verboseLevel > 1)
-                    cerr << "Recommended filter curve: " << fcurve << endl;
-            }
-#endif
-* commenting those two out just so that
-* i can think of a way to show them on
-* the menu instead
-*/
 
             if (m_fcurve >= 0.0) {
                 fcurve = m_fcurve;
@@ -841,7 +828,10 @@ uint_least32_t ConsolePlayer::getBufSize() {
     }
 	else if ((m_timer.stop != 0) && (m_timer.current >= m_timer.stop)) {
         m_state = playerExit;
-        for (;;) {
+
+		if (m_track.loop) {
+			m_state = playerRestart;
+		} else {
             if (m_track.single)
                 return 0;
 
@@ -852,10 +842,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
             if (m_track.selected == m_track.first)
                 return 0;
             m_state = playerRestart;
-            break;
         }
-        if (m_track.loop)
-            m_state = playerRestart;
     } else {
         uint_least32_t remaining = m_timer.stop - m_timer.current;
         uint_least32_t bufSize   = remaining * m_driver.cfg.bytesPerMillis();

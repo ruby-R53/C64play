@@ -35,18 +35,6 @@ private:
     class parseError {};
 
 private:
-    template<class T>
-    class compare {
-    private:
-        SID_STRING s;
-
-    public:
-        compare(const TCHAR *str) : s(str) {}
-
-        bool operator() (T const &p) { return s.compare(p.first) == 0; }
-    };
-
-private:
     sections_t sections;
 
     sections_t::iterator curSection;
@@ -71,7 +59,7 @@ public:
     bool write(const TCHAR *fName);
     void close();
 
-    bool setSection(const TCHAR *section);
+    bool  setSection(const TCHAR *section);
     const TCHAR *getValue(const TCHAR *key) const;
 
     void addSection(const TCHAR *section);

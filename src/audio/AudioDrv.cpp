@@ -25,11 +25,6 @@
 
 #include "AudioDrv.h"
 
-// Generic Sound Driver
-#ifdef HAVE_OUT123
-#  include "out123/audiodrv.h"
-#endif
-
 // Unix Sound Drivers
 #ifdef HAVE_PULSE
 #  include "pulse/audiodrv.h"
@@ -51,12 +46,6 @@
 
 bool audioDrv::open(AudioConfig &cfg) {
     bool res = false;
-#ifdef HAVE_OUT123
-    if(!res) {
-        audio.reset(new Audio_OUT123());
-        res = audio->open(cfg);
-    }
-#endif
 #ifdef HAVE_PULSE
     if(!res) {
         audio.reset(new Audio_Pulse());

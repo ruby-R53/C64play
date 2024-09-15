@@ -167,12 +167,12 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
     while ((i < argc) && (argv[i] != nullptr)) {
         if ((argv[i][0] == '-') && (argv[i][1] != '\0')) {
             // help options
-            if ((argv[i][1] == 'h') || !strcmp(&argv[i][1], "-help")) {
+            if ((argv[i][1] == 'h') || !std::strcmp(&argv[i][1], "-help")) {
                 displayArgs();
                 return 0;
             }
 
-            else if (!strcmp(&argv[i][1], "-help-debug")) {
+            else if (!std::strcmp(&argv[i][1], "-help-debug")) {
                 displayDebugArgs();
                 return 0;
             }
@@ -279,7 +279,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 m_engCfg.forceSidModel = ((argv[i][3] == 'f') ? true : false);
             }
 
-            else if (strcmp (&argv[i][1], "-digiboost") == 0) {
+            else if (std::strcmp (&argv[i][1], "-digiboost") == 0) {
                 m_engCfg.digiBoost = true;
             }
 
@@ -334,40 +334,40 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
-            else if (strcmp (&argv[i][1], "-residfp") == 0) {
+            else if (std::strcmp (&argv[i][1], "-residfp") == 0) {
                 m_driver.sid    = EMU_RESIDFP;
             }
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
-            else if (strcmp (&argv[i][1], "-resid") == 0) {
+            else if (std::strcmp (&argv[i][1], "-resid") == 0) {
                 m_driver.sid    = EMU_RESID;
             }
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESID_H
 
             // Hardware selection
 #ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
-            else if (strcmp (&argv[i][1], "-exsid") == 0) {
+            else if (std::strcmp (&argv[i][1], "-exsid") == 0) {
                 m_driver.sid    = EMU_EXSID;
                 m_driver.output = OUT_NULL;
             }
 #endif // HAVE_SIDPLAYFP_BUILDERS_EXSID_H
 
             // These are for debug
-            else if (strcmp (&argv[i][1], "-none") == 0) {
+            else if (std::strcmp (&argv[i][1], "-none") == 0) {
                 m_driver.sid    = EMU_NONE;
                 m_driver.output = OUT_NULL;
             }
 
-            else if (strcmp (&argv[i][1], "-nosid") == 0) {
+            else if (std::strcmp (&argv[i][1], "-nosid") == 0) {
                 m_driver.sid = EMU_NONE;
             }
 
-            else if (strcmp (&argv[i][1], "-noaudio") == 0) {
+            else if (std::strcmp (&argv[i][1], "-noaudio") == 0) {
                 m_driver.output = OUT_NULL;
             }
 
-            else if (strcmp (&argv[i][1], "-cpu-debug") == 0) {
+            else if (std::strcmp (&argv[i][1], "-cpu-debug") == 0) {
                 m_cpudebug = true;
             }
 

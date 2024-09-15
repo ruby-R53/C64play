@@ -1,11 +1,5 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects
 
-if USE_LIBOUT123
-  OUT123_SOURCES = \
-src/audio/out123/audiodrv.cpp \
-src/audio/out123/audiodrv.h
-endif
-
 if USE_ICONV
   ICONV_SOURCES = \
 src/codepages.h
@@ -56,7 +50,6 @@ src/audio/null/null.cpp \
 src/audio/null/null.h \
 src/audio/oss/audiodrv.cpp \
 src/audio/oss/audiodrv.h \
-$(OUT123_SOURCES) \
 src/audio/pulse/audiodrv.cpp \
 src/audio/pulse/audiodrv.h \
 src/audio/wav/WavFile.cpp \

@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([C64play], [1.0.0-beta1], [], [], [https://github.com/ruby-R53/C64play/])
+AC_INIT([C64play], [1.0.0-beta1], [], [], [https://github.com/ruby-R53/C64play])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
@@ -15,11 +15,11 @@ AC_PROG_CXX
 dnl Use C++ for tests.
 AC_LANG([C++])
 
-AX_CXX_COMPILE_STDCXX_17([noext], [optional])
+AX_CXX_COMPILE_STDCXX([17], [noext], [optional])
 AS_IF([test $ax_cv_cxx_compile_cxx17__std_cpp17 != "yes"], [
-    AX_CXX_COMPILE_STDCXX_14([noext], [optional])
+    AX_CXX_COMPILE_STDCXX([14], [noext], [optional])
     AS_IF([test $ax_cv_cxx_compile_cxx14__std_cpp14 != "yes"],
-        [AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])]
+        [AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])]
     )
 ])
 
@@ -32,12 +32,6 @@ AM_CONDITIONAL([USE_ICONV], [test "x$am_cv_func_iconv" = "xyes"])
 dnl Audio subsystem
 
 AUDIO_LDFLAGS=""
-
-PKG_CHECK_MODULES(ALSA,
-    [alsa >= 1.0],
-    [AC_DEFINE([HAVE_ALSA], 1, [Define to 1 if you have libasound (-lasound).])],
-    [AC_MSG_WARN([$ALSA_PKG_ERRORS])]
-)
 
 PKG_CHECK_MODULES(PULSE,
     [libpulse-simple >= 1.0],
@@ -57,21 +51,7 @@ AS_IF([test "x$ac_cv_header_soundcard_h" = "xyes"],
 
 AC_SUBST(AUDIO_LDFLAGS)
 
-PKG_CHECK_MODULES(SIDPLAYFP, [libsidplayfp >= 2.0.0])
-
-USE_LIBOUT123=no
-AC_ARG_WITH([out123], AS_HELP_STRING([--with-out123], [Build with out123 library (default: enabled)]))
-
-AS_IF([test "x$with_out123" != "xno"],
-    [PKG_CHECK_MODULES([OUT123],
-        [libout123 >= 1.0],
-        [USE_LIBOUT123=yes
-        AC_DEFINE([HAVE_OUT123], [1], [Use libout123])],
-        [USE_LIBOUT123=no]
-    )]
-)
-
-AM_CONDITIONAL([USE_LIBOUT123], [test "x$USE_LIBOUT123" = "xyes"])
+PKG_CHECK_MODULES(SIDPLAYFP, [libsidplayfp >= 2.2.0])
 
 # hack?
 saveCPPFLAGS=$CPPFLAGS

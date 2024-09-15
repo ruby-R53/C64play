@@ -20,7 +20,7 @@ See what I've done down below and also how you can contribute to the project!
 	  sidplayfp's...
 
 - Changes to the keybinds:
-  - Replay a tune by hitting the `r` key.
+  - Replay a tune by hitting the `r` key instead of having a 4-second timeout.
   - YouTube player-like keybinds:
     - Hit `j` to go to the previous subtune;
     - `k` to pause one;
@@ -78,6 +78,15 @@ See what I've done down below and also how you can contribute to the project!
 - Support for `Songlengths.txt`
   - Because since HVSC #71 (it's from 2019!), only the new MD5 format is
     included, so again, why botherrrrrr
+
+- Support for libout123
+  - No idea how to work with that one, it's better to leave it Pulseaudio-only
+    instead.
+
+- Support for ALSA output*
+  - *I'm actually only temporarily removing support for it, because for some
+    reason the text synchronization is really messed up on it. Until this gets
+	fixed, I'll keep ALSA support disabled.
 
 ### Contributing
 

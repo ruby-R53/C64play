@@ -89,26 +89,10 @@ typedef enum {
     /* Hardware */
     OUT_SOUNDCARD,
     /* File creation support */
-    OUT_WAV, OUT_AU, OUT_END
+    OUT_WAV, OUT_END
 } OUTPUTS;
 
-// Error and status message numbers.
-enum {
-    ERR_SYNTAX = 0,
-    ERR_NOT_ENOUGH_MEMORY,
-    ERR_SIGHANDLER,
-    ERR_FILE_OPEN
-};
-
-/*
-// Songlength DB.
-typedef enum {
-    SLDB_NONE = 0,
-    SLDB_MD5
-} sldb_t;
-*/
-
-void displayError(const char *arg0, unsigned int num);
+// void displayError(const char *arg0, unsigned int num);
 
 // Grouped global variables
 class ConsolePlayer {
@@ -215,8 +199,6 @@ private:
 
     bool createOutput  (OUTPUTS driver, const SidTuneInfo *tuneInfo);
     bool createSidEmu  (SIDEMUS emu, const SidTuneInfo *tuneInfo);
-    void displayError  (const char *error);
-    void displayError  (unsigned int num) { ::displayError (m_name, num); }
     void decodeKeys    (void);
     void updateDisplay ();
     void emuflush      (void);
@@ -235,6 +217,8 @@ private:
 public:
     ConsolePlayer(const char * const name);
     virtual ~ConsolePlayer() = default;
+
+    void displayError(const char* error);
 
     int  args (int argc, const char *argv[]);
     bool open (void);
