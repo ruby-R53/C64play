@@ -26,10 +26,10 @@
 
 class AudioConfig {
 public:
-    uint_least32_t frequency;
-    int            depth;
-    int            channels;
-    uint_least32_t bufSize;   // sample buffer size
+    uint_least32_t frequency; // sample rate
+    uint_least32_t depth;     // bit depth
+    uint8_t        channels;  // audio channels
+    uint16_t       bufSize;   // sample buffer size
 
     AudioConfig() :
         frequency(48000),

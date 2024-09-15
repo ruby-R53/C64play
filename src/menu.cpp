@@ -294,7 +294,7 @@ void ConsolePlayer::menu() {
 
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
-        cerr << " Addresses    : ";
+        cerr << " Subroutines  : ";
         consoleColour(white, false);
 
         // Display PSID Driver location
@@ -340,8 +340,12 @@ void ConsolePlayer::menu() {
 				consoleColour(white, false);
 			}
 			
-			cerr << "SID #" << i+1 << ": $" << tuneInfo->sidChipBase(i)
-				 << ", model: " << getModel(tuneInfo->sidModel(i)) << endl;
+			if (tuneInfo->sidChips() > 1)
+				cerr << "SID #" << i+1 << ": ";
+			    
+			cerr << "$" << tuneInfo->sidChipBase(i)
+				 << ", model: " << getModel(tuneInfo->sidModel(i))
+				 << endl;
 		}
 		cerr << dec;
 		cerr.unsetf(std::ios::uppercase);
@@ -602,18 +606,29 @@ void ConsolePlayer::refreshRegDump() {
 	else if (m_verboseLevel > 2) {
         for (int j = 0; j < tuneInfo->sidChips(); ++j) {
             uint8_t* registers = m_registers[j];
+			string miscInfo;
+			miscInfo.reserve(tableWidth);
+			miscInfo.append("M. vol.    Filters    F. chn.  F. res.  Cutoff");
 
 	        consoleTable(tableSeparator);
 	        consoleTable(tableMiddle);
-            cerr << " SID #" << (j + 1) << ":  "
-			     << "M. vol.    Filters    F. chn.  F. res.  Cutoff" << endl;
+
+			if (tuneInfo->sidChips() >= 2) {
+            	cerr << " SID #" << (j + 1) << ":  ";
+				cerr << miscInfo << endl;
+			}
+			else
+				cerr << setw(tableWidth/2 + miscInfo.length()/2) << miscInfo
+				     << endl;
+
             consoleTable(tableMiddle);
 
 			// master volume display
 	        consoleColour(yellow, false);
 			cerr << hex;
             {
-	        	cerr << "            "
+	        	cerr << ((tuneInfo->sidChips() >= 2) ? "            " :
+				         "        ")
 					 << "$";
 
 				cerr << (registers[0x18] & 0x0f);

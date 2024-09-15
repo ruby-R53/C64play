@@ -74,11 +74,11 @@ IniConfig::~IniConfig() {
 }
 
 void IniConfig::clear() {
-    player_s.database.clear();
+    player_s.database.clear ();
     player_s.playLength   = 0;               // infinite play time
-	player_s.recordLength = (5 * 60) * 1000; // 5 minutes default for recording
+	player_s.recordLength = (4 * 60) * 1000; // 4 minutes default for recording
     player_s.kernalRom.clear();
-    player_s.basicRom.clear();
+    player_s.basicRom.clear ();
     player_s.chargenRom.clear();
     player_s.verboseLevel = 0;
 	player_s.quietLevel   = 0;
@@ -316,8 +316,8 @@ void IniConfig::readAudio(iniHandler &ini) {
         ini.addSection(TEXT("Audio"));
 
     readInt(ini, TEXT("Sample rate"), audio_s.frequency);
-    readInt(ini, TEXT("Channels"),  audio_s.channels);
-    readInt(ini, TEXT("Bit depth"), audio_s.precision);
+    readInt(ini, TEXT("Channels"),    audio_s.channels);
+    readInt(ini, TEXT("Bit depth"),   audio_s.precision);
 }
 
 

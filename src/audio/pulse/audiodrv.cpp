@@ -43,8 +43,8 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
     pa_sample_spec pacfg = {};
 
     pacfg.channels = cfg.channels;
-    pacfg.rate = cfg.frequency;
-    pacfg.format = PA_SAMPLE_S16NE;
+    pacfg.rate     = cfg.frequency;
+    pacfg.format   = PA_SAMPLE_S16NE;
 
     // Set bit depth and type of encoding.
     int err;
@@ -83,6 +83,7 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
 
         if (_audioHandle)
             pa_simple_free(_audioHandle);
+
         _audioHandle = nullptr;
 
         return false;
