@@ -76,6 +76,13 @@ static char keytable[] = {
     '7',0,                  A_TOGGLE_VOICE7,
     '8',0,                  A_TOGGLE_VOICE8,
     '9',0,                  A_TOGGLE_VOICE9,
+
+#ifdef FEAT_SAMPLE_MUTE
+    'a',0,                  A_TOGGLE_SAMPLE1,
+    's',0,                  A_TOGGLE_SAMPLE2,
+    'd',0,                  A_TOGGLE_SAMPLE3,
+#endif
+
     'f',0,                  A_TOGGLE_FILTER,
 
     // General Keys
@@ -89,7 +96,7 @@ static char keytable[] = {
 	'g',0,                  A_GOTO,
 	'r',0,                  A_REPLAY,
 	'0',0,                  A_RESTORE,
-	'=',0,                  A_INCREASE, // '=' because it's annoying to hit shift
+	'=',0,                  A_INCREASE, // '=' because hitting shift is annoying
 	'-',0,                  A_DECREASE,
 
     0,                      A_END_LIST

@@ -88,6 +88,30 @@ const char* getModel(SidConfig::sid_model_t model) {
     }
 }
 
+int getModelInt(SidTuneInfo::model_t model) {
+	switch (model) {
+	default:
+    case SidTuneInfo::SIDMODEL_UNKNOWN:
+        return 0;
+    case SidTuneInfo::SIDMODEL_6581:
+        return 1;
+    case SidTuneInfo::SIDMODEL_8580:
+        return 2;
+    case SidTuneInfo::SIDMODEL_ANY:
+        return 3;
+	}
+}
+
+int getModelInt(SidConfig::sid_model_t model) {
+    switch (model) {
+    default:
+    case SidConfig::MOS6581:
+        return 1;
+    case SidConfig::MOS8580:
+        return 2;
+    }
+}
+
 const char* getClock(SidTuneInfo::clock_t clock) {
     switch(clock) {
     default:
@@ -100,6 +124,16 @@ const char* getClock(SidTuneInfo::clock_t clock) {
     case SidTuneInfo::CLOCK_ANY:
         return "Any";
     }
+}
+
+const char* getCia(SidConfig::cia_model_t ciaModel) {
+	switch(ciaModel) {
+	default:
+	case SidConfig::MOS6526:
+		return "MOS6526";
+	case SidConfig::MOS8521:
+		return "MOS8521";
+	}
 }
 
 string trimString(const char* str, unsigned int maxLen) {
@@ -219,7 +253,7 @@ void ConsolePlayer::menu() {
         cerr << tuneInfo->formatString() << endl;
         consoleTable (tableMiddle);
         consoleColour(green, true);
-        cerr << " File(s)      : ";
+        cerr << " File name    : ";
         consoleColour(white, false);
         cerr << trimString(tuneInfo->dataFileName(), 41) << endl;
 
@@ -309,21 +343,25 @@ void ConsolePlayer::menu() {
 				 << info.driverAddr() + (info.driverLength() - 1);
 
         if (tuneInfo->playAddr() == 0xffff)
-            cerr << ", SYS: $" << setw(4) << setfill('0') << tuneInfo->initAddr();
+            cerr << ", SYS: $" << setw(4) << setfill('0')
+			     << tuneInfo->initAddr();
         else
-            cerr << ", INIT: $" << setw(4) << setfill('0') << tuneInfo->initAddr();
+            cerr << ", INIT: $" << setw(4) << setfill('0')
+			     << tuneInfo->initAddr();
         cerr << endl;
 
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
         cerr << "              : ";
         consoleColour(white, false);
-        cerr << "LOAD  : $" << setw(4) << setfill('0') << tuneInfo->loadAddr()
+        cerr << "LOAD  : $" << setw(4) << setfill('0')
+		     << tuneInfo->loadAddr()
              << "-$"        << setw(4) << setfill('0')
 			 << tuneInfo->loadAddr() + (tuneInfo->c64dataLen() - 1);
 
         if (tuneInfo->playAddr() != 0xffff)
-            cerr << ", PLAY: $" << setw(4) << setfill('0') << tuneInfo->playAddr();
+            cerr << ", PLAY: $" << setw(4) << setfill('0')
+			     << tuneInfo->playAddr();
 
         cerr << endl;
 
@@ -373,31 +411,66 @@ void ConsolePlayer::menu() {
 		if (m_filter.enabled) {
 			// check if filter curve is provided by the command line
 			// or by the config file
-			double cfgFilter = (((m_engCfg.forceSidModel ?
-		                    	getModel(m_engCfg.defaultSidModel) :
-								getModel(tuneInfo->sidModel(0))) == SID6581) ?
-								m_filter.filterCurve6581 :
-								m_filter.filterCurve8580);
+			double cfgCurve = 0.0;
+
+			enum {
+				UNKNOWN,
+				MOS6581,
+				CSG8580,
+				ANY
+			};
+
+			int tuneModel = getModelInt(tuneInfo->sidModel(0));
+			int cfgModel  = getModelInt(m_engCfg.defaultSidModel);
+
+			switch(tuneModel) {
+			default:
+			case UNKNOWN:
+				break;
+			case MOS6581:
+				cfgCurve = m_filter.filterCurve6581;
+				break;
+			case CSG8580:
+				cfgCurve = m_filter.filterCurve8580;
+				break;
+			case ANY:
+				break;
+			}
+
+			if (tuneModel == UNKNOWN || tuneModel == ANY) {
+				switch(cfgModel) {
+					default:
+					case MOS6581:
+						cfgCurve = m_filter.filterCurve6581;
+						break;
+					case CSG8580:
+						cfgCurve = m_filter.filterCurve8580;
+						break;
+				}
+			}
+
 			consoleTable (tableMiddle);
 			consoleColour(yellow, true);
 			cerr << " Filter curve : ";
 			consoleColour(white, false);
-			cerr << ((m_fcurve == -1) ? cfgFilter : m_fcurve) << endl;
+			cerr << ((m_fcurve == -1) ? cfgCurve : m_fcurve) << endl;
 
 #ifdef FEAT_FILTER_RANGE
-			if ((m_engCfg.forceSidModel ? getModel(m_engCfg.defaultSidModel) :
-				getModel(tuneInfo->sidModel(0))) == SID6581) {
+			if (tuneModel == MOS6581 || cfgModel == MOS6581) {
 				consoleTable (tableMiddle);
 				consoleColour(yellow, true);
 				cerr << " Filter range : ";
 				consoleColour(white, false);
-				cerr << m_filter.filterRange6581 << endl;
+				cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
+				     << endl;
 			}
 #endif
 		}
 
-		if ((m_engCfg.forceSidModel ? getModel(m_engCfg.defaultSidModel) :
-			getModel(tuneInfo->sidModel(0))) == SID8580) {
+		int tuneModel = getModelInt(tuneInfo->sidModel(0));
+		int cfgModel  = getModelInt(m_engCfg.defaultSidModel);
+
+		if (tuneModel == 2 || cfgModel == 2) {
         	consoleTable (tableMiddle);
         	consoleColour(yellow, true);
         	cerr << " DigiBoost    : ";
@@ -412,6 +485,12 @@ void ConsolePlayer::menu() {
 		cerr << getModel(m_engCfg.defaultSidModel) << " "
 			 << (m_engCfg.forceSidModel ? "(forced)" : "(default)")
 			 << endl;
+
+		consoleTable (tableMiddle);
+		consoleColour(yellow, true);
+		cerr << " CIA model    : ";
+		consoleColour(white, false);
+		cerr << getCia(m_engCfg.ciaModel) << endl;
 
         if (m_verboseLevel > 1) {
             consoleTable (tableMiddle);

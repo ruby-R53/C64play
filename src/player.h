@@ -42,6 +42,9 @@
 
 #include "sidlib_features.h"
 
+#include <string>
+#include <bitset>
+
 typedef enum {
 	black,
 	red,
@@ -120,6 +123,10 @@ private:
 
     double            m_fcurve;
 
+#ifdef FEAT_FILTER_RANGE
+    double            m_frange;
+#endif
+
 #ifdef FEAT_CW_STRENGTH
     SidConfig::
 	sid_cw_t          m_combinedWaveformsStrength;
@@ -137,7 +144,11 @@ private:
 
     bool              m_cpudebug;
     bool              m_autofilter;
-    bool              vMute[9];
+	std::bitset<9>    m_mute_channel;
+
+#ifdef FEAT_SAMPLE_MUTE
+    std::bitset<3>    m_mute_samples;
+#endif
 
     unsigned int      m_channels;
     unsigned int      m_precision;

@@ -91,12 +91,15 @@ or decimal format.
 
 Adds a third SID at <addr>. Same thing as B<-D>.
 
-=item B<-m>I<< <num> >>
+=item B<-m>I<< <num|char> >>
 
 Start playing with channel <num> muted. Can be used more than once at
 a time, which can be handy for dumping individual channels.
 
 Channels 1 to 3 are for SID #1, 4 to 6 for SID #2, and 7 to 9 for SID #3.
+
+Moreover, using 'a' to 'c' makes it mute sample playback, from SID #1 to
+SID #3 respectively.
 
 =item B<-p>I<< <num> >>
 
@@ -186,6 +189,11 @@ from 0.0 ("light") to 1.0 ("dark"). Defaults to 0.5, and can
 also [auto]matically select a value according to the tune's
 author.
 
+=item B<--frange=>I<< <num>|auto >>
+
+For libsidplayfp v2.7.0 and higher. Controls the filter range
+value for the 6581 chip in reSIDfp emulation.
+
 =item B<--noaudio>
 
 Don't use an audio output device.
@@ -208,6 +216,10 @@ device.
 =item 1-9
 
 Mute/unmute voice(s) 1-9.
+
+=item a-d
+
+Mute/unmute samples from SID #1 to #3.
 
 =item f
 

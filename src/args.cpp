@@ -155,9 +155,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
     m_driver.file   = false;
     m_driver.info   = false;
 
-    for (int i=0; i < 9; ++i) {
-        vMute[i] = false;
-    }
+	m_mute_channel.reset();
 
     int  infile = 0;
     int  i      = 0;
@@ -270,11 +268,20 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 }
                 else if (argv[i][2] == 'n') { // or the 8580 one
                     m_engCfg.defaultSidModel = SidConfig::MOS8580;
-                } else {
+				}
+
+#ifdef FEAT_SAMPLE_MUTE
+				// Sample channel muting
+				else if (argv[i][2] >= 'a' && argv[i][2] <= 'c') {
+					m_mute_samples[(argv[i][2] - 'a')] = true;
+                }
+#endif
+
+				else {
 					// Channel muting
                     const int voice = atoi(&argv[i][2]);
-                    if (voice > 0 && voice <= 9)
-                        vMute[voice-1] = true;
+                    if (voice > 0 && voice <= m_mute_channel.size())
+                        m_mute_channel[voice-1] = true;
                 }
                 m_engCfg.forceSidModel = ((argv[i][3] == 'f') ? true : false);
             }
@@ -313,6 +320,16 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                     m_fcurve = atof(&argv[i][9]);
                 }
             }
+
+#ifdef FEAT_FILTER_RANGE
+            else if (strncmp (&argv[i][1], "-frange=", 8) == 0) {
+                if (strncmp (&argv[i][9], "auto", 4) == 0) {
+                    m_autofilter = true;
+                } else {
+                    m_frange = atof(&argv[i][9]);
+                }
+            }
+#endif
 
             // File format conversions
             else if (argv[i][1] == 'w') {
@@ -494,7 +511,8 @@ void ConsolePlayer::displayArgs (const char *arg) {
         << SidConfig::DEFAULT_SAMPLING_FREQ << endl
         << "-D<addr>           set address of SID #2 (e.g. -ds0xd420)" << endl
         << "-T<addr>           set address of SID #3 (e.g. -ts0xd440)" << endl
-        << "-m<num>            mute voice <num> (e.g. -u1 -u2)" << endl
+        << "-m<num|char>       mute voice <num> (e.g. -m1 -m2), use" << endl
+		<< "                   'a' to 'c' for muting sample playback" << endl
         << "-nf                disable filter emulation" << endl
         << "-o<l|s>            loop and/or make it single track" << endl
         << "-o<num>            start track (default: preset)" << endl
@@ -518,12 +536,19 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		<< "                   or [r]esample. If you're using reSID, you" << endl
 		<< "                   may also enable [f]ast resampling" << endl
         << "--fcurve=<d|auto>  controls the filter curve for reSIDfp" << endl
+		<< "                   emulation" << endl
+
+#ifdef FEAT_FILTER_RANGE
+        << "--frange=<d|auto>  controls the filter range in the ReSIDfp" << endl
+		<< "                   emulation (same default and value range)" << endl
+#endif
+
 		<< "                   emulation. Ranges from 0.0 to 1.0 and" << endl
 		<< "                   defaults to 0.5. You may also let C64play" << endl
 		<< "                   [auto]matically change it for you" << endl
-        << "-w[name]           create a .wav file, with default layout" << endl
+        << "-w[name]           render a WAV file, with default name" << endl
 		<< "                   being <file>[n].wav" << endl
-        << "--info             add metadata to .wav file" << endl;
+        << "--info             add metadata to WAV file" << endl;
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
     out << "--residfp          use reSIDfp emulation (default)" << endl;
