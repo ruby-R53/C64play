@@ -92,13 +92,13 @@ int getModelInt(SidTuneInfo::model_t model) {
 	switch (model) {
 	default:
     case SidTuneInfo::SIDMODEL_UNKNOWN:
-        return 0;
+        return Chip::UNKNOWN;
     case SidTuneInfo::SIDMODEL_6581:
-        return 1;
+        return Chip::MOS6581;
     case SidTuneInfo::SIDMODEL_8580:
-        return 2;
+        return Chip::CSG8580;
     case SidTuneInfo::SIDMODEL_ANY:
-        return 3;
+        return Chip::ANY;
 	}
 }
 
@@ -106,9 +106,9 @@ int getModelInt(SidConfig::sid_model_t model) {
     switch (model) {
     default:
     case SidConfig::MOS6581:
-        return 1;
+        return Chip::MOS6581;
     case SidConfig::MOS8580:
-        return 2;
+        return Chip::CSG8580;
     }
 }
 
@@ -413,37 +413,33 @@ void ConsolePlayer::menu() {
 			// or by the config file
 			double cfgCurve = 0.0;
 
-			enum {
-				UNKNOWN,
-				MOS6581,
-				CSG8580,
-				ANY
-			};
-
 			int tuneModel = getModelInt(tuneInfo->sidModel(0));
 			int cfgModel  = getModelInt(m_engCfg.defaultSidModel);
 
-			switch(tuneModel) {
-			default:
-			case UNKNOWN:
-				break;
-			case MOS6581:
-				cfgCurve = m_filter.filterCurve6581;
-				break;
-			case CSG8580:
-				cfgCurve = m_filter.filterCurve8580;
-				break;
-			case ANY:
-				break;
+			if (!m_engCfg.forceSidModel) {
+				switch(tuneModel) {
+				default:
+				case Chip::UNKNOWN:
+					break;
+				case Chip::MOS6581:
+					cfgCurve = m_filter.filterCurve6581;
+					break;
+				case Chip::CSG8580:
+					cfgCurve = m_filter.filterCurve8580;
+					break;
+				case Chip::ANY:
+					break;
+				}
 			}
 
-			if (tuneModel == UNKNOWN || tuneModel == ANY) {
+			if (tuneModel == Chip::UNKNOWN || tuneModel == Chip::ANY
+			    || m_engCfg.forceSidModel) {
 				switch(cfgModel) {
 					default:
-					case MOS6581:
+					case Chip::MOS6581:
 						cfgCurve = m_filter.filterCurve6581;
 						break;
-					case CSG8580:
+					case Chip::CSG8580:
 						cfgCurve = m_filter.filterCurve8580;
 						break;
 				}
@@ -456,7 +452,9 @@ void ConsolePlayer::menu() {
 			cerr << ((m_fcurve == -1) ? cfgCurve : m_fcurve) << endl;
 
 #ifdef FEAT_FILTER_RANGE
-			if (tuneModel == MOS6581 || cfgModel == MOS6581) {
+			if ((tuneModel == Chip::MOS6581
+			    || cfgModel == Chip::MOS6581)
+				&& !(cfgModel == Chip::CSG8580 && m_engCfg.forceSidModel)) {
 				consoleTable (tableMiddle);
 				consoleColour(yellow, true);
 				cerr << " Filter range : ";
@@ -467,10 +465,10 @@ void ConsolePlayer::menu() {
 #endif
 		}
 
-		int tuneModel = getModelInt(tuneInfo->sidModel(0));
-		int cfgModel  = getModelInt(m_engCfg.defaultSidModel);
-
-		if (tuneModel == 2 || cfgModel == 2) {
+		if (getModel(tuneInfo->sidModel(0)) == SID8580
+		    || getModel(m_engCfg.defaultSidModel) == SID8580
+			 && !(getModel(m_engCfg.defaultSidModel) == SID6581
+			      && m_engCfg.forceSidModel)) {
         	consoleTable (tableMiddle);
         	consoleColour(yellow, true);
         	cerr << " DigiBoost    : ";

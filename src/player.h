@@ -95,6 +95,16 @@ typedef enum {
     OUT_WAV, OUT_END
 } OUTPUTS;
 
+class Chip {
+	public:
+	enum type {
+		UNKNOWN,
+		MOS6581,
+		CSG8580,
+		ANY
+	};
+};
+
 // void displayError(const char *arg0, unsigned int num);
 
 // Grouped global variables
@@ -140,7 +150,6 @@ private:
     uint_least8_t     m_verboseLevel;
 
 	bool              songlengthDB;
-    //sldb_t            songlengthDB;
 
     bool              m_cpudebug;
     bool              m_autofilter;

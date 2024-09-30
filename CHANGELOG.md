@@ -7,6 +7,13 @@ September 29, 2024:
 	the already messy code.
 	I still have to clean some stuff up tho', but at least it
 	works much better compared to that previous code block.
+  - UPDATE (10:33 PM -03): *bold* of me to assume what I had done
+    was actually working. It instead broke the tunes that
+	specified the SID model, and fixed for the ones that didn't.
+	Oops.
+	At least now I think I managed to fix it. Had to add some
+	mess to the code, but it's still better than what it had
+	previously. I'll clean that up later, I promise!!
 
 September 27, 2024:
 - sidplayfp now supports setting the filter range setting on the
