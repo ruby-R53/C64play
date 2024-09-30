@@ -92,13 +92,12 @@ int getModelInt(SidTuneInfo::model_t model) {
 	switch (model) {
 	default:
     case SidTuneInfo::SIDMODEL_UNKNOWN:
-        return Chip::UNKNOWN;
+    case SidTuneInfo::SIDMODEL_ANY:
+        return Chip::UNKNOWN_ANY;
     case SidTuneInfo::SIDMODEL_6581:
         return Chip::MOS6581;
     case SidTuneInfo::SIDMODEL_8580:
         return Chip::CSG8580;
-    case SidTuneInfo::SIDMODEL_ANY:
-        return Chip::ANY;
 	}
 }
 
@@ -390,6 +389,14 @@ void ConsolePlayer::menu() {
 
         consoleTable (tableSeparator);
 
+        if (m_verboseLevel > 1) {
+            consoleTable (tableMiddle);
+            consoleColour(yellow, true);
+            cerr << " Delay        : ";
+            consoleColour(white, false);
+            cerr << info.powerOnDelay() << " cycles at power-on" << endl;
+        }
+
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
         cerr << " Timing       : ";
@@ -402,24 +409,40 @@ void ConsolePlayer::menu() {
         consoleColour(white, false);
         cerr << (info.channels() == 1 ? "Mono" : "Stereo") << endl;
 
+		if (m_verboseLevel > 1) {
+			consoleTable (tableMiddle);
+			consoleColour(yellow, true);
+			cerr << " CIA model    : ";
+			consoleColour(white, false);
+			cerr << getCia(m_engCfg.ciaModel) << endl;
+		}
+
+        consoleTable (tableMiddle);
+        consoleColour(yellow, true);
+        cerr << " SID model    : ";
+        consoleColour(white, false);
+		cerr << getModel(m_engCfg.defaultSidModel) << " "
+			 << (m_engCfg.forceSidModel ? "(forced)" : "(default)")
+			 << endl;
+
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
         cerr << " Filter       : ";
         consoleColour(white, false);
         cerr << (m_filter.enabled ? "Enabled" : "Disabled") << endl;
 
+		int tuneModel = getModelInt(tuneInfo->sidModel(0));
+		int cfgModel  = getModelInt(m_engCfg.defaultSidModel);
+
 		if (m_filter.enabled) {
 			// check if filter curve is provided by the command line
 			// or by the config file
 			double cfgCurve = 0.0;
 
-			int tuneModel = getModelInt(tuneInfo->sidModel(0));
-			int cfgModel  = getModelInt(m_engCfg.defaultSidModel);
-
 			if (!m_engCfg.forceSidModel) {
 				switch(tuneModel) {
 				default:
-				case Chip::UNKNOWN:
+				case Chip::UNKNOWN_ANY:
 					break;
 				case Chip::MOS6581:
 					cfgCurve = m_filter.filterCurve6581;
@@ -427,13 +450,10 @@ void ConsolePlayer::menu() {
 				case Chip::CSG8580:
 					cfgCurve = m_filter.filterCurve8580;
 					break;
-				case Chip::ANY:
-					break;
 				}
 			}
 
-			if (tuneModel == Chip::UNKNOWN || tuneModel == Chip::ANY
-			    || m_engCfg.forceSidModel) {
+			if (tuneModel == Chip::UNKNOWN_ANY || m_engCfg.forceSidModel) {
 				switch(cfgModel) {
 					default:
 					case Chip::MOS6581:
@@ -450,53 +470,57 @@ void ConsolePlayer::menu() {
 			cerr << " Filter curve : ";
 			consoleColour(white, false);
 			cerr << ((m_fcurve == -1) ? cfgCurve : m_fcurve) << endl;
+		}
 
+		if (!m_engCfg.forceSidModel) {
+			switch(tuneModel) {
+				case Chip::UNKNOWN_ANY:
+					break;
 #ifdef FEAT_FILTER_RANGE
-			if ((tuneModel == Chip::MOS6581
-			    || cfgModel == Chip::MOS6581)
-				&& !(cfgModel == Chip::CSG8580 && m_engCfg.forceSidModel)) {
-				consoleTable (tableMiddle);
-				consoleColour(yellow, true);
-				cerr << " Filter range : ";
-				consoleColour(white, false);
-				cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
-				     << endl;
-			}
+			if (m_filter.enabled) {
+				case Chip::MOS6581:
+					consoleTable (tableMiddle);
+					consoleColour(yellow, true);
+					cerr << " Filter range : ";
+					consoleColour(white, false);
+					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
+				         << endl;
+					break;
 #endif
+			}
+			case Chip::CSG8580:
+       			consoleTable (tableMiddle);
+       			consoleColour(yellow, true);
+       			cerr << " DigiBoost    : ";
+       			consoleColour(white, false);
+       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled")
+					 << endl;
+				break;
+			}
 		}
 
-		if (getModel(tuneInfo->sidModel(0)) == SID8580
-		    || getModel(m_engCfg.defaultSidModel) == SID8580
-			 && !(getModel(m_engCfg.defaultSidModel) == SID6581
-			      && m_engCfg.forceSidModel)) {
-        	consoleTable (tableMiddle);
-        	consoleColour(yellow, true);
-        	cerr << " DigiBoost    : ";
-        	consoleColour(white, false);
-        	cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled") << endl;
+		if (tuneModel == Chip::UNKNOWN_ANY || m_engCfg.forceSidModel) {
+			switch(cfgModel) {
+#ifdef FEAT_FILTER_RANGE
+				case Chip::MOS6581:
+					consoleTable (tableMiddle);
+					consoleColour(yellow, true);
+					cerr << " Filter range : ";
+					consoleColour(white, false);
+					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
+				         << endl;
+					break;
+#endif
+				case Chip::CSG8580:
+       				consoleTable (tableMiddle);
+       				consoleColour(yellow, true);
+       				cerr << " DigiBoost    : ";
+       				consoleColour(white, false);
+       				cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled")
+					     << endl;
+					break;
+			}
 		}
-
-        consoleTable (tableMiddle);
-        consoleColour(yellow, true);
-        cerr << " SID model    : ";
-        consoleColour(white, false);
-		cerr << getModel(m_engCfg.defaultSidModel) << " "
-			 << (m_engCfg.forceSidModel ? "(forced)" : "(default)")
-			 << endl;
-
-		consoleTable (tableMiddle);
-		consoleColour(yellow, true);
-		cerr << " CIA model    : ";
-		consoleColour(white, false);
-		cerr << getCia(m_engCfg.ciaModel) << endl;
-
-        if (m_verboseLevel > 1) {
-            consoleTable (tableMiddle);
-            consoleColour(yellow, true);
-            cerr << " Delay        : ";
-            consoleColour(white, false);
-            cerr << info.powerOnDelay() << " cycles at power-on" << endl;
-        }
     }
 
     const char* romDesc = info.kernalDesc();

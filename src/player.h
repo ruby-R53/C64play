@@ -98,10 +98,9 @@ typedef enum {
 class Chip {
 	public:
 	enum type {
-		UNKNOWN,
+		UNKNOWN_ANY,
 		MOS6581,
-		CSG8580,
-		ANY
+		CSG8580
 	};
 };
 
