@@ -633,10 +633,12 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
         }
     }
 
+#ifndef FEAT_FILTER_DISABLE
     if (m_engCfg.sidEmulation) {
         // set up SID filter
         m_engCfg.sidEmulation->filter(m_filter.enabled);
     }
+#endif
 
     return true;
 
@@ -679,6 +681,12 @@ bool ConsolePlayer::open (void) {
         displayError(m_engine.error());
         return false;
     }
+
+#ifdef FEAT_FILTER_DISABLE
+    m_engine.filter(0, m_filter.enabled);
+    m_engine.filter(1, m_filter.enabled);
+    m_engine.filter(2, m_filter.enabled);
+#endif
 
 	if (m_engCfg.defaultC64Model == SidConfig::NTSC && m_engCfg.forceC64Model
 		|| tuneInfo->clockSpeed() != SidTuneInfo::CLOCK_PAL
@@ -791,10 +799,11 @@ bool ConsolePlayer::play() {
         short *buffer = m_driver.selected->buffer();
         const uint_least32_t length = getBufSize();
         retSize = m_engine.play(buffer, length);
-        if (retSize < length) {
-            if (m_engine.isPlaying()) {
-                m_state = playerError;
-            }
+
+        if ((retSize < length) || !m_engine.isPlaying()) {
+			cerr << m_engine.error();
+			m_state = playerError;
+
             return false;
         }
     }
@@ -851,7 +860,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
                 return 0;
 
             // Move to next track
-            ++m_track.selected;
+            m_track.selected++;
             if (m_track.selected > m_track.songs)
                 m_track.selected = 1;
             if (m_track.selected == m_track.first)

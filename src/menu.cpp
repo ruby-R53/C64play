@@ -403,12 +403,6 @@ void ConsolePlayer::menu() {
         consoleColour(white, false);
         cerr << info.speedString() << endl;
 
-        consoleTable (tableMiddle);
-        consoleColour(yellow, true);
-        cerr << " Channels     : ";
-        consoleColour(white, false);
-        cerr << (info.channels() == 1 ? "Mono" : "Stereo") << endl;
-
 		if (m_verboseLevel > 1) {
 			consoleTable (tableMiddle);
 			consoleColour(yellow, true);
@@ -416,6 +410,12 @@ void ConsolePlayer::menu() {
 			consoleColour(white, false);
 			cerr << getCia(m_engCfg.ciaModel) << endl;
 		}
+
+        consoleTable (tableMiddle);
+        consoleColour(yellow, true);
+        cerr << " Channels     : ";
+        consoleColour(white, false);
+        cerr << (info.channels() == 1 ? "Mono" : "Stereo") << endl;
 
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
@@ -477,17 +477,17 @@ void ConsolePlayer::menu() {
 				case Chip::UNKNOWN_ANY:
 					break;
 #ifdef FEAT_FILTER_RANGE
-			if (m_filter.enabled) {
 				case Chip::MOS6581:
-					consoleTable (tableMiddle);
-					consoleColour(yellow, true);
-					cerr << " Filter range : ";
-					consoleColour(white, false);
-					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
-				         << endl;
+					if (m_filter.enabled) {
+						consoleTable (tableMiddle);
+						consoleColour(yellow, true);
+						cerr << " Filter range : ";
+						consoleColour(white, false);
+						cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
+				             << endl;
+					}
 					break;
 #endif
-			}
 			case Chip::CSG8580:
        			consoleTable (tableMiddle);
        			consoleColour(yellow, true);
@@ -503,22 +503,24 @@ void ConsolePlayer::menu() {
 			switch(cfgModel) {
 #ifdef FEAT_FILTER_RANGE
 				case Chip::MOS6581:
-					consoleTable (tableMiddle);
-					consoleColour(yellow, true);
-					cerr << " Filter range : ";
-					consoleColour(white, false);
-					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
-				         << endl;
+					if (m_filter.enabled) {
+						consoleTable (tableMiddle);
+						consoleColour(yellow, true);
+						cerr << " Filter range : ";
+						consoleColour(white, false);
+						cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
+				             << endl;
+					}
 					break;
 #endif
-				case Chip::CSG8580:
-       				consoleTable (tableMiddle);
-       				consoleColour(yellow, true);
-       				cerr << " DigiBoost    : ";
-       				consoleColour(white, false);
-       				cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled")
-					     << endl;
-					break;
+			case Chip::CSG8580:
+       			consoleTable (tableMiddle);
+       			consoleColour(yellow, true);
+       			cerr << " DigiBoost    : ";
+       			consoleColour(white, false);
+       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled")
+					 << endl;
+				break;
 			}
 		}
     }

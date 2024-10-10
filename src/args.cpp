@@ -198,7 +198,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 m_engCfg.frequency = (uint_least32_t) atoi(argv[i]+2);
             }
 
-            // No filter options
+            // Disable filter emulation?
             else if (strncmp (&argv[i][1], "nf", 2) == 0) {
                 if (argv[i][3] == '\0')
                     m_filter.enabled = false;
@@ -331,7 +331,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 #endif
 
-            // File format conversions
+            // Render it to a file?
             else if (argv[i][1] == 'w') {
                 m_driver.output = OUT_WAV;
                 m_driver.file   = true;
@@ -500,7 +500,7 @@ void ConsolePlayer::displayArgs (const char *arg) {
     if (arg)
         out << "Invalid option: " << arg << endl;
     else
-        out << "Syntax: " << m_name << " [option(s)] <file>" << endl;
+        out << "Syntax: " << m_name << " [options] <file>" << endl;
 
     out << "Options:" << endl
         << "--help | -h        display this screen" << endl
@@ -512,7 +512,7 @@ void ConsolePlayer::displayArgs (const char *arg) {
         << "-D<addr>           set address of SID #2 (e.g. -ds0xd420)" << endl
         << "-T<addr>           set address of SID #3 (e.g. -ts0xd440)" << endl
         << "-m<num|char>       mute voice <num> (e.g. -m1 -m2), use" << endl
-		<< "                   'a' to 'c' for muting sample playback" << endl
+		<< "                   'a' to 'c' for muting sample playback too" << endl
         << "-nf                disable filter emulation" << endl
         << "-o<l|s>            loop and/or make it single track" << endl
         << "-o<num>            start track (default: preset)" << endl
@@ -530,13 +530,14 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		<< "                   the setting to prevent speed fixing" << endl
         << "-m<o|n>[f]         set SID model to [o]ld (MOS6581) or [n]ew" << endl
 		<< "                   (CSG8580), defaults to the old version. You" << endl
-        << "                   may also [f]orce the setting" << endl
-        << "--digiboost        enable digiboost for the 8580 chip" << endl
+        << "                   may also [f]orce that setting" << endl
+        << "--digiboost        enable the DigiBoost hack for the 8580 chip" << endl
         << "-r[i|r][f]         set resampling method, either [i]nterpolate" << endl
 		<< "                   or [r]esample. If you're using reSID, you" << endl
 		<< "                   may also enable [f]ast resampling" << endl
-        << "--fcurve=<d|auto>  controls the filter curve for reSIDfp" << endl
-		<< "                   emulation" << endl
+        << "--fcurve=<d|auto>  controls the filter curve for the reSIDfp" << endl
+		<< "                   emulation (default: 0.5, ranges from 0.0 to" << endl
+		<< "                   1.0)" << endl
 
 #ifdef FEAT_FILTER_RANGE
         << "--frange=<d|auto>  controls the filter range in the ReSIDfp" << endl
