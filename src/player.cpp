@@ -260,7 +260,7 @@ uint8_t* loadRom(const SID_STRING &romPath, const int size, const TCHAR defaultR
             return buffer;
     }
 
-    // Fallback to default rom path
+    // Fallback to default ROM path
     try {
         SID_STRING dataPath(utils::getDataPath());
 
@@ -270,6 +270,7 @@ uint8_t* loadRom(const SID_STRING &romPath, const int size, const TCHAR defaultR
             dataPath = PKGDATADIR;
             dataPath.append(defaultRom);
         }
+
         return loadRom(dataPath, size);
     }
     catch (utils::error const &e) {
@@ -414,6 +415,7 @@ bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
     // Remove old audio driver
     m_driver.null.close();
     m_driver.selected = &m_driver.null;
+
     if (m_driver.device != nullptr) {
         if (m_driver.device != &m_driver.null)
             delete m_driver.device;
@@ -495,7 +497,7 @@ bool ConsolePlayer::createOutput (OUTPUTS driver, const SidTuneInfo *tuneInfo) {
         m_engCfg.playback = SidConfig::STEREO;
         break;
     default:
-        cerr << m_name << ": " << "ERROR: " << m_channels
+        cerr << "[" << m_name << "] " << "ERROR: " << m_channels
              << " audio channels not supported" << endl;
         return false;
     }
@@ -620,7 +622,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 #endif // HAVE_SIDPLAYFP_BUILDERS_EXSID_H
 
     default:
-        // Emulation Not yet handled
+        // Emulation not yet handled
         // This default case results in the default
         // emulation
         break;
@@ -649,10 +651,10 @@ createSidEmu_error:
     return false;
 }
 
-bool ConsolePlayer::open (void) {
+bool ConsolePlayer::open(void) {
     if ((m_state & ~playerFast) == playerRestart) {
         if (m_quietLevel < 2)
-            cerr << endl;
+            cerr << '\n';
         if (m_state & playerFast)
             m_driver.selected->reset();
         m_state = playerStopped;
@@ -699,7 +701,7 @@ bool ConsolePlayer::open (void) {
     // forwarding to the start position
     m_driver.selected = &m_driver.null;
     //m_speed.current   = m_speed.max;
-	//it still works without it :shrug:
+	// ^ it still works without it :shrug:
     m_engine.fastForward(100 * m_speed.current);
 
     m_engine.mute(0, 0, m_mute_channel[0]);
@@ -768,9 +770,11 @@ void ConsolePlayer::close() {
     if (m_quietLevel < 2) {
 		// Correctly leave ANSI mode and get prompt to
         // end up in a suitable location
-        if (m_iniCfg.console().ansi)
+        if (m_iniCfg.console().ansi) {
 			cerr << "\x1b[?25h";
             cerr << "\x1b[0m";
+		}
+
         cerr << endl;
     }
 }
@@ -825,7 +829,7 @@ bool ConsolePlayer::play() {
         return true;
     default:
         if (m_quietLevel < 3)
-            cerr << endl;
+            cerr << '\n';
         m_engine.stop();
         break;
     }
@@ -847,6 +851,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
         memset(m_driver.selected->buffer(), 0, m_driver.cfg.bufSize);
         m_speed.current = 1;
         m_engine.fastForward(100);
+
         if (m_cpudebug)
             m_engine.debug(true, nullptr);
     }
@@ -860,11 +865,14 @@ uint_least32_t ConsolePlayer::getBufSize() {
                 return 0;
 
             // Move to next track
-            m_track.selected++;
+            ++m_track.selected;
+			
             if (m_track.selected > m_track.songs)
                 m_track.selected = 1;
+			
             if (m_track.selected == m_track.first)
                 return 0;
+			
             m_state = playerRestart;
         }
     } else {
@@ -874,6 +882,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
         if (bufSize < m_driver.cfg.bufSize)
             return bufSize;
     }
+
     return m_driver.cfg.bufSize;
 }
 
@@ -893,7 +902,7 @@ void ConsolePlayer::updateDisplay() {
 
 		// this hack has to be done because for some
 		// reason at both levels 1 and 0 it appends to
-		// the timer instead of writing over it
+		// the timer instead of overwriting it
 		if (m_verboseLevel <= 1)
         	cerr << "\b\b\b\b\b";
     }
@@ -1047,10 +1056,12 @@ void ConsolePlayer::decodeKeys() {
             m_mute_samples.flip(0);
             m_engine.mute(0, 3, m_mute_samples[0]);
         break;
+
         case A_TOGGLE_SAMPLE2:
             m_mute_samples.flip(1);
             m_engine.mute(1, 3, m_mute_samples[1]);
         break;
+
         case A_TOGGLE_SAMPLE3:
             m_mute_samples.flip(2);
             m_engine.mute(2, 3, m_mute_samples[2]);
@@ -1067,7 +1078,6 @@ void ConsolePlayer::decodeKeys() {
 #else
             m_engCfg.sidEmulation->filter(m_filter.enabled);
 #endif
-
         break;
 
         case A_QUIT:

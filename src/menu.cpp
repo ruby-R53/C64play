@@ -158,8 +158,7 @@ string ConsolePlayer::getNote(uint16_t freq) {
 			else if (d <= (m_freqTable[i] - m_freqTable[i-1])*(m_freqTable[i] / m_freqTable[i-1])) {
 				result += noteName[i];
 				return result;
-			}
-            else {
+			} else {
 				result  = "~";
 				result += noteName[i];
 				return result;
@@ -286,7 +285,7 @@ void ConsolePlayer::menu() {
 
     	cerr << tuneInfo->currentSong() << '/' << tuneInfo->songs() << " "
 		     << "(starting subtune: " << tuneInfo->startSong() << ")"
-			 << ((m_track.loop) ? " - looping" : "");
+			 << (m_track.loop ? " - looping" : "");
 	}
 
     cerr << endl;
@@ -311,15 +310,20 @@ void ConsolePlayer::menu() {
     }
     else if (m_timer.valid)
         cerr << "Infinite";
-    else if (!songlengthDB)
-        cerr << "No Songlength DB";
-    else
+    else if (!songlengthDB) {
+		consoleColour(yellow, false);
+        cerr << "Songlength DB not found!";
+	} else {
+		consoleColour(red, false);
         cerr << "Unknown";
+	}
+
     if (m_timer.start) { // Show offset
         const uint_least32_t seconds = m_timer.start / 1000;
         cerr << " (+" << setw(2) << setfill('0') << ((seconds / 60) % 100)
              << ':' << setw(2) << setfill('0') << (seconds % 60) << ")";
     }
+
     cerr << endl;
 
     if (m_verboseLevel) {
@@ -387,7 +391,7 @@ void ConsolePlayer::menu() {
 		cerr << dec;
 		cerr.unsetf(std::ios::uppercase);
 
-        consoleTable (tableSeparator);
+        consoleTable(tableSeparator);
 
         if (m_verboseLevel > 1) {
             consoleTable (tableMiddle);
@@ -455,13 +459,13 @@ void ConsolePlayer::menu() {
 
 			if (tuneModel == Chip::UNKNOWN_ANY || m_engCfg.forceSidModel) {
 				switch(cfgModel) {
-					default:
-					case Chip::MOS6581:
-						cfgCurve = m_filter.filterCurve6581;
-						break;
-					case Chip::CSG8580:
-						cfgCurve = m_filter.filterCurve8580;
-						break;
+				default:
+				case Chip::MOS6581:
+					cfgCurve = m_filter.filterCurve6581;
+					break;
+				case Chip::CSG8580:
+					cfgCurve = m_filter.filterCurve8580;
+					break;
 				}
 			}
 
@@ -474,54 +478,55 @@ void ConsolePlayer::menu() {
 
 		if (!m_engCfg.forceSidModel) {
 			switch(tuneModel) {
-				case Chip::UNKNOWN_ANY:
-					break;
+			case Chip::UNKNOWN_ANY:
+				break;
 #ifdef FEAT_FILTER_RANGE
-				case Chip::MOS6581:
-					if (m_filter.enabled) {
-						consoleTable (tableMiddle);
-						consoleColour(yellow, true);
-						cerr << " Filter range : ";
-						consoleColour(white, false);
-						cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
-				             << endl;
-					}
-					break;
+			// same with filter range here
+			case Chip::MOS6581:
+				if (m_filter.enabled) {
+					consoleTable (tableMiddle);
+					consoleColour(yellow, true);
+					cerr << " Filter range : ";
+					consoleColour(white, false);
+					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange);
+				}
+				break;
 #endif
 			case Chip::CSG8580:
        			consoleTable (tableMiddle);
        			consoleColour(yellow, true);
        			cerr << " DigiBoost    : ";
        			consoleColour(white, false);
-       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled")
-					 << endl;
+       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled");
 				break;
 			}
+
+			cerr << '\n';
 		}
 
 		if (tuneModel == Chip::UNKNOWN_ANY || m_engCfg.forceSidModel) {
 			switch(cfgModel) {
 #ifdef FEAT_FILTER_RANGE
-				case Chip::MOS6581:
-					if (m_filter.enabled) {
-						consoleTable (tableMiddle);
-						consoleColour(yellow, true);
-						cerr << " Filter range : ";
-						consoleColour(white, false);
-						cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
-				             << endl;
-					}
-					break;
+			case Chip::MOS6581:
+				if (m_filter.enabled) {
+					consoleTable (tableMiddle);
+					consoleColour(yellow, true);
+					cerr << " Filter range : ";
+					consoleColour(white, false);
+					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange);
+				}
+				break;
 #endif
 			case Chip::CSG8580:
        			consoleTable (tableMiddle);
        			consoleColour(yellow, true);
        			cerr << " DigiBoost    : ";
        			consoleColour(white, false);
-       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled")
-					 << endl;
+       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled");
 				break;
 			}
+
+			cerr << '\n';
 		}
     }
 
@@ -585,7 +590,7 @@ void ConsolePlayer::menu() {
 
         for (int i = 0; i < movLines; ++i) {
             consoleTable(tableMiddle);
-			cerr << endl; // reserve space for Voice 3 status
+			cerr << '\n'; // reserve space for each voice's status
         }
     }
 
@@ -605,7 +610,7 @@ void ConsolePlayer::refreshRegDump() {
 								  (tuneInfo->sidChips() * 6 + 1):
 							      (tuneInfo->sidChips() * 3 + 1);
 
-    cerr << "\x1b[" << movLines << "A\r"; // Moves cursor for updating the displays
+	cerr << "\x1b[" << movLines << "F"; // Moves cursor for updating the displays
 
     for (int j=0; j < tuneInfo->sidChips(); ++j) {
     	uint8_t* registers = m_registers[j];
@@ -626,15 +631,17 @@ void ConsolePlayer::refreshRegDump() {
 
                 consoleColour(cyan, false);
 
+				// Note field
 				cerr << setw(4) << setfill(' ')
 					 << getNote(registers[0x00 + i * 0x07] |
 						       (registers[0x01 + i * 0x07] << 8));
 
+				// PW field
 				cerr << hex << "   $" << setw(3) << setfill('0')
 					 << (registers[0x02 + i * 0x07] |
-						((registers[0x03 + i * 0x07] & 0x0f) << 8));
+						((registers[0x03 + i * 0x07] & 0x0f) << 8))
 
-				cerr << "  ";
+				     << "  ";
 
 				// - control registers -
                 // gate changed ?
@@ -716,62 +723,48 @@ void ConsolePlayer::refreshRegDump() {
 	        consoleTable(tableSeparator);
 	        consoleTable(tableMiddle);
 
+			// number each SID chip if needed
 			if (tuneInfo->sidChips() >= 2) {
             	cerr << " SID #" << (j + 1) << ":  ";
-				cerr << miscInfo << endl;
-			}
-			else
+				cerr << miscInfo << '\n';
+			} else
 				cerr << setw(tableWidth/2 + miscInfo.length()/2) << miscInfo
-				     << endl;
+				     << '\n';
 
             consoleTable(tableMiddle);
 
 			// master volume display
 	        consoleColour(yellow, false);
-			cerr << hex;
-            {
-	        	cerr << ((tuneInfo->sidChips() >= 2) ? "            " :
-				         "        ")
-					 << "$";
-
-				cerr << (registers[0x18] & 0x0f);
-            }
+			cerr << hex
+	        	 << ((tuneInfo->sidChips() >= 2) ? "            " : "        ")
+				 << "$" << (registers[0x18] & 0x0f);
 
 			// the filters!
-            cerr << "     ";
-            {
-                cerr << ((registers[0x18] & 0x10) ? "LP" : "lp")
-					 << " "
-                	 << ((registers[0x18] & 0x20) ? "BP" : "bp")
-					 << " "
-                	 << ((registers[0x18] & 0x40) ? "HP" : "hp")
-					 << " "
-                	 << ((registers[0x18] & 0x80) ? "3O" : "3o");
-            }
+            cerr << "     "
+                 << ((registers[0x18] & 0x10) ? "LP" : "lp")
+ 				 << " "
+                 << ((registers[0x18] & 0x20) ? "BP" : "bp")
+ 				 << " "
+                 << ((registers[0x18] & 0x40) ? "HP" : "hp")
+ 				 << " "
+                 << ((registers[0x18] & 0x80) ? "3O" : "3o");
 
 			// see which voices are being filtered
-            cerr << "    ";
-            {
-                cerr << ((registers[0x17] & 0x01) ? "1" : "-")
-                	 << ((registers[0x17] & 0x02) ? "2" : "-")
-                	 << ((registers[0x17] & 0x04) ? "3" : "-");
-            }
+            cerr << "    "
+                 << ((registers[0x17] & 0x01) ? "1" : "-")
+                 << ((registers[0x17] & 0x02) ? "2" : "-")
+                 << ((registers[0x17] & 0x04) ? "3" : "-");
 
             // filter resonance display
             cerr << "      "
-				 << "$";
-            {
-				cerr << (registers[0x17] >> 4);
-            }
+				 << "$" << (registers[0x17] >> 4);
 
 			// filter cutoff frequency display
 	        cerr << "      "
-				 << "$";
-            {
-				cerr << setw(3) << setfill('0')
-					 << (registers[0x15] & 0x07 << 8 | registers[0x16]);
-            }
-	        cerr << '\n';
+				 << "$" << setw(3) << setfill('0')
+				 << (registers[0x15] & 0x07 << 8 | registers[0x16])
+	        
+				 << '\n';
 	    }
 		cerr << dec;
         consoleTable(tableEnd);
