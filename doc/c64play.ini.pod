@@ -166,12 +166,11 @@ Number of bits per sample, used on file output only.
 
 =back
 
-
 =head2 [Emulation]
 
 =over
 
-=item B<Engine>=I<< <RESIDFP|RESID|EXSID|NONE> >>
+=item B<Engine>=I<< <RESIDFP|RESID|NONE> >>
 
 Set the SID emulation engine. Defaults to RESIDFP.
 

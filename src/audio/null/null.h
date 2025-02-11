@@ -27,20 +27,12 @@
 #  include "config.h"
 #endif
 
-#if defined(HAVE_SIDPLAYFP_BUILDERS_EXSID_H)
-#  ifndef AudioDriver
-#    define AudioDriver Audio_Null
-#  endif
-#endif
-
 #include "../AudioBase.h"
 
 /*
- * Null audio driver used for exSID
- * and songlength detection
+ * Null audio driver used for songlength detection
  */
-class Audio_Null: public AudioBase
-{
+class Audio_Null: public AudioBase {
 private:  // ------------------------------------------------------- private
     bool isOpen;
 
@@ -51,8 +43,10 @@ public:  // --------------------------------------------------------- public
     bool open (AudioConfig &cfg) override;
     void close() override;
     void reset() override {}
-    bool write(uint_least32_t size) override;
+	bool write(uint_least32_t size) override;
+    //bool write(uint_least32_t frames) override;
     void pause() override {}
+	//void clearBuffer() override {}
 };
 
 #endif // AUDIO_NULL_H

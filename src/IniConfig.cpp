@@ -93,9 +93,10 @@ void IniConfig::clear() {
     console_s.junctionLeft  = ':';
     console_s.junctionRight = ':';
 
-    audio_s.frequency = SidConfig::DEFAULT_SAMPLING_FREQ;
-    audio_s.channels  = 0;
-    audio_s.precision = 16;
+    audio_s.sampleRate = SidConfig::DEFAULT_SAMPLING_FREQ;
+    audio_s.channels   = 0;
+    audio_s.bitDepth   = 16;
+	//audio_s.bufSize    = 250;
 
     emulation_s.modelDefault = SidConfig::PAL;
     emulation_s.modelForced  = false;
@@ -315,9 +316,10 @@ void IniConfig::readAudio(iniHandler &ini) {
     if (!ini.setSection(TEXT("Audio")))
         ini.addSection(TEXT("Audio"));
 
-    readInt(ini, TEXT("Sample rate"), audio_s.frequency);
+    readInt(ini, TEXT("Sample rate"), audio_s.sampleRate);
     readInt(ini, TEXT("Channels"),    audio_s.channels);
-    readInt(ini, TEXT("Bit depth"),   audio_s.precision);
+    readInt(ini, TEXT("Bit depth"),   audio_s.bitDepth);
+	//readInt(ini, TEXT("Buffer size"), audio_s.bufSize);
 }
 
 

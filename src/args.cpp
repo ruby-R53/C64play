@@ -38,10 +38,6 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-#ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
-#  include <sidplayfp/builders/exsid.h>
-#endif
-
 // Wide-chars are not supported here yet 
 #undef SEPARATOR
 #define SEPARATOR "/"
@@ -220,15 +216,15 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 }
             }
 
-            else if (argv[i][1] == 'p') { // user didn't provide anything?
-                if (argv[i][2] == '\0')
+            else if (argv[i][1] == 'p') {
+                if (argv[i][2] == '\0') // user didn't provide anything?
                     err = true;
                 {
                     uint_least8_t precision = atoi(&argv[i][2]);
                     if (precision <= 16)
-                        m_precision = 16;
+                        m_bitDepth = 16;
                     else
-                        m_precision = 32;
+                        m_bitDepth = 32;
                 }
             }
 
@@ -240,8 +236,9 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 
             else if (argv[i][1] == 't') {
-                if (!parseTime (&argv[i][2], m_timer.length))
+                if (!parseTime(&argv[i][2], m_timer.length))
                     err = true;
+
                 m_timer.valid = true;
             }
 
@@ -362,14 +359,6 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESID_H
 
-            // Hardware selection
-#ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
-            else if (std::strcmp (&argv[i][1], "-exsid") == 0) {
-                m_driver.sid    = EMU_EXSID;
-                m_driver.output = OUT_NULL;
-            }
-#endif // HAVE_SIDPLAYFP_BUILDERS_EXSID_H
-
             // These are for debug
             else if (std::strcmp (&argv[i][1], "-none") == 0) {
                 m_driver.sid    = EMU_NONE;
@@ -430,13 +419,6 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
     if (m_driver.output > OUT_SOUNDCARD)
         m_track.loop = false;
 
-    // Check to see if we are trying to generate an audio file
-    // whilst using a hardware emulation
-    if (m_driver.file && (m_driver.sid >= EMU_EXSID)) {
-        displayError("ERROR: can't generate audio files using hardware emulation");
-        return -1;
-    }
-
     if (m_driver.info && m_driver.file) {
         displayError("WARNING: metadata can only be added to wav files!");
     }
@@ -444,6 +426,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
     // Select the desired track
     m_track.first    = m_tune.selectSong(m_track.first);
     m_track.selected = m_track.first;
+
     if (m_track.single)
         m_track.songs = 1;
 
@@ -559,13 +542,6 @@ void ConsolePlayer::displayArgs (const char *arg) {
     out << "--resid            use reSID emulation" << endl;
 #endif
 
-#ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
-    {
-        exSIDBuilder hs("");
-        if (hs.availDevices())
-            out << "--exsid           enable exSID support" << endl;
-    }
-#endif
     out << endl
         << "Home page: " PACKAGE_URL;
 }

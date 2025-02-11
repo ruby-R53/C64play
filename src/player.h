@@ -44,6 +44,8 @@
 
 #include <string>
 #include <bitset>
+//#include <thread>
+//#include <atomic>
 
 typedef enum {
 	black,
@@ -79,20 +81,22 @@ typedef enum {
     /* Same as EMU_DEFAULT except no soundcard.
     Still allows wav generation */
     EMU_NONE = 0,
-    /* The following require a soundcard */
+    // The following require a soundcard
     EMU_DEFAULT, EMU_RESIDFP, EMU_RESID,
-    /* The following should disable the soundcard */
-    EMU_EXSID, EMU_SIDSTATION, EMU_COMMODORE,
-    EMU_SIDSYN, EMU_END
+    // The following should disable the soundcard
+    //EMU_SIDSTATION, EMU_COMMODORE,
+    //EMU_SIDSYN,
+	EMU_END
 } SIDEMUS;
 
 typedef enum {
-    /* Define possible output sources */
+    // Define possible output sources
     OUT_NULL = 0,
-    /* Hardware */
+    // Hardware
     OUT_SOUNDCARD,
-    /* File creation support */
-    OUT_WAV, OUT_END
+    // File creation support
+    OUT_WAV,
+	OUT_END
 } OUTPUTS;
 
 class Chip {
@@ -104,8 +108,6 @@ class Chip {
 	};
 };
 
-// void displayError(const char *arg0, unsigned int num);
-
 // Grouped global variables
 class ConsolePlayer {
 private:
@@ -115,15 +117,13 @@ private:
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
     static const char RESID_ID[];
 #endif
-#ifdef HAVE_SIDPLAYFP_BUILDERS_EXSID_H
-    static const char EXSID_ID[];
-#endif
 
     const char* const m_name;
     sidplayfp         m_engine;
     SidConfig         m_engCfg;
     SidTune           m_tune;
-    player_state_t    m_state;
+    //std::atomic<player_state_t> m_state;
+	player_state_t    m_state;
     const char*       m_outfile;
     std::string       m_filename;
 
@@ -159,12 +159,17 @@ private:
 #endif
 
     unsigned int      m_channels;
-    unsigned int      m_precision;
+    unsigned int      m_bitDepth;
+	//unsigned int      m_bufferSize;
+
+	//std::thread      *m_thread = nullptr;
 
     struct m_filter_t {
         bool          enabled;
+
         // Filter parameter for reSID
         double        bias;
+
         // Filter parameters for reSIDfp
         double        filterCurve6581;
 #ifdef FEAT_FILTER_RANGE
@@ -186,7 +191,8 @@ private:
 
     struct m_timer_t { // secs
         uint_least32_t start;
-        uint_least32_t current;
+        //std::atomic<uint_least32_t current;
+		uint_least32_t current;
         uint_least32_t stop;
         uint_least32_t length;
         bool           valid;
@@ -220,7 +226,6 @@ private:
     bool createSidEmu  (SIDEMUS emu, const SidTuneInfo *tuneInfo);
     void decodeKeys    (void);
     void updateDisplay ();
-    void emuflush      (void);
     void menu          (void);
     void refreshRegDump();
 

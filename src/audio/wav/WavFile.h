@@ -29,45 +29,45 @@
 
 #include "../AudioBase.h"
 
-struct riffHeader {                     // little endian format
-    char mainChunkID[4];                // 'RIFF' (ASCII)
-    unsigned char length[4];            // file length
-    char chunkID[4];                    // 'WAVE' (ASCII)
+struct riffHeader {						// little endian format
+	char mainChunkID[4];				// 'RIFF' (ASCII)
+	unsigned char length[4];			// file length
+	char chunkID[4];					// 'WAVE' (ASCII)
 };
 
-struct wavHeader {                      // little endian format
-    char subChunkID[4];                 // 'fmt ' (ASCII)
-    char subChunkLen[4];                // length of subChunk, always 16 bytes
-    unsigned char format[2];            // 1 = PCM, 3 = IEEE float
+struct wavHeader {						// little endian format
+	char subChunkID[4];					// 'fmt ' (ASCII)
+	char subChunkLen[4];				// length of subChunk, always 16 bytes
+	unsigned char format[2];			// 1 = PCM, 3 = IEEE float
 
-    unsigned char channels[2];          // 1 = mono, 2 = stereo
-    unsigned char sampleFreq[4];        // sample-frequency
-    unsigned char bytesPerSec[4];       // sampleFreq * blockAlign
-    unsigned char blockAlign[2];        // bytes per sample * channels
-    unsigned char bitsPerSample[2];
+	unsigned char channels[2];			// 1 = mono, 2 = stereo
+	unsigned char sampleFreq[4];		// sample-frequency
+	unsigned char bytesPerSec[4];		// sampleFreq * blockAlign
+	unsigned char blockAlign[2];		// bytes per sample * channels
+	unsigned char bitsPerSample[2];
 
-    char dataChunkID[4];                // keyword, begin of data chunk; = 'data' (ASCII)
+	char dataChunkID[4];				// keyword, begin of data chunk; = 'data' (ASCII)
 
-    unsigned char dataChunkLen[4];      // length of data
+	unsigned char dataChunkLen[4];		// length of data
 };
 
-struct listInfo {                       // little endian format
-    char mainChunkID[4];                // 'LIST' (ASCII)
+struct listInfo {						// little endian format
+	char mainChunkID[4];				// 'LIST' (ASCII)
 
-    unsigned char length[4];            // chunk length
+	unsigned char length[4];			// chunk length
 
-    char chunkID[4];                    // 'INFO' (ASCII)
-    char namChunkID[4];                 // 'INAM' (ASCII)
-    char namChunkLen[4];                // length of subChunk, always 32 bytes
-    char name[32];
+	char chunkID[4];					// 'INFO' (ASCII)
+	char namChunkID[4];					// 'INAM' (ASCII)
+	char namChunkLen[4];				// length of subChunk, always 32 bytes
+	char name[32];
 
-    char artChunkID[4];                 // 'IART' (ASCII)
-    char artChunkLen[4];                // length of subChunk, always 32 bytes
-    char artist[32];
+	char artChunkID[4];					// 'IART' (ASCII)
+	char artChunkLen[4];				// length of subChunk, always 32 bytes
+	char artist[32];
 
-    char copChunkID[4];                 // 'ICOP' (ASCII)
-    char copChunkLen[4];                // length of subChunk, always 32 bytes
-    char released[32];
+	char copChunkID[4];					// 'ICOP' (ASCII)
+	char copChunkLen[4];				// length of subChunk, always 32 bytes
+	char released[32];
 };
 
 /*
@@ -76,50 +76,50 @@ struct listInfo {                       // little endian format
  */
 class WavFile: public AudioBase {
 private:
-    std::string name;
+	std::string name;
 
-    unsigned long int dataSize;
+	unsigned long int dataSize;
 
-    static const riffHeader defaultRiffHdr;
-    riffHeader riffHdr;
+	static const riffHeader defaultRiffHdr;
+	riffHeader riffHdr;
 
-    static const wavHeader defaultWavHdr;
-    wavHeader wavHdr;
+	static const wavHeader defaultWavHdr;
+	wavHeader wavHdr;
 
-    static const listInfo defaultListInfo;
-    listInfo listHdr;
+	static const listInfo defaultListInfo;
+	listInfo listHdr;
 
-    std::ostream *file;
-    bool headerWritten;
-    bool hasListInfo;
-    int  depth;
+	std::ostream *file;
+	bool headerWritten;
+	bool hasListInfo;
+	int  depth;
 
 public:
-    WavFile(const std::string &name);
-    ~WavFile() override { close(); }
+	WavFile(const std::string &name);
+	~WavFile() override { close(); }
 
-    static const char *extension() { return ".wav"; }
+	static const char *extension() { return ".wav"; }
 
-    // Only signed 16-bit and 32bit float samples are supported.
-    // Endian-ess is adjusted if necessary.
-    //
-    // If number of sample bytes is given, this can speed up the
-    // process of closing a huge file on slow storage media.
+	// Only signed 16-bit and 32bit float samples are supported.
+	// Endian-ess is adjusted if necessary.
+	//
+	// If number of sample bytes is given, this can speed up the
+	// process of closing a huge file on slow storage media.
 
-    bool open(AudioConfig &cfg) override;
+	bool open(AudioConfig &cfg) override;
 
-    // After write call old buffer is invalid and you should
-    // use the new buffer provided instead.
-    bool write(uint_least32_t size) override;
-    void close() override;
-    void pause() override {}
-    void reset() override {}
+	// After write call old buffer is invalid and you should
+	// use the new buffer provided instead.
+	bool write(uint_least32_t size) override;
+	void close() override;
+	void pause() override {}
+	void reset() override {}
 
-    // Stream state.
-    bool fail() const { return (file->fail() != 0); }
-    bool bad () const { return (file->bad()  != 0); }
+	// Stream state.
+	bool fail() const { return (file->fail() != 0); }
+	bool bad () const { return (file->bad()  != 0); }
 
-    void setInfo(const char* title, const char* author, const char* released);
+	void setInfo(const char* title, const char* author, const char* released);
 };
 
 #endif /* WAV_FILE_H */

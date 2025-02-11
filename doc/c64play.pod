@@ -167,10 +167,6 @@ Use the reSID emulation engine, made by the VICE project.
 
 Use the reSIDfp emulation engine, which is the default.
 
-=item B<--exsid>
-
-Use an exSID device.
-
 =item B<--cpu-debug>
 
 Display CPU registers and assembly dumps, only available in

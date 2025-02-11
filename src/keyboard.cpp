@@ -107,11 +107,7 @@ static char keytable[] = {
  * Search a single command table for the command string in cmd.
  */
 static int keyboard_search(char *cmd) {
-    char *p;
-    char *q;
-    int   a;
-
-    for (p = keytable, q = cmd;;  ++p, ++q) {
+    for (char *p = keytable, *q = cmd;;  p++, q++) {
         if (*p == *q) {
             /*
              * Current characters match.
@@ -121,9 +117,11 @@ static int keyboard_search(char *cmd) {
              * in the command table.
              */
             if (*p == '\0') {
-                a = *++p & 0377;
+                int a = *++p & 0377;
+
                 while (a == A_SKIP)
                     a = *++p & 0377;
+
                 if (a == A_END_LIST) {
                     /*
                      * We get here only if the original
@@ -133,6 +131,7 @@ static int keyboard_search(char *cmd) {
                      */
                     break;
                 }
+
                 return (a);
             }
         }
@@ -159,8 +158,10 @@ static int keyboard_search(char *cmd) {
             }
             while (*p++ != '\0')
                 continue;
+
             while (*p == A_SKIP)
                 ++p;
+
             q = cmd-1;
         }
     }
@@ -180,10 +181,12 @@ int keyboard_decode() {
      * Start with the one we have, and get more if we need them.
      */
     int c = _getch();
+
     if (c == '\0')
         c = '\340'; // 224
     else if (c == ESC) {
         cmd[nch++] = c;
+
         if (_kbhit())
             c = _getch();
     }
@@ -195,8 +198,10 @@ int keyboard_decode() {
 
         if (action != A_PREFIX)
             break;
+
         if (!_kbhit())
             break;
+
         c = _getch();
     }
     return action;
@@ -213,8 +218,10 @@ int _kbhit(void) {
         // See if key has been pressed
         FD_ZERO(&rdfs);
         FD_SET (infd, &rdfs);
+
         if (select(infd + 1, &rdfs, nullptr, nullptr, &tv) <= 0)
             return 0;
+
         if (FD_ISSET(infd, &rdfs))
             return 1;
     }
@@ -231,9 +238,6 @@ int _getch(void) {
 // Set keyboard to raw mode to getch will work
 static termios term;
 void keyboard_enable_raw() {
-    // set to non canonical mode, echo off, ignore signals
-    struct termios current;
-
     // Already open
     if (infd >= 0)
         return;
@@ -250,6 +254,7 @@ void keyboard_enable_raw() {
     }
 
     // save current terminal settings
+    struct termios current;
     tcgetattr(infd, &current);
 
     // set to non canonical mode, echo off, ignore signals

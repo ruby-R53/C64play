@@ -1,3 +1,35 @@
+February 11, 2025:
+- First update of the year!
+- I was finally able to implement not one but 2 scripts for
+  channel dumping, useful for oscilloscope views.
+  - `oscidump.sh` is for single-SID tunes, and
+    `oscidump_2SID.sh` is for 2SID ones. Maybe I should make
+	one for 3SID as well, but this is enough for now.
+	- Both of them are pretty straightforward to use - just put
+	  the file name and then the same options you'd put on
+	  C64play to play the tune!
+	  - NOTE: sample dumping feature for `oscidump_2SID.sh` is
+		untested! Let me know if there're any bugs :)
+- Minor grammar fixes
+  - In English, you have to capitalize every word in a title.
+    So that's what I did for the displays, because they are
+	titles in a way.
+- That's it! I hope I can finally make the repository public
+  soon this year. I still have to thoroughly test this program.
+
+October 28, 2024:
+- Working on implementing a script for dumping each channel of
+  a tune. Handy for oscilloscope views, that's why I named it
+  `oscidump.sh` :)
+
+October 26/27, 2024:
+- Fixed one extra detail on the Filter range/DigiBoost display
+  - Damn, coding that was an awful quest. Hopefully that's the
+    last time I have to fix something there. Well, I still need
+    to optimize that code a little, it has some redundancy...
+- Code cleanup
+  - Replaced spaces with tabs!
+
 September 30, 2024:
 - Oh my friggin' GOD, I didn't notice a small error and pushed
   the code anyways. OOPS!

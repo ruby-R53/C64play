@@ -59,9 +59,12 @@ public:
     };
 
     struct audio_section { // [Audio] section
-        int frequency;
+        int sampleRate; // in Hz
         int channels;
-        int precision;
+        int bitDepth;
+		//int bufSize;    // in milliseconds
+		
+		//int getBufSize() const { return (bufSize * sampleRate) / 1000; }
     };
 
     struct emulation_section { // [Emulation] section
@@ -75,13 +78,17 @@ public:
         bool                         filter;
         double                       bias;
         double                       filterCurve6581;
+
 #ifdef FEAT_FILTER_RANGE
         double                       filterRange6581;
 #endif
+
         double                       filterCurve8580;
+
 #ifdef FEAT_CW_STRENGTH
         SidConfig::sid_cw_t          combinedWaveformsStrength;
 #endif
+
         int                          powerOnDelay;
         SidConfig::sampling_method_t samplingMethod;
         bool                         fastSampling;

@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([C64play], [1.0.0-beta1], [], [], [https://github.com/ruby-R53/C64play])
+AC_INIT([C64play], [1.0.0-beta2], [], [], [https://github.com/ruby-R53/C64play])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
@@ -58,8 +58,7 @@ saveCPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $C64PLAY_CFLAGS"
 
 AC_CHECK_HEADERS([sidplayfp/builders/residfp.h \
-sidplayfp/builders/resid.h \
-sidplayfp/builders/exsid.h])
+sidplayfp/builders/resid.h])
 
 CPPFLAGS=$saveCPPFLAGS
 

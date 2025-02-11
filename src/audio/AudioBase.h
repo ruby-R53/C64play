@@ -23,17 +23,16 @@
 #define AUDIOBASE_H
 
 #include <string>
+//#include <cstring>
 
 #include "IAudio.h"
 #include "AudioConfig.h"
 
 #include "sidcxx11.h"
 
-class AudioBase : public IAudio
-{
+class AudioBase : public IAudio {
 protected:
-    class error
-    {
+    class error {
     private:
         const char* m_msg;
 
@@ -51,13 +50,11 @@ protected:
     short      *_sampleBuffer;
 
 protected:
-    void setError(const char* msg)
-    {
+    void setError(const char* msg) {
         _errorString.assign(_backendName).append(" ERROR: ").append(msg);
     }
 
-    void clearError()
-    {
+    void clearError() {
         _errorString.clear();
     }
 
@@ -69,13 +66,13 @@ public:
 
     short *buffer() const override { return _sampleBuffer; }
 
-    void getConfig(AudioConfig &cfg) const override
-    {
+	//void clearBuffer() override { std::memset(_sampleBuffer, 0, _settings.getBufBytes()); }
+
+    void getConfig(AudioConfig &cfg) const override {
         cfg = _settings;
     }
 
-    const char *getErrorString() const override
-    {
+    const char *getErrorString() const override {
         return _errorString.c_str();
     }
 };

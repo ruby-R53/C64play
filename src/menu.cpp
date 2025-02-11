@@ -26,6 +26,7 @@
 
 #include <cctype>
 #include <cstring>
+#include <cmath>
 
 #include <iostream>
 #include <iomanip>
@@ -150,7 +151,7 @@ string ConsolePlayer::getNote(uint16_t freq) {
         uint16_t distance = 0xffff;
 		string   result("");
         for (int i = 0; i < 96; ++i) {
-            uint16_t d = abs(freq - m_freqTable[i]);
+            uint16_t d = std::abs(freq - m_freqTable[i]);
             if (d < distance)
                 distance = d;
 			// check if frequency matches exactly or off by a bit
@@ -251,7 +252,7 @@ void ConsolePlayer::menu() {
         cerr << tuneInfo->formatString() << endl;
         consoleTable (tableMiddle);
         consoleColour(green, true);
-        cerr << " File name    : ";
+        cerr << " File Name    : ";
         consoleColour(white, false);
         cerr << trimString(tuneInfo->dataFileName(), 41) << endl;
 
@@ -275,7 +276,7 @@ void ConsolePlayer::menu() {
     consoleColour(green, true);
 
 	if (tuneInfo->songs() == 1) {
-		cerr << " On loop?     : ";
+		cerr << " On Loop?     : ";
     	consoleColour(white, false);
 
 		cerr << ((m_track.loop) ? "Yes" : "No");
@@ -293,7 +294,7 @@ void ConsolePlayer::menu() {
     if (m_verboseLevel) {
         consoleTable (tableMiddle);
         consoleColour(green, true);
-        cerr << " Video signal : ";
+        cerr << " Video Signal : ";
         consoleColour(white, false);
         cerr << getClock(tuneInfo->clockSpeed()) << endl;
     }
@@ -370,7 +371,7 @@ void ConsolePlayer::menu() {
 
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
-        cerr << " SID details  : ";
+        cerr << " SID Details  : ";
         consoleColour(white, false);
 
 		for (int i = 0; i < tuneInfo->sidChips(); ++i) {
@@ -410,7 +411,7 @@ void ConsolePlayer::menu() {
 		if (m_verboseLevel > 1) {
 			consoleTable (tableMiddle);
 			consoleColour(yellow, true);
-			cerr << " CIA model    : ";
+			cerr << " CIA Model    : ";
 			consoleColour(white, false);
 			cerr << getCia(m_engCfg.ciaModel) << endl;
 		}
@@ -423,7 +424,7 @@ void ConsolePlayer::menu() {
 
         consoleTable (tableMiddle);
         consoleColour(yellow, true);
-        cerr << " SID model    : ";
+        cerr << " SID Model    : ";
         consoleColour(white, false);
 		cerr << getModel(m_engCfg.defaultSidModel) << " "
 			 << (m_engCfg.forceSidModel ? "(forced)" : "(default)")
@@ -441,18 +442,18 @@ void ConsolePlayer::menu() {
 		if (m_filter.enabled) {
 			// check if filter curve is provided by the command line
 			// or by the config file
-			double cfgCurve = 0.0;
-
-			if (!m_engCfg.forceSidModel) {
+			consoleTable (tableMiddle);
+			consoleColour(yellow, true);
+			cerr << " Filter Curve : ";
+			consoleColour(white, false);
+			if (!m_engCfg.forceSidModel && tuneModel != Chip::UNKNOWN_ANY) {
 				switch(tuneModel) {
 				default:
-				case Chip::UNKNOWN_ANY:
-					break;
 				case Chip::MOS6581:
-					cfgCurve = m_filter.filterCurve6581;
+					cerr << ((m_fcurve == -3.0) ? m_filter.filterCurve6581 : m_fcurve) << endl;
 					break;
 				case Chip::CSG8580:
-					cfgCurve = m_filter.filterCurve8580;
+					cerr << ((m_fcurve == -3.0) ? m_filter.filterCurve6581 : m_fcurve) << endl;
 					break;
 				}
 			}
@@ -461,34 +462,27 @@ void ConsolePlayer::menu() {
 				switch(cfgModel) {
 				default:
 				case Chip::MOS6581:
-					cfgCurve = m_filter.filterCurve6581;
+					cerr << ((m_fcurve == -3.0) ? m_filter.filterCurve6581 : m_fcurve) << endl;
 					break;
 				case Chip::CSG8580:
-					cfgCurve = m_filter.filterCurve8580;
+					cerr << ((m_fcurve == -3.0) ? m_filter.filterCurve6581 : m_fcurve) << endl;
 					break;
 				}
 			}
-
-			consoleTable (tableMiddle);
-			consoleColour(yellow, true);
-			cerr << " Filter curve : ";
-			consoleColour(white, false);
-			cerr << ((m_fcurve == -1) ? cfgCurve : m_fcurve) << endl;
 		}
 
-		if (!m_engCfg.forceSidModel) {
+		if (!m_engCfg.forceSidModel && tuneModel != Chip::UNKNOWN_ANY) {
 			switch(tuneModel) {
-			case Chip::UNKNOWN_ANY:
-				break;
 #ifdef FEAT_FILTER_RANGE
 			// same with filter range here
 			case Chip::MOS6581:
 				if (m_filter.enabled) {
 					consoleTable (tableMiddle);
 					consoleColour(yellow, true);
-					cerr << " Filter range : ";
+					cerr << " Filter Range : ";
 					consoleColour(white, false);
-					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange);
+					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
+					     << endl;
 				}
 				break;
 #endif
@@ -497,11 +491,10 @@ void ConsolePlayer::menu() {
        			consoleColour(yellow, true);
        			cerr << " DigiBoost    : ";
        			consoleColour(white, false);
-       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled");
+       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled")
+					 << endl;
 				break;
 			}
-
-			cerr << '\n';
 		}
 
 		if (tuneModel == Chip::UNKNOWN_ANY || m_engCfg.forceSidModel) {
@@ -511,9 +504,10 @@ void ConsolePlayer::menu() {
 				if (m_filter.enabled) {
 					consoleTable (tableMiddle);
 					consoleColour(yellow, true);
-					cerr << " Filter range : ";
+					cerr << " Filter Range : ";
 					consoleColour(white, false);
-					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange);
+					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
+						 << endl;
 				}
 				break;
 #endif
@@ -522,11 +516,10 @@ void ConsolePlayer::menu() {
        			consoleColour(yellow, true);
        			cerr << " DigiBoost    : ";
        			consoleColour(white, false);
-       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled");
+       			cerr << (m_engCfg.digiBoost ? "Enabled" : "Disabled")
+					 << endl;
 				break;
 			}
-
-			cerr << '\n';
 		}
     }
 
@@ -537,9 +530,9 @@ void ConsolePlayer::menu() {
     consoleTable (tableMiddle);
     consoleColour(magenta, true);
     cerr << " Kernal ROM   : ";
-    if (strlen(romDesc) == 0) {
+    if (std::strlen(romDesc) == 0) {
         consoleColour(red, false);
-        cerr << "None - some tunes may not play!";
+        cerr << "None - some tunes won't play properly!";
     } else {
         consoleColour(white, false);
         cerr << romDesc;
@@ -551,7 +544,7 @@ void ConsolePlayer::menu() {
     consoleTable (tableMiddle);
     consoleColour(magenta, true);
     cerr << " BASIC ROM    : ";
-    if (strlen(romDesc) == 0) {
+    if (std::strlen(romDesc) == 0) {
         consoleColour(red, false);
         cerr << "None - BASIC tunes won't play!";
     } else {
@@ -565,8 +558,8 @@ void ConsolePlayer::menu() {
     consoleTable (tableMiddle);
     consoleColour(magenta, true);
     cerr << " Chargen ROM  : ";
-    if (strlen(romDesc) == 0) {
-        consoleColour(red, false);
+    if (std::strlen(romDesc) == 0) {
+        consoleColour(yellow, false);
         cerr << "None";
     } else {
         consoleColour(white, false);
@@ -586,7 +579,7 @@ void ConsolePlayer::menu() {
 		unsigned int movLines = (m_verboseLevel > 2) ? (tuneInfo->sidChips() * 6):
 		                                               (tuneInfo->sidChips() * 3);
 
-		cerr << " Voice   Note   PW    Control registers     Waveform(s)" << endl;
+		cerr << " Voice   Note   PW    Control Registers     Waveform(s)" << endl;
 
         for (int i = 0; i < movLines; ++i) {
             consoleTable(tableMiddle);
@@ -627,7 +620,7 @@ void ConsolePlayer::refreshRegDump() {
             for (int i=0; i < 3; ++i) {
                 consoleTable (tableMiddle);
 
-                cerr << "   " << (j * 3 + i+1) << "    ";
+                cerr << "   " << (j*3 + i+1) << "    ";
 
                 consoleColour(cyan, false);
 
@@ -718,7 +711,7 @@ void ConsolePlayer::refreshRegDump() {
             uint8_t* registers = m_registers[j];
 			string miscInfo;
 			miscInfo.reserve(tableWidth);
-			miscInfo.append("M. vol.    Filters    F. chn.  F. res.  Cutoff");
+			miscInfo.append("M. Vol.    Filters    F. Chn.  F. Res.  Cutoff");
 
 	        consoleTable(tableSeparator);
 	        consoleTable(tableMiddle);
