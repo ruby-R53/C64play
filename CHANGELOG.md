@@ -14,6 +14,13 @@ February 11, 2025:
   - In English, you have to capitalize every word in a title.
     So that's what I did for the displays, because they are
 	titles in a way.
+- Filter curve now ranges from -2.5 to 2.5
+  - I got that based on how for reSID you have -5000 mV to
+    +5000 mV, but that number is way too high, so I had to
+	adapt it.
+	Values over 1.0 and below 0.0 still break 8580 tunes, but
+	it works fine for 6581 ones. I was annoyed I wasn't getting
+	the sound I wanted with that previous range.
 - That's it! I hope I can finally make the repository public
   soon this year. I still have to thoroughly test this program.
 
