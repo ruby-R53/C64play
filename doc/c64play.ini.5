@@ -55,7 +55,7 @@
 .\" ========================================================================
 .\"
 .IX Title "C64PLAY.INI 5"
-.TH C64PLAY.INI 5 2025-01-12 "perl v5.40.0" "File formats"
+.TH C64PLAY.INI 5 2025-02-13 "perl v5.40.0" "File formats"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -77,7 +77,7 @@ Every setting has a \fI<name> = <value>\fR structure.
 .PP
 \&\fB[Emulation]\fR \- Emulation parameters
 .PP
-If a setting is specified more than once, the last iteration of it will be used by the program.
+If a setting is specified more than once, the last mention of it will be used by the program.
 .PP
 And, if any of those settings are outside of their section, it will be ignored.
 .SS [Player]
@@ -97,7 +97,7 @@ Default play time if Songlengths.md5 isn't found. Defaults to 0, which means inf
 Default recording time when recording to WAV if Songlengths.md5 isn't found. Defaults to 5 minutes.
 .IP "\fBKernal ROM\fR=\fI<path>\fR" 4
 .IX Item "Kernal ROM=<path>"
-Full path for the Kernal ROM file. Out of all the 2 other ROMs, this is the most important, and thus should be provided as some tunes may not play without it.
+Full path for the Kernal ROM file. Out of all the 3 ROM slots, this is the most important one, and thus should be provided as some tunes may not play without it.
 By default, the program will look for a file named \fIkernal\fR under the following places:
 .RS 4
 .IP \(bu 4
@@ -189,7 +189,7 @@ If not specified, C64play will use mono playback on single-SID tunes
 and stereo playback on 2\- or 3SID ones.
 .IP "\fBBit depth\fR=\fI<16|32>\fR" 4
 .IX Item "Bit depth=<16|32>"
-Number of bits per sample, used on file output only.
+Number of bits per sample, used for WAV rendering only.
 .SS [Emulation]
 .IX Subsection "[Emulation]"
 .IP \fBEngine\fR=\fI<RESIDFP|RESID|NONE>\fR 4
@@ -205,7 +205,9 @@ NTSC for American/Japanese NTSC-M models;
 .Sp
 OLD_NTSC for NTSC-M models with the old VIC chip;
 .Sp
-and DREAN for the Argentinian PAL-N model. Defaults to PAL.
+and DREAN for the Argentinian PAL-N model.
+.Sp
+Defaults to PAL.
 .IP "\fBForce video mode\fR=\fItrue|false\fR" 4
 .IX Item "Force video mode=true|false"
 Use the same video mode even if the tune specifies one.
@@ -231,7 +233,7 @@ Ranges from 0.0 ("dark") to 1.0 ("light"), defaults to 0.5.
 .IP "\fB6581 filter curve\fR=\fI<number>\fR" 4
 .IX Item "6581 filter curve=<number>"
 Controls the SID's filter curve on reSIDfp's emulation.
-Ranges from 0.0 ("dark") to 1.0 ("bright"), defaults to 0.5.
+Ranges from \-2.5 ("bright") to 2.5 ("dark"), defaults to 0.5.
 .IP "\fB6581 filter range\fR=\fI<number>\fR" 4
 .IX Item "6581 filter range=<number>"
 Controls the filter's uCox parameter for the 6581 chip on reSIDfp's
@@ -253,11 +255,11 @@ Simulates the C64's power-on delay in CPU cycles.
 If <number> is higher than 8191, that delay will be randomly generated, and that's the default.
 .IP \fBResampling\fR=\fI<INTERPOLATE|RESAMPLE>\fR 4
 .IX Item "Resampling=<INTERPOLATE|RESAMPLE>"
-Set resampling method.
+Set resampling method:
 .Sp
-Use \fIINTERPOLATE\fR for a speedier output;
+\&\fIINTERPOLATE\fR for a speedier output;
 .Sp
-and \fIRESAMPLE\fR for a more accurate one at the cost of hardware resources.
+\&\fIRESAMPLE\fR for a more accurate one at the cost of hardware resources.
 .IP "\fBreSID's fast sampling\fR=\fI<true|false>\fR" 4
 .IX Item "reSID's fast sampling=<true|false>"
 Enable reSID's fast resampling.
@@ -266,9 +268,11 @@ Enable reSID's fast resampling.
 \&\fBC64play\fR\|(1)
 .SH AUTHORS
 .IX Header "AUTHORS"
-.IP "Erika Lima" 4
-.IX Item "Erika Lima"
+.IP "Enki Costa" 4
+.IX Item "Enki Costa"
 Riced sidplayfp over and over and called it C64play.
+.Sp
+Current maintainer.
 .IP "Leandro Nini" 4
 .IX Item "Leandro Nini"
 Current maintainer of sidplayfp.
@@ -316,8 +320,8 @@ Wrote the original man page.
 .IX Item "Copyright (C) 2009-2015 VICE Project"
 .IP "Copyright (C) 2010\-2024 Leandro Nini" 4
 .IX Item "Copyright (C) 2010-2024 Leandro Nini"
-.IP "Copyright (C) 2024 Erika Lima" 4
-.IX Item "Copyright (C) 2024 Erika Lima"
+.IP "Copyright (C) 2024 Enki Costa" 4
+.IX Item "Copyright (C) 2024 Enki Costa"
 .PD
 .PP
 This program is free software; you can redistribute it and/or modify

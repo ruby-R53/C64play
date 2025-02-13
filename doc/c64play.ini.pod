@@ -21,7 +21,7 @@ B<[Audio]> - Audio output settings
 
 B<[Emulation]> - Emulation parameters
 
-If a setting is specified more than once, the last iteration of it will be used by the program.
+If a setting is specified more than once, the last mention of it will be used by the program.
 
 And, if any of those settings are outside of their section, it will be ignored.
 
@@ -47,7 +47,7 @@ Default recording time when recording to WAV if Songlengths.md5 isn't found. Def
 
 =item B<Kernal ROM>=I<< <path> >>
 
-Full path for the Kernal ROM file. Out of all the 2 other ROMs, this is the most important, and thus should be provided as some tunes may not play without it.
+Full path for the Kernal ROM file. Out of all the 3 ROM slots, this is the most important one, and thus should be provided as some tunes may not play without it.
 By default, the program will look for a file named F<kernal> under the following places:
 
 =over
@@ -162,7 +162,7 @@ and stereo playback on 2- or 3SID ones.
 
 =item B<Bit depth>=I<< <16|32> >>
 
-Number of bits per sample, used on file output only.
+Number of bits per sample, used for WAV rendering only.
 
 =back
 
@@ -184,7 +184,9 @@ NTSC for American/Japanese NTSC-M models;
 
 OLD_NTSC for NTSC-M models with the old VIC chip;
 
-and DREAN for the Argentinian PAL-N model. Defaults to PAL.
+and DREAN for the Argentinian PAL-N model.
+
+Defaults to PAL.
 
 =item B<Force video mode>=I<true|false>
 
@@ -218,7 +220,7 @@ Ranges from 0.0 ("dark") to 1.0 ("light"), defaults to 0.5.
 =item B<6581 filter curve>=I<< <number> >>
 
 Controls the SID's filter curve on reSIDfp's emulation.
-Ranges from 0.0 ("dark") to 1.0 ("bright"), defaults to 0.5.
+Ranges from -2.5 ("bright") to 2.5 ("dark"), defaults to 0.5.
 
 =item B<6581 filter range>=I<< <number> >>
 
@@ -245,11 +247,11 @@ If <number> is higher than 8191, that delay will be randomly generated, and that
 
 =item B<Resampling>=I<< <INTERPOLATE|RESAMPLE> >>
 
-Set resampling method.
+Set resampling method:
 
-Use I<INTERPOLATE> for a speedier output;
+I<INTERPOLATE> for a speedier output;
 
-and I<RESAMPLE> for a more accurate one at the cost of hardware resources.
+I<RESAMPLE> for a more accurate one at the cost of hardware resources.
 
 =item B<reSID's fast sampling>=I<< <true|false> >>
 
@@ -267,9 +269,11 @@ L<C64play(1)>
 
 =over
 
-=item Erika Lima
+=item Enki Costa
 
 Riced sidplayfp over and over and called it C64play.
+
+Current maintainer.
 
 =item Leandro Nini
 
@@ -333,7 +337,7 @@ Wrote the original man page.
 
 =item Copyright (C) 2010-2024 Leandro Nini
 
-=item Copyright (C) 2024 Erika Lima
+=item Copyright (C) 2024 Enki Costa
 
 =back
 

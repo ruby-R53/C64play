@@ -37,7 +37,7 @@ description for each of them.
 
 =item B<-h, --help-debug>
 
-Displays a help message for debugging-related options, plug a
+Displays a help message for debugging-related options, plus a
 brief description for each.
 
 =item B<-f>I<< <num> >>
@@ -154,11 +154,6 @@ Record selected tune to a WAV file. The default file name is
 than one subtune. By providing [name], the .wav extension is added
 automatically.
 
-=item B<--au>I<< [name] >>
-
-Record selected tune to an AU file. Uses the same naming convention
-as I<-w>.
-
 =item B<--resid>
 
 Use the reSID emulation engine, made by the VICE project.
@@ -181,14 +176,12 @@ which is the default.
 =item B<--fcurve=>I<< <num>|auto >>
 
 Sets the filter curve on the reSIDfp emulation engine. Ranges
-from 0.0 ("light") to 1.0 ("dark"). Defaults to 0.5, and can
-also [auto]matically select a value according to the tune's
-author.
+from -2.5 ("light") to 2.5 ("dark"). Defaults to 0.5.
 
 =item B<--frange=>I<< <num>|auto >>
 
 For libsidplayfp v2.7.0 and higher. Controls the filter range
-value for the 6581 chip in reSIDfp emulation.
+value for the 6581 chip under the reSIDfp emulation.
 
 =item B<--noaudio>
 
@@ -296,7 +289,7 @@ L<c64play.ini(5)>
 
 =head1 NOTES
 
-Due to Copyright laws, C64play isn't shipped with ROM dumps.
+Due to Copyright issues, C64play isn't shipped with ROM dumps.
 
 Check L<c64play.ini> for more details like search paths and configuration stuff.
 
@@ -305,9 +298,9 @@ Check L<c64play.ini> for more details like search paths and configuration stuff.
 
 =over
 
-=item Erika Lima
+=item Enki Costa
 
-Current developer of C64play.
+Current maintainer of C64play.
 
 =item Leandro Nini
 
@@ -371,7 +364,7 @@ Wrote the original man page.
 
 =item Copyright (C) 2010-2024 Leandro Nini
 
-=item Copyright (C) 2024 Erika Lima
+=item Copyright (C) 2024 Enki Costa
 
 =back
 
