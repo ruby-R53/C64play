@@ -1,3 +1,10 @@
+February 12, 2025:
+- Fixed (?) `oscidump_2SID.sh`
+  - I literally just copy & pasted the code for the 1SID
+    version of this script and missed some simple details.
+	I didn't even bother actually including the 2nd sample
+	channel dump :sob:
+
 February 11, 2025:
 - First update of the year!
 - I was finally able to implement not one but 2 scripts for

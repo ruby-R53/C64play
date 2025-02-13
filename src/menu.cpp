@@ -532,7 +532,7 @@ void ConsolePlayer::menu() {
     cerr << " Kernal ROM   : ";
     if (std::strlen(romDesc) == 0) {
         consoleColour(red, false);
-        cerr << "None - some tunes won't play properly!";
+        cerr << "None - some tunes won't properly play!";
     } else {
         consoleColour(white, false);
         cerr << romDesc;
@@ -830,7 +830,7 @@ void ConsolePlayer::consoleTable(player_table_t table) {
 // Restore ANSI console to defaults
 void ConsolePlayer::consoleRestore() {
     if (m_iniCfg.console().ansi) {
-		cerr << "\x1b[?25h"; // cursor visibility
-        cerr << "\x1b[0m";   // colors
+		cerr << "\x1b[?25h"; // unhide cursor
+        cerr << "\x1b[0m";   // restore colors
 	}
 }

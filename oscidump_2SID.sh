@@ -10,7 +10,6 @@ if [[ $# != 0 ]]; then
 	c64play $@ -m2 -m3 -m4 -m5 -m6 -w01\ -\ Voice\ 1.wav && # then dump Voice 1
 	c64play $@ -m1 -m3 -m4 -m5 -m6 -w02\ -\ Voice\ 2.wav && # Voice 2
 	c64play $@ -m1 -m2 -m4 -m5 -m6 -w03\ -\ Voice\ 3.wav && # and 3
-	# SID #2
 	c64play $@ -m1 -m2 -m3 -m5 -m6 -w11\ -\ Voice\ 1.wav &&
 	c64play $@ -m1 -m2 -m3 -m4 -m6 -w12\ -\ Voice\ 2.wav &&
 	c64play $@ -m1 -m2 -m3 -m4 -m5 -w13\ -\ Voice\ 3.wav &&
@@ -24,7 +23,8 @@ if [[ $# != 0 ]]; then
 				[[ ! $PARAMS = "-ma" ]] && NEW_ARGS+=("$PARAMS")
 			done
 			set -- "${NEW_ARGS[@]}"
-			c64play $@ -m1 -m2 -m3 -w04\ -\ Master\ volume.wav
+			c64play $@ -m1 -m2 -m3 -m4 -m5 -m6 -mb -w04\ -\ Master\ volume.wav
+			c64play $@ -m1 -m2 -m3 -m4 -m5 -m6 -ma -w14\ -\ Master\ volume.wav
 		fi
 	done
 
