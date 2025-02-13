@@ -20,3 +20,5 @@ build
 src/config.h
 src/config.h.in~
 src/stamp-h1
+doc/c64play.1
+doc/c64play.ini.5
