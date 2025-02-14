@@ -176,7 +176,7 @@ which is the default.
 =item B<--fcurve=>I<< <num>|auto >>
 
 Sets the filter curve on the reSIDfp emulation engine. Ranges
-from -2.5 ("light") to 2.5 ("dark"). Defaults to 0.5.
+from -2.0 ("light") to 2.0 ("dark"). Defaults to 0.5.
 
 =item B<--frange=>I<< <num>|auto >>
 

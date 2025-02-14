@@ -255,7 +255,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 m_engCfg.fastSampling = ((argv[i][3] == 'f') ? true : false);
             }
 
-            // SID model + audio channel options
+            // SID model + audio layout options
 			else if (argv[i][1] == 'm') { // Mono playback
                 if (argv[i][2] == '\0') {
                     m_channels = 1;
@@ -280,6 +280,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                     if (voice > 0 && voice <= m_mute_channel.size())
                         m_mute_channel[voice-1] = true;
                 }
+
                 m_engCfg.forceSidModel = ((argv[i][3] == 'f') ? true : false);
             }
 
@@ -420,7 +421,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
         m_track.loop = false;
 
     if (m_driver.info && m_driver.file) {
-        displayError("WARNING: metadata can only be added to wav files!");
+        displayError("WARNING: metadata can only be added to WAV files!");
     }
 
     // Select the desired track
@@ -494,8 +495,8 @@ void ConsolePlayer::displayArgs (const char *arg) {
         << SidConfig::DEFAULT_SAMPLING_FREQ << endl
         << "-D<addr>           set address of SID #2 (e.g. -ds0xd420)" << endl
         << "-T<addr>           set address of SID #3 (e.g. -ts0xd440)" << endl
-        << "-m<num|char>       mute voice <num> (e.g. -m1 -m2), use" << endl
-		<< "                   'a' to 'c' for muting sample playback too" << endl
+        << "-m<num|a-c>        mute voice <num> (e.g. -m1 -m2), use" << endl
+		<< "                   'a','b' or 'c' for muting sample playback" << endl
         << "-nf                disable filter emulation" << endl
         << "-o<l|s>            loop and/or make it single track" << endl
         << "-o<num>            start track (default: preset)" << endl

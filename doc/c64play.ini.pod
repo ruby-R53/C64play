@@ -220,7 +220,7 @@ Ranges from 0.0 ("dark") to 1.0 ("light"), defaults to 0.5.
 =item B<6581 filter curve>=I<< <number> >>
 
 Controls the SID's filter curve on reSIDfp's emulation.
-Ranges from -2.5 ("bright") to 2.5 ("dark"), defaults to 0.5.
+Ranges from -2.0 ("bright") to 2.0 ("dark"), defaults to 0.5.
 
 =item B<6581 filter range>=I<< <number> >>
 
