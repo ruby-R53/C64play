@@ -58,15 +58,10 @@ See what I've done down below and also how you can contribute to the project!
 
 - STILView
   - Never used it, didn't wanna take care of something I never messed
-    with...
+    with···
 
 - Support for emulating with a real SID (e.g. exSID)
-  - I'm actually only *considering* to drop support for those, as I currently
-    don't have any of those devices. However, if you, the reader, do have at
-	least one of them, lemme know! (as if an enthusiast would actually see
-	my project at all, not sure why I'm writing this...)
-  - UPDATE (2024/7/7): I found out that HardSID support is untested on
-    libsidplayfp. Why bother?? xD
+  - HardSID support is untested on libsidplayfp. Why bother?? xD
 
 - AU file support
   - I only knew this file format existed after digging into sidplayfp's source
