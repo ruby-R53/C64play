@@ -44,7 +44,7 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
 
     pacfg.channels = cfg.channels;
     pacfg.rate     = cfg.frequency;
-    pacfg.format   = PA_SAMPLE_S16NE;
+    pacfg.format   = PA_SAMPLE_S16LE;
 
     // Set bit depth and type of encoding.
     int err;
@@ -118,7 +118,7 @@ bool Audio_Pulse::write(uint_least32_t size) {
     //if (pa_simple_write(_audioHandle, _sampleBuffer, frames * m_frameSize, &err) < 0) {
 	if (pa_simple_write(_audioHandle, _sampleBuffer, size * 2, &err) < 0) {
         setError(pa_strerror(err));
-		//return false; // can't set song length to infinite with that
+		return false;
     }
 
     return true;

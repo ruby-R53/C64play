@@ -29,8 +29,9 @@ public:
     uint_least32_t frequency; // sample rate (Hz)
     uint_least32_t depth;     // bit depth
     uint8_t        channels;  // audio channels
-    uint16_t       bufSize;   // sample buffer size (frames)
+    uint16_t       bufSize;   // sample buffer size
 
+	// defaults
     AudioConfig() :
         frequency(48000),
         depth(16),

@@ -252,6 +252,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 } else {
                     err = true;
                 }
+
                 m_engCfg.fastSampling = ((argv[i][3] == 'f') ? true : false);
             }
 
@@ -260,16 +261,27 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 if (argv[i][2] == '\0') {
                     m_channels = 1;
                 }
-                else if (argv[i][2] == 'o') { // use the 6581 chip
-                    m_engCfg.defaultSidModel = SidConfig::MOS6581;
-                }
-                else if (argv[i][2] == 'n') { // or the 8580 one
+
+				// use the 6581 chip
+                else if (argv[i][2] == 'o' || argv[i][2] == 'n') {
+                    m_engCfg.defaultSidModel =
+					((argv[i][2] == 'o') ? SidConfig::MOS6581 : SidConfig::MOS8580);
+
+				// user wants to force that model?
+                m_engCfg.forceSidModel = ((argv[i][3] == 'f') ? true : false);
+				}
+
+				/*
+				// or the 8580 one
+                else if (argv[i][2] == 'n') {
                     m_engCfg.defaultSidModel = SidConfig::MOS8580;
 				}
+				*/
 
 #ifdef FEAT_SAMPLE_MUTE
 				// Sample channel muting
 				else if (argv[i][2] >= 'a' && argv[i][2] <= 'c') {
+					// convert 'a' thru 'c' to an actual number
 					m_mute_samples[(argv[i][2] - 'a')] = true;
                 }
 #endif
@@ -277,11 +289,10 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 				else {
 					// Channel muting
                     const int voice = atoi(&argv[i][2]);
+
                     if (voice > 0 && voice <= m_mute_channel.size())
                         m_mute_channel[voice-1] = true;
                 }
-
-                m_engCfg.forceSidModel = ((argv[i][3] == 'f') ? true : false);
             }
 
             else if (std::strcmp (&argv[i][1], "-digiboost") == 0) {
@@ -320,12 +331,8 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 
 #ifdef FEAT_FILTER_RANGE
-            else if (strncmp (&argv[i][1], "-frange=", 8) == 0) {
-                if (strncmp (&argv[i][9], "auto", 4) == 0) {
-                    m_autofilter = true;
-                } else {
-                    m_frange = atof(&argv[i][9]);
-                }
+            else if (strncmp(&argv[i][1], "-frange=", 8) == 0) {
+            	m_frange = atof(&argv[i][9]);
             }
 #endif
 
@@ -337,44 +344,44 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                     m_outfile = &argv[i][2];
             }
 
-            else if (strncmp (&argv[i][1], "-wav", 4) == 0) {
+            else if (strncmp(&argv[i][1], "-wav", 4) == 0) {
                 m_driver.output = OUT_WAV;
                 m_driver.file   = true;
                 if (argv[i][5] != '\0')
                     m_outfile = &argv[i][5];
             }
 
-            else if (strncmp (&argv[i][1], "-info", 5) == 0) {
+            else if (strncmp(&argv[i][1], "-info", 5) == 0) {
                 m_driver.info   = true;
             }
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
-            else if (std::strcmp (&argv[i][1], "-residfp") == 0) {
+            else if (std::strcmp(&argv[i][1], "-residfp") == 0) {
                 m_driver.sid    = EMU_RESIDFP;
             }
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
-            else if (std::strcmp (&argv[i][1], "-resid") == 0) {
+            else if (std::strcmp(&argv[i][1], "-resid") == 0) {
                 m_driver.sid    = EMU_RESID;
             }
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESID_H
 
             // These are for debug
-            else if (std::strcmp (&argv[i][1], "-none") == 0) {
+            else if (std::strcmp(&argv[i][1], "-none") == 0) {
                 m_driver.sid    = EMU_NONE;
                 m_driver.output = OUT_NULL;
             }
 
-            else if (std::strcmp (&argv[i][1], "-nosid") == 0) {
+            else if (std::strcmp(&argv[i][1], "-nosid") == 0) {
                 m_driver.sid = EMU_NONE;
             }
 
-            else if (std::strcmp (&argv[i][1], "-noaudio") == 0) {
+            else if (std::strcmp(&argv[i][1], "-noaudio") == 0) {
                 m_driver.output = OUT_NULL;
             }
 
-            else if (std::strcmp (&argv[i][1], "-cpu-debug") == 0) {
+            else if (std::strcmp(&argv[i][1], "-cpu-debug") == 0) {
                 m_cpudebug = true;
             }
 
@@ -382,7 +389,8 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 err = true;
             }
 
-        } else { // Reading file name
+        } else {
+			// Reading the file name
             if (infile == 0)
                 infile = i;
             else
@@ -474,6 +482,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
         displayError(m_engine.error());
         return -1;
     }
+
     return 1;
 }
 
