@@ -1,3 +1,11 @@
+March 22, 2025:
+- Fixed WAV dumping when the SID model is forced
+  - The program would ignore that setting and dump the
+    individual channels on the tune-specified SID model.
+	The code looks a little ugly, but hey, it works! I should
+	be able to do it better later. For now, it's just a quick
+	fix.
+
 February 12, 2025:
 - Fixed (?) `oscidump_2SID.sh`
   - I literally just copy & pasted the code for the 1SID
