@@ -19,7 +19,7 @@ if [[ $# != 0 ]]; then
 				[[ ! $PARAMS = "-ma" ]] && NEW_ARGS+=("$PARAMS")
 			done
 			set -- "${NEW_ARGS[@]}"
-			c64play $@ -m1 -m2 -m3 -w04\ -\ Master\ volume.wav
+			c64play $@ -m1 -m2 -m3 -w04\ -\ Master\ Volume.wav
 		fi
 	done
 
