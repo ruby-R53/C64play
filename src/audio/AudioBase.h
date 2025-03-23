@@ -66,8 +66,6 @@ public:
 
     short *buffer() const override { return _sampleBuffer; }
 
-	//void clearBuffer() override { std::memset(_sampleBuffer, 0, _settings.getBufBytes()); }
-
     void getConfig(AudioConfig &cfg) const override {
         cfg = _settings;
     }

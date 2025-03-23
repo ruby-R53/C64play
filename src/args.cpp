@@ -1,7 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2024 Erika Lima
+ * Copyright 2024-2025 Enki Costa
  * Copyright 2011-2023 Leandro Nini
  * Copyright 2000-2001 Simon White
  *
@@ -43,7 +43,7 @@ using std::endl;
 #define SEPARATOR "/"
 
 /**
- * Try load SID tune from HVSC_BASE
+ * Try loading SID tune from HVSC_BASE
  */
 bool ConsolePlayer::tryOpenTune(const char *hvscBase) {
     std::string newFileName(hvscBase);
@@ -59,7 +59,7 @@ bool ConsolePlayer::tryOpenTune(const char *hvscBase) {
 }
 
 /**
- * Try load songlength DB from HVSC_BASE
+ * Try loading songlength DB from HVSC_BASE
  */
 bool ConsolePlayer::tryOpenDatabase(const char *hvscBase) {
     std::string newFileName(hvscBase);
@@ -108,6 +108,7 @@ bool parseTime(const char *str, uint_least32_t &time) {
 
             *milli = '\0';
         }
+
         val = atoi (sep + 1);
         if (val < 0 || val > 59)
             return false;
@@ -262,8 +263,8 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                     m_channels = 1;
                 }
 
-				// use the 6581 chip
                 else if (argv[i][2] == 'o' || argv[i][2] == 'n') {
+					// use specified model
                     m_engCfg.defaultSidModel =
 					((argv[i][2] == 'o') ? SidConfig::MOS6581 : SidConfig::MOS8580);
 

@@ -178,6 +178,7 @@ bool iniHandler::write(const TCHAR *fName) {
                 iniFile << key << " = ";
             iniFile << (*entry).second << std::endl;
         }
+
 		if (section != (sections.end() - 1))
         	iniFile << std::endl;
     }

@@ -1,7 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2024 Erika Lima
+ * Copyright 2024-2025 Enki Costa
  * Copyright 2013-2016 Leandro Nini
  * Copyright 2008 Antti Lankila
  *
@@ -74,7 +74,6 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
             throw error("Unable to allocate memory for sample buffers!");
         }
 
-		//m_frameSize = 2 * cfg.channels;
         _settings = cfg;
 
         return true;
@@ -114,8 +113,6 @@ bool Audio_Pulse::write(uint_least32_t size) {
     }
 
     int err;
-	//size_t const bytes = static_cast<size_t>(frames) * m_frameSize;
-    //if (pa_simple_write(_audioHandle, _sampleBuffer, frames * m_frameSize, &err) < 0) {
 	if (pa_simple_write(_audioHandle, _sampleBuffer, size * 2, &err) < 0) {
         setError(pa_strerror(err));
 		return false;

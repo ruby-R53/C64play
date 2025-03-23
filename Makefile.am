@@ -12,7 +12,6 @@ AM_CPPFLAGS = \
 $(C64PLAY_CFLAGS) \
 $(ALSA_CFLAGS) \
 $(PULSE_CFLAGS) \
-$(OUT123_CFLAGS) \
 @debug_flags@
 
 
@@ -66,8 +65,7 @@ $(AUDIO_LDFLAGS) \
 $(SIDPLAYFP_LIBS) \
 $(BUILDERS_LDFLAGS) \
 $(ALSA_LIBS) \
-$(PULSE_LIBS) \
-$(OUT123_LIBS)
+$(PULSE_LIBS)
 
 #=========================================================
 # docs

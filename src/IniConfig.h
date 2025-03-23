@@ -62,9 +62,6 @@ public:
         int sampleRate; // in Hz
         int channels;
         int bitDepth;
-		//int bufSize;    // in milliseconds
-		
-		//int getBufSize() const { return (bufSize * sampleRate) / 1000; }
     };
 
     struct emulation_section { // [Emulation] section

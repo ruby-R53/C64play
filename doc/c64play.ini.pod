@@ -32,8 +32,10 @@ And, if any of those settings are outside of their section, it will be ignored.
 =item B<Songlength DB>=I<< <path> >>
 
 Full path for the Songlength database.
+
 By default, the program will look for F<DOCUMENTS/Songlengths.md5> under the HVSC
 path, if $HVSC_BASE is set.
+
 If this variable is not set, C64play will try
 F<$PREFIX/share/C64play/Songlengths.md5> instead.
 
@@ -43,7 +45,7 @@ Default play time if Songlengths.md5 isn't found. Defaults to 0, which means inf
 
 =item B<Default record time>=I<MM:SS.mmm>
 
-Default recording time when recording to WAV if Songlengths.md5 isn't found. Defaults to 5 minutes.
+Default recording time when recording to WAV if Songlengths.md5 isn't found. Defaults to 4 minutes.
 
 =item B<Kernal ROM>=I<< <path> >>
 
@@ -69,11 +71,13 @@ if not found in any of the directories above.
 =item B<BASIC ROM>=I<< <path> >>
 
 Full path for the BASIC ROM file. This is mostly useful for playing tunes made in BASIC.
+
 By default the program will look for a file named F<basic> under the same locations as above.
 
 =item B<Chargen ROM>=I<< <path> >>
 
 Full path for the Character generator ROM file. Almost useless for actually playing tunes, but included for completeness.
+
 By default the program will look for a file named F<chargen> under the same locations as above too.
 
 =item B<Verboseness>=I<< <num> >>
@@ -337,7 +341,7 @@ Wrote the original man page.
 
 =item Copyright (C) 2010-2024 Leandro Nini
 
-=item Copyright (C) 2024 Enki Costa
+=item Copyright (C) 2024-2025 Enki Costa
 
 =back
 

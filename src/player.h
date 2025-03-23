@@ -1,7 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2024 Erika Lima
+ * Copyright 2024-2025 Enki Costa
  * Copyright 2011-2024 Leandro Nini
  * Copyright 2000-2001 Simon White
  *
@@ -44,8 +44,6 @@
 
 #include <string>
 #include <bitset>
-//#include <thread>
-//#include <atomic>
 
 typedef enum {
 	black,
@@ -83,9 +81,6 @@ typedef enum {
     EMU_NONE = 0,
     // The following require a soundcard
     EMU_DEFAULT, EMU_RESIDFP, EMU_RESID,
-    // The following should disable the soundcard
-    //EMU_SIDSTATION, EMU_COMMODORE,
-    //EMU_SIDSYN,
 	EMU_END
 } SIDEMUS;
 
@@ -122,7 +117,6 @@ private:
     sidplayfp         m_engine;
     SidConfig         m_engCfg;
     SidTune           m_tune;
-    //std::atomic<player_state_t> m_state;
 	player_state_t    m_state;
     const char*       m_outfile;
     std::string       m_filename;
@@ -160,9 +154,6 @@ private:
 
     unsigned int      m_channels;
     unsigned int      m_bitDepth;
-	//unsigned int      m_bufferSize;
-
-	//std::thread      *m_thread = nullptr;
 
     struct m_filter_t {
         bool          enabled;

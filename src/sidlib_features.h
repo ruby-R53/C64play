@@ -1,7 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2024 Erika Lima
+ * Copyright 2024-2025 Enki Costa
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

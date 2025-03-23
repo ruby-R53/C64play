@@ -110,8 +110,10 @@ signed 16-bit output, or 32 for a 32-bit float one. Defaults to 16.
 
 Track options:
 Use I<l> to make the selected track loop.
+
 Use I<s> to select only one of the subtunes from <file> and play it,
 ignoring the rest.
+
 And use I<<num>> to make playback start at a specific subtune from
 <file>.
 
@@ -122,8 +124,11 @@ Set play time, in [min:]sec[.mil] format. Use 0 for infinite play time.
 =item B<-v>I<< <n|p>[f] >>
 
 Set or [f]orce a video signal for the VIC chip.
+
 Use I<n> for NTSC, commonly used in America, with a 60 Hz signal.
+
 And use I<p> for PAL, commonly used in Europe, with a 50 Hz signal.
+
 Note that not forcing a video signal triggers a signal fix. On a
 real C64 this doesn't happen, so adding [f] simulates the real
 behavior.
@@ -131,7 +136,9 @@ behavior.
 =item B<-m>I<< <o|n>[f] >>
 
 Set or [f]orce SID chip to be used.
+
 Use I<o> for the old 6581 model.
+
 And use I<n> for the newer 8580 one.
 
 =item B<--digiboost>
@@ -145,7 +152,9 @@ Set resampling method. If using the reSID engine, [f]ast sampling
 is supported.
 Use I<i> for Resample interpolate, which prioritizes speed over
 accuracy.
-And use I<r> for Resample, which prioritizes accuracy over speed.
+
+And use I<r> for Resample, which prioritizes accuracy over speed
+(this is the default).
 
 =item B<-w, --wav>I<< [name] >>
 
@@ -364,7 +373,7 @@ Wrote the original man page.
 
 =item Copyright (C) 2010-2024 Leandro Nini
 
-=item Copyright (C) 2024 Enki Costa
+=item Copyright (C) 2024-2025 Enki Costa
 
 =back
 

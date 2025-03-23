@@ -1,7 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2024 Erika Lima
+ * Copyright 2024-2025 Enki Costa
  * Copyright 2016 Leandro Nini
  * Copyright 2000-2001 Simon White
  *
@@ -44,9 +44,7 @@ public:  // --------------------------------------------------------- public
     void close() override;
     void reset() override {}
 	bool write(uint_least32_t size) override;
-    //bool write(uint_least32_t frames) override;
     void pause() override {}
-	//void clearBuffer() override {}
 };
 
 #endif // AUDIO_NULL_H

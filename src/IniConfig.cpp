@@ -1,7 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2024 Erika Lima
+ * Copyright 2024-2025 Enki Costa
  * Copyright 2011-2024 Leandro Nini
  * Copyright 2000-2001 Simon White
  *
@@ -96,7 +96,6 @@ void IniConfig::clear() {
     audio_s.sampleRate = SidConfig::DEFAULT_SAMPLING_FREQ;
     audio_s.channels   = 0;
     audio_s.bitDepth   = 16;
-	//audio_s.bufSize    = 250;
 
     emulation_s.modelDefault = SidConfig::PAL;
     emulation_s.modelForced  = false;
@@ -115,7 +114,7 @@ void IniConfig::clear() {
 #ifdef FEAT_CW_STRENGTH
     emulation_s.combinedWaveformsStrength = SidConfig::AVERAGE;
 #endif
-    emulation_s.powerOnDelay   = -1;
+    emulation_s.powerOnDelay   = -1; // -1 means the delay will be random
     emulation_s.samplingMethod = SidConfig::RESAMPLE_INTERPOLATE;
     emulation_s.fastSampling   = false;
 }
@@ -319,7 +318,6 @@ void IniConfig::readAudio(iniHandler &ini) {
     readInt(ini, TEXT("Sample rate"), audio_s.sampleRate);
     readInt(ini, TEXT("Channels"),    audio_s.channels);
     readInt(ini, TEXT("Bit depth"),   audio_s.bitDepth);
-	//readInt(ini, TEXT("Buffer size"), audio_s.bufSize);
 }
 
 
@@ -347,18 +345,17 @@ void IniConfig::readEmulation(iniHandler &ini) {
     readBool(ini, TEXT("DigiBoost"), emulation_s.digiboost);
     {
         SID_STRING str = readString(ini, TEXT("CIA version"));
-        if (!str.empty())
-        {
+        if (!str.empty()) {
             if (str.compare(TEXT("MOS6526")) == 0)
                 emulation_s.ciaModel = SidConfig::MOS6526;
             else if (str.compare(TEXT("MOS8521")) == 0)
                 emulation_s.ciaModel = SidConfig::MOS8521;
         }
     }
+
     {
         SID_STRING str = readString(ini, TEXT("SID version"));
-        if (!str.empty())
-        {
+        if (!str.empty()) {
             if (str.compare(TEXT("MOS6581")) == 0)
                 emulation_s.sidModel = SidConfig::MOS6581;
             else if (str.compare(TEXT("MOS8580")) == 0)

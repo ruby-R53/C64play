@@ -2,6 +2,7 @@
  * This file is part of sidplayfp, a console SID player.
  *
  * Copyright 2000-2002 Simon White
+ * Copyright 2024-2025 Enki Costa
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,15 +25,12 @@ Audio_Null::Audio_Null() :
     AudioBase("NULL"),
     isOpen(false) {}
 
-Audio_Null::~Audio_Null()
-{
+Audio_Null::~Audio_Null() {
     close();
 }
 
-bool Audio_Null::open(AudioConfig &cfg)
-{
-    if (isOpen)
-    {
+bool Audio_Null::open(AudioConfig &cfg) {
+    if (isOpen) {
         setError("Audio device already open.");
         return false;
     }
@@ -42,18 +40,15 @@ bool Audio_Null::open(AudioConfig &cfg)
     return true;
 }
 
-bool Audio_Null::write(uint_least32_t)
-{
-    if (!isOpen)
-    {
+bool Audio_Null::write(uint_least32_t) {
+    if (!isOpen) {
         setError("Audio device not open.");
         return false;
     }
     return true;
 }
 
-void Audio_Null::close(void)
-{
+void Audio_Null::close(void) {
     if (!isOpen)
         return;
 

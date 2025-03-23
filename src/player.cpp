@@ -1,7 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2024 Erika Lima
+ * Copyright 2024-2025 Enki Costa
  * Copyright 2011-2024 Leandro Nini
  * Copyright 2000-2001 Simon White
  *
@@ -93,140 +93,14 @@ uint16_t freqTableNtsc[] = {
     0x8620, 0x8e20, 0x96a0, 0x9f80, 0xa900, 0xb300, 0xbdc0, 0xc900, 0xd520, 0xe1a0, 0xef20, 0xfd40, // 8
 };
 
-/*
-// This table contains chip-profiles which allow us to adjust
-// certain settings that varied wildly between 6581 chips, even
-// made in the same factory on the same day.
-//
-// This works under the assumption that the authors used the
-// same SID chip their entire career.
-//
-// taken from https://github.com/reFX/libSidplayEZ/blob/modernized/src/chip-profiles.h
-#ifdef FEAT_FILTER_RANGE
-static const filter_map_t filterRangeMap = {
-    { "Anthony Lees",                        1.30 },
-    { "Antony Crowther (Ratt)",              1.10 },
-    { "Barry Leitch (The Jackal)",           0.05 },
-    { "Ben Daglish",                         0.60 },
-    { "Charles Deenen",                      0.20 },
-    { "Chris H\xFClsbeck",                   0.60 },
-    { "David Dunn",                          0.15 },
-    { "David Dunn & Aidan Bell",             0.15 },
-    { "David Whittaker",                     0.15 },
-    { "Thomas Mogensen (DRAX)",              0.30 },
-    { "Edwin van Santen",                    0.50 },
-    { "Edwin van Santen & Falco Paul",       0.40 }, // 20th Century Composers
-    { "Edwin van Santen & Venom",            0.40 }, // 20th Century Composers
-    { "Falco Paul",                          0.15 },
-    { "Falco Paul & Edwin van Santen",       0.40 }, // 20th Century Composers
-    { "Figge Wasberger (Fegolhuzz)",         0.25 },
-    { "Fred Gray",                           0.18 },
-    { "Geir Tjelta",                         0.50 },
-    { "Geoff Follin",                        0.85 },
-    { "Georg Feil",                          0.20 },
-    { "Glenn Rune Gallefoss",                1.30 },
-    { "Graham Jarvis & Rob Hartshorne",      0.25 },
-    { "Jason Page",                          0.35 },
-    { "Jeroen Tel",                          0.35 },
-    { "Johannes Bjerregaard",                0.35 },
-    { "Jonathan Dunn",                       0.25 },
-    { "Jouni Ikonen (Mixer)",                0.25 },
-    { "Jori Olkkonen",                       0.15 },
-    { "Jori Olkkonen (Yip)",                 0.15 },
-    { "Kim Christensen (Future Freak)",      0.35 },
-    { "Linus \xC5kesson (lft)",              0.30 },
-    { "Mark Cooksey",                        0.25 },
-    { "Markus M\xFCller (Superbrain)",       0.30 },
-    { "Martin Galway",                       1.00 },
-    { "Martin Walker",                       0.15 },
-    { "Matt Gray",                           0.30 },
-    { "Michael Hendriks",                    0.25 },
-    { "Mitch & Dane",                        0.75 },
-    { "M. Nilsson-Vonderburgh (Mic)",        0.25 },
-    { "M. Nilsson-Vonderburgh (Mitch)",      0.25 },
-    { "M. Nilsson-Vonderburgh (Yankee)",     0.25 },
-    { "Neil Brennan",                        0.25 },
-    { "Peter Clarke",                        0.20 },
-    { "Pex Tufvesson (Mahoney)",             0.35 },
-    { "Pex Tufvesson (Zax)",                 0.35 },
-    { "Renato Brosowski (Zoci-Joe)",         0.30 },
-    { "Reyn Ouwehand",                       0.25 },
-    { "Richard Joseph",                      0.30 },
-    { "Rob Hubbard",                         0.35 },
-    { "Russell Lieblich",                    0.25 },
-    { "Stellan Andersson (Dane)",            0.75 },
-    { "Steve Turner",                        0.60 },
-    { "Tim Follin",                          0.50 },
-    { "Thomas E. Petersen (Laxity)",         0.30 },
-    { "Thomas E. Petersen (TSS)",            0.30 },
-};
-#else
-static const filter_map_t filterCurveMap = {
-    { "Anthony Lees",                        0.450 },
-    { "Antony Crowther (Ratt)",              0.400 },
-    { "Ben Daglish",                         0.900 },
-    { "Charles Deenen",                      1.000 },
-    { "Chris H\xFClsbeck",                   0.600 },
-    { "David Dunn",                          1.100 },
-    { "David Dunn & Aidan Bell",             1.100 },
-    { "David Whittaker",                     1.000 },
-    { "Thomas Mogensen (DRAX)",              0.450 },
-    { "Edwin van Santen",                    0.650 },
-    { "Falco Paul",                          1.100 },
-    { "Figge Wasberger (Fegolhuzz)",         1.100 },
-    { "Fred Gray",                           1.250 },
-    { "Geir Tjelta",                         0.700 },
-    { "Georg Feil",                          1.250 },
-    { "Glenn Rune Gallefoss",                1.250 },
-    { "Graham Jarvis & Rob Hartshorne",      1.000 },
-    { "Jason Page",                          1.000 },
-    { "Jeroen Tel",                          0.825 },
-    { "Johannes Bjerregaard",                0.700 },
-    { "Jonathan Dunn",                       0.750 },
-    { "Jouni Ikonen (Mixer)",                0.600 },
-    { "Kim Christensen (Future Freak)",      0.300 },
-    { "Linus \xC5kesson (lft)",              0.900 },
-    { "Mark Cooksey",                        1.250 },
-    { "Markus M\xFCller (Superbrain)",       0.800 },
-    { "Martin Walker",                       1.000 },
-    { "Matt Gray",                           1.100 },
-    { "Michael Hendriks",                    0.900 },
-    { "M. Nilsson-Vonderburgh (Mic)",        0.700 },
-    { "M. Nilsson-Vonderburgh (Mitch)",      0.700 },
-    { "M. Nilsson-Vonderburgh (Yankee)",     0.700 },
-    { "Neil Brennan",                        0.750 },
-    { "Peter Clarke",                        0.600 },
-    { "Pex Tufvesson (Mahoney)",             0.400 },
-    { "Pex Tufvesson (Zax)",                 0.400 },
-    { "Renato Brosowski (Zoci-Joe)",         1.400 },
-    { "Reyn Ouwehand",                       1.000 },
-    { "Richard Joseph",                      0.700 },
-    { "Rob Hubbard",                         0.700 },
-    { "Russell Lieblich",                    0.400 },
-    { "Stellan Andersson (Dane)",            0.350 },
-    { "Steve Turner",                        0.550 },
-    { "Tim Follin",                          0.300 },
-    { "Thomas E. Petersen (Laxity)",         1.550 },
-    { "Thomas E. Petersen (TSS)",            1.550 },
-};
-#endif
-
-#ifdef FEAT_FILTER_RANGE
-double getRecommendedFilterRange(const std::string& author) {
-    filter_map_iter_t it = filterRangeMap.find(author);
-    if (it != filterRangeMap.end()) {
-        double adjustment = it->second;
-        return (adjustment * 20. - 1.) / 39.;
-    }
-    return -1;
-}
-#else
-double getRecommendedFilterCurve(const std::string& author) {
-    filter_map_iter_t it = filterCurveMap.find(author);
-    return (it != filterCurveMap.end()) ? it->second : -1.;
-}
-#endif
-*/
+/* You see, this part was supposed to be the suggested filter range/curve table.
+ * I decided not to implement it, because I personally don't agree with any of its
+ * numbers and I'm pretty sure a lot of other SID listeners don't.
+ * Everyone had a different experience when listening to these SIDs, so I don't
+ * really see why it'd be a great idea to implement one universal filter parameter
+ * table.
+ * Plus, that thing was really really huge :(
+ */
 
 uint8_t* loadRom(const SID_STRING &romPath, const int size) {
     SID_IFSTREAM is(romPath.c_str(), std::ios::binary);
@@ -329,7 +203,6 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
         m_engCfg.fastSampling    = emulation.fastSampling;
         m_channels               = audio.channels;
         m_bitDepth               = audio.bitDepth;
-		//m_bufferSize             = audio.getBufSize();
         m_filter.enabled         = emulation.filter;
         m_filter.bias            = emulation.bias;
         m_filter.filterCurve6581 = emulation.filterCurve6581;
@@ -349,13 +222,13 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 
         if (!emulation.engine.empty()) {
             if (emulation.engine.compare(TEXT("RESIDFP")) == 0) {
-                m_driver.sid    = EMU_RESIDFP;
+                m_driver.sid = EMU_RESIDFP;
             }
             else if (emulation.engine.compare(TEXT("RESID")) == 0) {
-                m_driver.sid    = EMU_RESID;
+                m_driver.sid = EMU_RESID;
             }
             else if (emulation.engine.compare(TEXT("NONE")) == 0) {
-                m_driver.sid    = EMU_NONE;
+                m_driver.sid = EMU_NONE;
             }
         }
     }
@@ -460,7 +333,6 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
     m_driver.cfg.channels  = m_channels ? m_channels : tuneChannels;
     m_driver.cfg.depth     = m_bitDepth;
 	m_driver.cfg.bufSize   = 0; // Recalculate
-    //m_driver.cfg.bufSize   = m_bufferSize;
 
     {   // Open the hardware
         bool err = false;
@@ -531,14 +403,6 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
 #ifdef FEAT_FILTER_RANGE
             double frange = m_filter.filterRange6581;
-
-			/*
-            if (m_autofilter && (tuneInfo->numberOfInfoStrings() == 3)) {
-                frange = getRecommendedFilterRange(tuneInfo->infoString(1));
-                if (m_verboseLevel > 1)
-                    cerr << "Suggested filter range: " << frange << endl;
-            }
-			*/
 
 			if (m_frange >= 0.0) {
                 frange = m_frange;
@@ -688,8 +552,6 @@ bool ConsolePlayer::open(void) {
     // Start the player. Do this by fast
     // forwarding to the start position
     m_driver.selected = &m_driver.null;
-    //m_speed.current   = m_speed.max;
-	// ^ it still works without it :shrug:
     m_engine.fastForward(100 * m_speed.current);
 
     m_engine.mute(0, 0, m_mute_channel[0]);
@@ -736,18 +598,6 @@ bool ConsolePlayer::open(void) {
 
     // Update display
     menu();
-	/*
-    // Update display at 50/60Hz
-    unsigned int delay = isNTSC ? 16 : 20;
-    m_thread = new std::thread([this](unsigned int delay) {
-        while (m_state != playerStopped) {
-			if (m_state == playerRunning)
-            	updateDisplay();
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-        }
-    }, delay);
-	*/
 
     return true;
 }
@@ -776,35 +626,18 @@ void ConsolePlayer::close() {
 
         cerr << endl;
     }
-
-	/*
-	if (m_thread) {
-		m_thread->join();
-		delete m_thread;
-	}
-	*/
 }
 
 // Out play loop to be externally called
 bool ConsolePlayer::play() {
 	uint_least32_t retSize = 0;
-    //uint_least32_t frames = 0;
 
     if (m_state == playerRunning) {
-		/*
-        // getBufSize returns the number of frames
-        // multiply by number of channels to get the count of 16-bit samples
-        const uint_least32_t length = getBufSize() * m_driver.cfg.channels;
-		short *buffer = m_driver.selected->buffer(); // Fill buffer
-        uint_least32_t samples = m_engine.play(buffer, length);
-		*/
-
 		updateDisplay();
 
 		const uint_least32_t length = getBufSize();
 		short *buffer = m_driver.selected->buffer(); // Fill buffer
         retSize = m_engine.play(buffer, length);
-        //if ((samples < length) || !m_engine.isPlaying()) {
         if ((retSize < length) || !m_engine.isPlaying()) {
 			cerr << m_engine.error();
 			m_state = playerError;
@@ -887,8 +720,6 @@ uint_least32_t ConsolePlayer::getBufSize() {
             m_state = playerRestart;
         }
     } else {
-        //uint_least32_t remainingMs = m_timer.stop - m_timer.current;
-        //uint_least32_t bufSize     = (remainingMs * m_driver.cfg.frequency) / 100;
 		uint_least32_t remaining = m_timer.stop - m_timer.current;
         uint_least32_t bufSize   = remaining * m_driver.cfg.bytesPerMillis();
 

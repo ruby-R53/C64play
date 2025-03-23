@@ -44,8 +44,6 @@
 #  define HAVE_NULL
 #endif
 
-//#include <iostream>
-
 bool audioDrv::open(AudioConfig &cfg) {
     bool res = false;
 #ifdef HAVE_PULSE

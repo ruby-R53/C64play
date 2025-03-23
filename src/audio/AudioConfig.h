@@ -1,7 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2024 Erika Lima
+ * Copyright 2024-2025 Enki Costa
  * Copyright 2000 Simon White
  *
  * This program is free software; you can redistribute it and/or modify
@@ -38,7 +38,6 @@ public:
         channels(1),
         bufSize(0) {}
 
-	//uint_least32_t getBufBytes() const { return bufSize * channels * (depth/8); }
 	uint_least32_t bytesPerMillis() const { return (depth/8 * channels * frequency) / 1000; }
 };
 

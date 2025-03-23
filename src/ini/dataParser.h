@@ -38,6 +38,7 @@ private:
         if (stream.fail()) {
             throw parseError();
         }
+
         return value;
     }
 

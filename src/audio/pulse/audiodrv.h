@@ -37,7 +37,6 @@ class Audio_Pulse: public AudioBase
 {
 private:  // ------------------------------------------------------- private
     pa_simple *_audioHandle;
-	//int        m_frameSize;
 
 //private:
     void outOfOrder();
@@ -50,7 +49,6 @@ public:  // --------------------------------------------------------- public
     void close() override;
     void reset() override {}
     bool write(uint_least32_t size) override;
-    //bool write(uint_least32_t frames) override;
     void pause() override {}
 };
 

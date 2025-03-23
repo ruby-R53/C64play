@@ -1,7 +1,8 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console SID player.
  *
  * Copyright 2000-2001 Simon White
+ * Copyright 2024-2025 Enki Costa
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,11 +66,11 @@ public:  // --------------------------------------------------------- public
     Audio_OSS();
     ~Audio_OSS() override;
 
-    bool open  (AudioConfig &cfg) override;
-    void close () override;
-    void reset () override;
-    bool write (uint_least32_t size) override;
-    void pause () override {}
+    bool open (AudioConfig &cfg) override;
+    void close() override;
+    void reset() override;
+    bool write(uint_least32_t size) override;
+    void pause() override {}
 };
 
 #endif // HAVE_*_SOUNDCARD_H
