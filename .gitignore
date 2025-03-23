@@ -17,6 +17,7 @@ build
 *.o
 *.la
 *.lo
+src/*.swp
 src/config.h
 src/config.h.in~
 src/stamp-h1

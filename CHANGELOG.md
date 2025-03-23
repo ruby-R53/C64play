@@ -5,6 +5,9 @@ March 22, 2025:
 	The code looks a little ugly, but hey, it works! I should
 	be able to do it better later. For now, it's just a quick
 	fix.
+- Small cleanup
+  - Removed redundant `cerr << dec;` on `menu.cpp`. Why the
+    heck did I only notice that now?
 
 February 12, 2025:
 - Fixed (?) `oscidump_2SID.sh`

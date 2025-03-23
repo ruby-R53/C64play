@@ -446,6 +446,7 @@ void ConsolePlayer::menu() {
 			consoleColour(yellow, true);
 			cerr << " Filter Curve : ";
 			consoleColour(white, false);
+
 			if (!m_engCfg.forceSidModel && tuneModel != Chip::UNKNOWN_ANY) {
 				switch(tuneModel) {
 				default:
@@ -605,7 +606,7 @@ void ConsolePlayer::refreshRegDump() {
 
 	cerr << "\x1b[" << movLines << "F"; // Moves cursor for updating the displays
 
-    for (int j=0; j < tuneInfo->sidChips(); ++j) {
+    for (int j = 0; j < tuneInfo->sidChips(); ++j) {
     	uint8_t* registers = m_registers[j];
         uint8_t  oldCtl[3];
         oldCtl[0] = registers[0x04];
@@ -617,7 +618,7 @@ void ConsolePlayer::refreshRegDump() {
             oldCtl[1] ^= registers[0x0b];
             oldCtl[2] ^= registers[0x12];
 
-            for (int i=0; i < 3; ++i) {
+            for (int i = 0; i < 3; ++i) {
                 consoleTable (tableMiddle);
 
                 cerr << "   " << (j*3 + i+1) << "    ";
@@ -694,9 +695,8 @@ void ConsolePlayer::refreshRegDump() {
 
 					 << '\n';
             }
-			cerr << dec;
         } else {
-			for (int i=0; i < 3; ++i) {
+			for (int i = 0; i < 3; ++i) {
                 consoleTable(tableMiddle);
 				cerr << "???\n";
 		    }
@@ -717,12 +717,10 @@ void ConsolePlayer::refreshRegDump() {
 	        consoleTable(tableMiddle);
 
 			// number each SID chip if needed
-			if (tuneInfo->sidChips() >= 2) {
-            	cerr << " SID #" << (j + 1) << ":  ";
-				cerr << miscInfo << '\n';
+			if (tuneInfo->sidChips() > 1) {
+            	cerr << " SID #" << (j + 1) << ":  " << miscInfo << '\n';
 			} else
-				cerr << setw(tableWidth/2 + miscInfo.length()/2) << miscInfo
-				     << '\n';
+				cerr << setw(tableWidth/2 + miscInfo.length()/2) << miscInfo << '\n';
 
             consoleTable(tableMiddle);
 
@@ -759,10 +757,11 @@ void ConsolePlayer::refreshRegDump() {
 	        
 				 << '\n';
 	    }
-		cerr << dec;
         consoleTable(tableEnd);
 	} else
         cerr << '\r';
+
+	cerr << dec;
 
     if (m_driver.file)
         cerr << info_file << ": ";
