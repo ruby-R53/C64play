@@ -167,7 +167,7 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
     m_cpudebug(false),
     m_autofilter(false)
 {
-    memset(m_registers, 0, 32*3);
+	std::memset(m_registers, 0, 32*3);
 
     // Other defaults
     m_filter.enabled = true;

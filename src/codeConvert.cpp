@@ -1,6 +1,7 @@
 /*
  * This file is part of C64play, a console Player for SID tunes.
  *
+ * Copyright 2024-2025 Enki Costa
  * Copyright 2021-2023 Leandro Nini
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,10 +28,10 @@ const char* codeConvert::convert(const char* src) {
     if (cd == (iconv_t) -1)
         return src;
 
-    char *srcPtr   = const_cast<char*>(src);
+    ICONV_CONST char *srcPtr = const_cast<ICONV_CONST char*>(src);
     size_t srcLeft = strlen(src);
     char *outPtr   = buffer;
-    size_t outLeft = sizeof (buffer)-1;
+    size_t outLeft = sizeof(buffer)-1;
 
     while (srcLeft > 0) {
         size_t ret = iconv(cd, &srcPtr, &srcLeft, &outPtr, &outLeft);

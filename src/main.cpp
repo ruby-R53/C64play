@@ -1,6 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
+ * Copyright 2024-2025 Enki Costa
  * Copyright 2012 Leandro Nini
  * Copyright 2000 Simon White
  *
