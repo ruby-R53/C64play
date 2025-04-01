@@ -1,3 +1,8 @@
+April 1, 2025:
+- Not a joke, I had to fix OsciDump to work with relative
+  paths···
+  - I've always that, only now I'm fixing it ¯\\\_(ツ)_/¯
+
 March 22, 2025:
 - Fixed WAV dumping when the SID model is forced
   - The program would ignore that setting and dump the
