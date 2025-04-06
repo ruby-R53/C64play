@@ -41,8 +41,7 @@ PKG_CHECK_MODULES(PULSE,
 
 
 dnl Checks what version of Unix we have and soundcard support
-AC_CHECK_HEADERS([sys/ioctl.h linux/soundcard.h machine/soundcard.h \
-sys/soundcard.h soundcard.h])
+AC_CHECK_HEADERS([sys/ioctl.h linux/soundcard.h machine/soundcard.h sys/soundcard.h soundcard.h])
 
 # NetBSD/OpenBSD OSS audio emulation
 AS_IF([test "x$ac_cv_header_soundcard_h" = "xyes"],
@@ -57,8 +56,7 @@ PKG_CHECK_MODULES(SIDPLAYFP, [libsidplayfp >= 2.2.0])
 saveCPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $C64PLAY_CFLAGS"
 
-AC_CHECK_HEADERS([sidplayfp/builders/residfp.h \
-sidplayfp/builders/resid.h])
+AC_CHECK_HEADERS([sidplayfp/builders/residfp.h sidplayfp/builders/resid.h])
 
 CPPFLAGS=$saveCPPFLAGS
 
