@@ -834,6 +834,9 @@ void ConsolePlayer::decodeKeys() {
         break;
 
 		case A_GOTO:
+			if (m_track.single || m_track.songs == 1)
+				break;
+
 			cerr << "\x1b[2K\r";
             cerr << "Jumping to subtune: ";
 			keyboard_disable_raw();

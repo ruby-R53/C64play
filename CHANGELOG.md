@@ -1,3 +1,10 @@
+April 6, 2025:
+- C64play now ignores the `g` key if it's either invoked with
+  `-os` or if the file only has one tune.
+  - No idea why I decided to add that now. Ever since I
+    implemented that key shortcut, that idea never, EVER,
+	appeared in my head. Better late than never, I guess.
+
 April 1, 2025:
 - Not a joke, I had to fix OsciDump to work with relative
   paths···
