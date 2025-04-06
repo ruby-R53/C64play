@@ -840,14 +840,13 @@ void ConsolePlayer::decodeKeys() {
 			cerr << "\x1b[2K\r";
             cerr << "Jumping to subtune: ";
 			keyboard_disable_raw();
-			std::cin >> m_track.query;
+			std::cin >> m_track.selected;
 			keyboard_enable_raw();
 			cerr << "\x1b[2K\r" << "\x1b[1A";
-			if (m_track.query <= m_track.songs) {
-                m_track.selected = m_track.query;
+			if (m_track.selected <= m_track.songs) {
 				m_state = playerFastRestart;
 			} else {
-				cerr << "Subtune #" << m_track.query << " not found!";
+				cerr << "Subtune #" << m_track.selected << " not found!";
 				sleep(1);
 			}
 		break;

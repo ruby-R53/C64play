@@ -196,7 +196,6 @@ private:
         uint_least16_t songs;
         bool           loop;
         bool           single;
-		unsigned int   query;
     } m_track;
 
     struct m_speed_t {
