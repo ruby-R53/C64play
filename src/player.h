@@ -145,7 +145,6 @@ private:
 	bool              songlengthDB;
 
     bool              m_cpudebug;
-    bool              m_autofilter;
 	std::bitset<9>    m_mute_channel;
 
 #ifdef FEAT_SAMPLE_MUTE
@@ -176,13 +175,12 @@ private:
         bool        info;     // File metadata
         AudioConfig cfg;
         IAudio*     selected; // Selected Output Driver
-        IAudio*     device;   // HW/File Driver
+        IAudio*     device;   // Sound card/File Driver
         Audio_Null  null;     // Used for everything
     } m_driver;
 
     struct m_timer_t { // secs
         uint_least32_t start;
-        //std::atomic<uint_least32_t current;
 		uint_least32_t current;
         uint_least32_t stop;
         uint_least32_t length;

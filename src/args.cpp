@@ -324,11 +324,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 
             else if (strncmp (&argv[i][1], "-fcurve=", 8) == 0) {
-                if (strncmp (&argv[i][9], "auto", 4) == 0) {
-                    m_autofilter = true;
-                } else {
-                    m_fcurve = atof(&argv[i][9]);
-                }
+                m_fcurve = atof(&argv[i][9]);
             }
 
 #ifdef FEAT_FILTER_RANGE

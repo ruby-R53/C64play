@@ -164,8 +164,7 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 #endif
 
     songlengthDB(false),
-    m_cpudebug(false),
-    m_autofilter(false)
+    m_cpudebug(false)
 {
 	std::memset(m_registers, 0, 32*3);
 
