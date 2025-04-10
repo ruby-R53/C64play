@@ -753,7 +753,7 @@ void ConsolePlayer::refreshRegDump() {
 			// filter cutoff frequency display
 	        cerr << "      "
 				 << "$" << setw(3) << setfill('0')
-				 << (registers[0x15] & 0x07 << 8 | registers[0x16])
+				 << (registers[0x16] << 4 | registers[0x15] & 0x07)
 	        
 				 << '\n';
 	    }

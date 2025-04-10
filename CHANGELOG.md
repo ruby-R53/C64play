@@ -1,3 +1,9 @@
+April 10, 2025:
+- Fixed filter cutoff display
+  - The lower 8 bits are actually meant to be the higher ones.
+    Apparently I misunderstood the SID's datasheet.
+	So thank you for pointing that out, Jammer!!
+
 April 6, 2025:
 - C64play now ignores the `g` key if it's either invoked with
   `-os` or if the file only has one tune.
