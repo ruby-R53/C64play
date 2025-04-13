@@ -1,6 +1,7 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console SID player.
  *
+ * Copyright 2025 Enki Costa
  * Copyright 2014-2016 Leandro Nini
  *
  * This program is free software; you can redistribute it and/or modify
