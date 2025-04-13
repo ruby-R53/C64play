@@ -1,6 +1,7 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
+ * Copyright 2025 Enki Costa
  * Copyright 2000 Simon White
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,8 +28,7 @@
 
 #include "AudioBase.h"
 
-class audioDrv : public IAudio
-{
+class audioDrv : public IAudio {
 private:
     std::unique_ptr<AudioBase> audio;
 

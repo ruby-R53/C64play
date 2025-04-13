@@ -1,6 +1,7 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console SID player.
  *
+ * Copyright 2025 Enki Costa
  * Copyright 2013 Leandro Nini
  * Copyright 2000 Simon White
  *
@@ -26,8 +27,7 @@
 
 class AudioConfig;
 
-class IAudio
-{
+class IAudio {
 public:
     virtual ~IAudio() = default;
 

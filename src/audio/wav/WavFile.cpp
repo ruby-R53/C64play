@@ -1,6 +1,7 @@
 /*
- * This file is part of sidplayfp, a SID player.
+ * This file is part of C64play, a SID player.
  *
+ * Copyright 2025 Enki Costa
  * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2004 Simon White
@@ -64,11 +65,11 @@ inline void endian_little16 (uint8_t ptr[2], uint_least16_t word) {
 // Write a little-endian 32-bit word to four bytes in memory.
 inline void endian_little32 (uint8_t ptr[4], uint_least32_t dword) {
 	uint_least16_t word = 0;
-	ptr[0] = endian_32lo8  (dword);
-	ptr[1] = endian_32hi8  (dword);
-	word   = endian_32hi16 (dword);
-	ptr[2] = endian_16lo8  (word);
-	ptr[3] = endian_16hi8  (word);
+	ptr[0] = endian_32lo8 (dword);
+	ptr[1] = endian_32hi8 (dword);
+	word   = endian_32hi16(dword);
+	ptr[2] = endian_16lo8 (word);
+	ptr[3] = endian_16hi8 (word);
 }
 
 const riffHeader WavFile::defaultRiffHdr = {
@@ -212,6 +213,7 @@ void WavFile::close() {
 			file->write((char*)&wavHdr, sizeof(wavHeader));
 			delete file;
 		}
+
 		file = nullptr;
 		delete[] _sampleBuffer;
 	}

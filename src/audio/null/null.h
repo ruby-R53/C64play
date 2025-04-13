@@ -33,10 +33,10 @@
  * Null audio driver used for songlength detection
  */
 class Audio_Null: public AudioBase {
-private:  // ------------------------------------------------------- private
+private:
     bool isOpen;
 
-public:  // --------------------------------------------------------- public
+public:
     Audio_Null();
     ~Audio_Null() override;
 

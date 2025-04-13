@@ -1,6 +1,7 @@
 /*
- * This file is part of sidplayfp, a SID player.
+ * This file is part of C64play, a SID player.
  *
+ * Copyright 2025 Enki Costa
  * Copyright 2011-2018 Leandro Nini <drfiemost@users.sourceforge.net>
  * Copyright 2007-2010 Antti Lankila
  * Copyright 2000-2004 Simon White

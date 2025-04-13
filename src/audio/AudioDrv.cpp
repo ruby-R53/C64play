@@ -1,8 +1,9 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2000 Simon White
+ * Copyright 2025 Enki Costa
  * Copyright 2013-2016 Leandro Nini
+ * Copyright 2000 Simon White
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
