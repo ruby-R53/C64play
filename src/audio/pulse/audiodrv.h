@@ -1,7 +1,8 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console SID player.
  *
  * Copyright 2008 Antti Lankila
+ * Copyright 2025 Enki Costa
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,12 +34,10 @@
 
 #include "../AudioBase.h"
 
-class Audio_Pulse: public AudioBase
-{
+class Audio_Pulse: public AudioBase {
 private:  // ------------------------------------------------------- private
     pa_simple *_audioHandle;
 
-//private:
     void outOfOrder();
 
 public:  // --------------------------------------------------------- public

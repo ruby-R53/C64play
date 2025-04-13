@@ -105,7 +105,6 @@ void Audio_Pulse::close() {
 }
 
 bool Audio_Pulse::write(uint_least32_t size) {
-//bool Audio_Pulse::write(uint_least32_t frames) {
     if (_audioHandle == nullptr) {
         setError("Device not open.");
 

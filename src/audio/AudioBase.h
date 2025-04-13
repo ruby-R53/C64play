@@ -1,6 +1,7 @@
 /*
- * This file is part of sidplayfp, a console SID player.
+ * This file is part of C64play, a console SID player.
  *
+ * Copyright 2025 Enki Costa
  * Copyright 2013-2016 Leandro Nini
  * Copyright 2000 Simon White
  *
@@ -23,7 +24,6 @@
 #define AUDIOBASE_H
 
 #include <string>
-//#include <cstring>
 
 #include "IAudio.h"
 #include "AudioConfig.h"
