@@ -39,6 +39,7 @@
 #include "audio/AudioConfig.h"
 #include "audio/null/null.h"
 #include "IniConfig.h"
+#include "settings.h"
 
 #include "sidlib_features.h"
 
@@ -124,10 +125,10 @@ private:
     IniConfig         m_iniCfg;
     SidDatabase       m_database;
 
-    double            m_fcurve;
+    Setting<double>   m_fcurve;
 
 #ifdef FEAT_FILTER_RANGE
-    double            m_frange;
+    Setting<double>   m_frange;
 #endif
 
 #ifdef FEAT_CW_STRENGTH

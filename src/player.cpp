@@ -50,7 +50,6 @@ using std::endl;
 #include <sidplayfp/SidInfo.h>
 #include <sidplayfp/SidTuneInfo.h>
 
-//#include <chrono>
 #include <unordered_map>
 
 using filter_map_t = std::unordered_map<std::string, double>;
@@ -157,11 +156,6 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
     m_state(playerStopped),
     m_outfile(nullptr),
     m_filename(""),
-    m_fcurve(-3.0),
-
-#ifdef FEAT_FILTER_RANGE
-    m_frange(-1.0),
-#endif
 
     songlengthDB(false),
     m_cpudebug(false)
@@ -403,8 +397,8 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 #ifdef FEAT_FILTER_RANGE
             double frange = m_filter.filterRange6581;
 
-			if (m_frange >= 0.0) {
-                frange = m_frange;
+			if (m_frange.has_value()) {
+                frange = m_frange.value();
             }
 
             if ((frange < 0.0) || (frange > 1.0)) {
@@ -418,8 +412,8 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
             // 6581
             double fcurve = m_filter.filterCurve6581;
 
-			if (m_fcurve >= -2.0) {
-            	fcurve = m_fcurve;
+			if (m_fcurve.has_value()) {
+            	fcurve = m_fcurve.value();
 			}
 
             if ((fcurve < -2.0) || (fcurve > 2.0)) {
@@ -432,8 +426,8 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
             // 8580
             fcurve = m_filter.filterCurve8580;
 
-			if (m_fcurve >= -2.0) {
-            	fcurve = m_fcurve;
+			if (m_fcurve.has_value()) {
+            	fcurve = m_fcurve.value();
 			}
 
             if ((fcurve < -2.0) || (fcurve > 2.0)) {

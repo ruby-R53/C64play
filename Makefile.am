@@ -31,6 +31,7 @@ src/main.cpp \
 src/menu.cpp \
 src/player.cpp \
 src/player.h \
+src/settings.h \
 src/sidcxx11.h \
 src/sidlib_features.h \
 src/utils.cpp \

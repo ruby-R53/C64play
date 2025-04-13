@@ -451,10 +451,10 @@ void ConsolePlayer::menu() {
 				switch(tuneModel) {
 				default:
 				case Chip::MOS6581:
-					cerr << ((m_fcurve == -3.0) ? m_filter.filterCurve6581 : m_fcurve) << endl;
+					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
 					break;
 				case Chip::CSG8580:
-					cerr << ((m_fcurve == -3.0) ? m_filter.filterCurve6581 : m_fcurve) << endl;
+					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
 					break;
 				}
 			}
@@ -463,10 +463,10 @@ void ConsolePlayer::menu() {
 				switch(cfgModel) {
 				default:
 				case Chip::MOS6581:
-					cerr << ((m_fcurve == -3.0) ? m_filter.filterCurve6581 : m_fcurve) << endl;
+					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
 					break;
 				case Chip::CSG8580:
-					cerr << ((m_fcurve == -3.0) ? m_filter.filterCurve6581 : m_fcurve) << endl;
+					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
 					break;
 				}
 			}
@@ -482,7 +482,7 @@ void ConsolePlayer::menu() {
 					consoleColour(yellow, true);
 					cerr << " Filter Range : ";
 					consoleColour(white, false);
-					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
+					cerr << (m_frange.has_value() ? m_frange.value() : m_filter.filterRange6581)
 					     << endl;
 				}
 				break;
@@ -507,7 +507,7 @@ void ConsolePlayer::menu() {
 					consoleColour(yellow, true);
 					cerr << " Filter Range : ";
 					consoleColour(white, false);
-					cerr << ((m_frange == -1) ? m_filter.filterRange6581 : m_frange)
+					cerr << (m_frange.has_value() ? m_frange.value() : m_filter.filterRange6581)
 						 << endl;
 				}
 				break;
