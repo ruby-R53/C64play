@@ -64,14 +64,16 @@ $(ALSA_LIBS) \
 $(PULSE_LIBS)
 
 #=========================================================
-# docs
+# Documentation, ROMs and OsciDump
 
 EXTRA_DIST = \
 doc/c64play.pod \
 doc/c64play.ini.pod \
 roms/basic.901226-01.bin \
 roms/characters.901225-01.bin \
-roms/kernal.901227-03.bin
+roms/kernal.901227-03.bin \
+oscidump.sh \
+oscidump_2SID.sh
 
 dist_man_MANS = \
 doc/c64play.1 \
