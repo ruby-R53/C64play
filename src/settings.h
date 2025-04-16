@@ -25,19 +25,18 @@
 #include "sidcxx11.h"
 
 #ifdef HAVE_CXX17
-
 #include <optional>
 
 template <typename T>
 using Setting = std::optional<T>;
 
 #else
-
 #include <type_traits>
 
 template <typename T>
+
 class Setting {
-    static_assert(std::is_scalar<T>(), "T must be a scalar type");
+    static_assert(std::is_scalar<T>(), "T must be a scalar type!");
 
 private:
     T m_val;

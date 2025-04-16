@@ -63,15 +63,10 @@ inline void error(const TCHAR *msg, const TCHAR *val) {
 const TCHAR *DIR_NAME  = TEXT("C64play");
 const TCHAR *FILE_NAME = TEXT("c64play.ini");
 
+// Initialize everything else 
+IniConfig::IniConfig() { clear(); }
 
-IniConfig::IniConfig() { // Initialise everything else
-    clear();
-}
-
-
-IniConfig::~IniConfig() {
-    clear();
-}
+IniConfig::~IniConfig() { clear(); }
 
 void IniConfig::clear() {
     player_s.database.clear ();
@@ -223,12 +218,13 @@ bool readTime(iniHandler &ini, const TCHAR *key, int &value) {
     const size_t sep = str.find_first_of(':');
     const size_t dot = str.find_first_of('.');
     try {
-        if (sep == SID_STRING::npos) { // User gave seconds
+        if (sep == SID_STRING::npos) { // User gave seconds?
             time = dataParser::parseInt(str.c_str());
-        } else {   // Read in MM:SS.mmm format
+        } else { // Read in MM:SS.mmm format
             const int min = dataParser::parseInt(str.substr(0, sep).c_str());
             if (min < 0 || min > 99)
                 goto IniCofig_readTime_error;
+
             time = min * 60;
 
             int sec;

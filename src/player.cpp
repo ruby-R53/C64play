@@ -632,15 +632,10 @@ bool ConsolePlayer::play() {
 
             return false;
         }
-
-		// m_engine.play returns the number of 16bit samples
-        // divide by number of channels to get the count of frames
-        //frames = samples / m_driver.cfg.channels;
     }
 
     switch (m_state) {
     case playerRunning:
-        //if (!m_driver.selected->write(frames)) {
         if (!m_driver.selected->write(retSize)) {
             cerr << m_driver.selected->getErrorString();
             m_state = playerError;

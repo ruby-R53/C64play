@@ -272,13 +272,6 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 m_engCfg.forceSidModel = ((argv[i][3] == 'f') ? true : false);
 				}
 
-				/*
-				// or the 8580 one
-                else if (argv[i][2] == 'n') {
-                    m_engCfg.defaultSidModel = SidConfig::MOS8580;
-				}
-				*/
-
 #ifdef FEAT_SAMPLE_MUTE
 				// Sample channel muting
 				else if (argv[i][2] >= 'a' && argv[i][2] <= 'c') {
@@ -511,7 +504,8 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		<< "                   to unsigned 16-bit" << endl
         << "-s                 use stereo output" << endl
         << "-m                 use mono output" << endl
-        << "-t<num>            set play length in [mins:]secs[.milli]" << endl
+        << "-t<num>            set play/record length in" << endl
+		<< "                   [mins:]secs[.milli] format" << endl
 		<< "                   format, use 0 for infinite play time" << endl
         << "-<v|q>[x]          [v]erbose or [q]uiet output, where [x] is" << endl
 		<< "                   an optional level that defaults to 1" << endl
