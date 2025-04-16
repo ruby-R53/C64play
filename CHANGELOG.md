@@ -1,3 +1,16 @@
+April 16, 2025:
+- Fixed Filter Curve display for CSG 8580 tunes
+  - I put the same variable for the 6581 filter curve value xd
+- C64play is now bundled with the C64's latest ROMs!
+  - I think it's safe to include them here now. I mean, I got
+    my (and this program's) ROMs from the internet, and I'm
+	pretty sure plenty of other websites have the same files.
+	Commodore doesn't even exist anymore, so how would they
+	even wanna do something about it?
+	I mean, even VICE which is a lot more popular than a lot
+	of other tools bundles those ROMs, so why would anything
+	happen to my rather insignificant project···?
+
 April 10, 2025:
 - Fixed filter cutoff display
   - The lower 8 bits are actually meant to be the higher ones.
