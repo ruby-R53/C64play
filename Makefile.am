@@ -1,10 +1,5 @@
 AUTOMAKE_OPTIONS = foreign subdir-objects
 
-if USE_ICONV
-  ICONV_SOURCES = \
-src/codepages.h
-endif
-
 AM_CPPFLAGS = \
 -I $(top_builddir)/src \
 -I $(top_srcdir)/src \
@@ -73,7 +68,10 @@ $(PULSE_LIBS)
 
 EXTRA_DIST = \
 doc/c64play.pod \
-doc/c64play.ini.pod
+doc/c64play.ini.pod \
+roms/basic.901226-01.bin \
+roms/characters.901225-01.bin \
+roms/kernal.901227-03.bin
 
 dist_man_MANS = \
 doc/c64play.1 \
