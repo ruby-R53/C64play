@@ -298,8 +298,6 @@ L<c64play.ini(5)>
 
 =head1 NOTES
 
-Due to Copyright issues, C64play isn't shipped with ROM dumps.
-
 Check L<c64play.ini> for more details like search paths and configuration stuff.
 
 
