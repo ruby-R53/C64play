@@ -48,7 +48,11 @@ public:
 
     inline bool has_value() const { return m_isSet; }
     inline T value() const { return m_val; }
-    inline Setting<T>& operator =(const T& val) { m_val = val; m_isSet = true;  return *this; }
+    inline Setting<T>& operator = (const T& val) {
+		m_val = val;
+		m_isSet = true;
+		return *this;
+	}
 };
 
 #endif // HAVE_CXX17

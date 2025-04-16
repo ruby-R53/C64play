@@ -395,47 +395,42 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 #endif
 
 #ifdef FEAT_FILTER_RANGE
-            double frange = m_filter.filterRange6581;
-
+			// 6581 filter range control
 			if (m_frange.has_value()) {
-                frange = m_frange.value();
+                m_filter.filterRange6581 = m_frange.value();
             }
 
-            if ((frange < 0.0) || (frange > 1.0)) {
-                cerr << "Invalid 6581 filter range: " << frange << endl;
+            if ((m_filter.filterRange6581 < 0.0) || (m_filter.filterRange6581 > 1.0)) {
+                cerr << "Invalid 6581 filter range: " << m_filter.filterRange6581 << endl;
                 exit(EXIT_FAILURE);
             }
 
-            rs->filter6581Range(frange);
+            rs->filter6581Range(m_filter.filterRange6581);
 #endif
 
-            // 6581
-            double fcurve = m_filter.filterCurve6581;
-
+            // 6581 filter curve control
 			if (m_fcurve.has_value()) {
-            	fcurve = m_fcurve.value();
+            	m_filter.filterCurve6581 = m_fcurve.value();
 			}
 
-            if ((fcurve < -2.0) || (fcurve > 2.0)) {
-                cerr << "Invalid 6581 filter curve: " << fcurve << endl;
+            if ((m_filter.filterCurve6581 < -2.0) || (m_filter.filterCurve6581 > 2.0)) {
+                cerr << "Invalid 6581 filter curve: " << m_filter.filterCurve6581 << endl;
                 exit(EXIT_FAILURE);
             }
 
-            rs->filter6581Curve(fcurve);
+            rs->filter6581Curve(m_filter.filterCurve6581);
 
-            // 8580
-            fcurve = m_filter.filterCurve8580;
-
+            // 8580 filter curve control
 			if (m_fcurve.has_value()) {
-            	fcurve = m_fcurve.value();
+            	m_filter.filterCurve8580 = m_fcurve.value();
 			}
 
-            if ((fcurve < -2.0) || (fcurve > 2.0)) {
-                cerr << "Invalid 8580 filter curve: " << fcurve << endl;
+            if ((m_filter.filterCurve8580 < -2.0) || (m_filter.filterCurve8580 > 2.0)) {
+                cerr << "Invalid 8580 filter curve: " << m_filter.filterCurve8580 << endl;
                 exit(EXIT_FAILURE);
             }
 
-            rs->filter8580Curve(fcurve);
+            rs->filter8580Curve(m_filter.filterCurve8580);
         }
 
         catch (std::bad_alloc const &ba) {}

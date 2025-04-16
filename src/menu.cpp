@@ -454,7 +454,7 @@ void ConsolePlayer::menu() {
 					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
 					break;
 				case Chip::CSG8580:
-					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
+					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve8580) << endl;
 					break;
 				}
 			}
@@ -466,7 +466,7 @@ void ConsolePlayer::menu() {
 					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
 					break;
 				case Chip::CSG8580:
-					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
+					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve8580) << endl;
 					break;
 				}
 			}
