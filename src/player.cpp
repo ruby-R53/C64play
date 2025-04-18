@@ -632,7 +632,8 @@ bool ConsolePlayer::play() {
 
             return false;
         }
-    }
+    } else
+		usleep(100000);
 
     switch (m_state) {
     case playerRunning:
