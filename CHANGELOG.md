@@ -1,3 +1,9 @@
+April 18, 2025:
+- Fix increase on CPU usage during pause
+  - I have no idea what could have possibly caused that, but
+    it got fixed by simply adding a .1-second delay to the
+	condition check ¯\\\_(ツ)_/¯
+
 April 16, 2025:
 - Fixed Filter Curve display for CSG 8580 tunes
   - I put the same variable for the 6581 filter curve value xd
