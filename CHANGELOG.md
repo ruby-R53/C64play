@@ -6,12 +6,13 @@ April 19, 2025:
 	  Those are rather aesthetical than to make more sense,
 	  I mean, I literally just added a dash to them.
 	- `--none` -> `--null` (both audio driver and SID chip
-	  are nonexistent)
-	- `-t` -> `-l` ("*l*ength")
+	  are nonexistent).
+	- `-t` -> `-l` ("*l*ength").
 	- `--fcurve` -> `--curve` & `--frange` -> `--range`. Those
 	  are rather aesthetical than to make more sense, again. I
 	  at least think it will still mean the same thing for
 	  everyone ¯\\\_(ツ)_/¯
+	- `-p` -> `-d` ("bit *d*epth").
   - The `--wav` option was removed in favor of the `-w` one.
     - I mean, the latter is much better to type. Easier to
 	  handle as well. I've always used it. Pretty sure most

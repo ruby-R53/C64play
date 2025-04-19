@@ -82,7 +82,7 @@ bool parseTime(const char *str, uint_least32_t &time) {
     char *sep = (char *) strstr (str, ":");
     if (!sep) { // User gave seconds
         _time = atoi(str);
-    } else { // Read in MM:SS[.mmm] format
+    } else { // Read in [MM:]SS[.mmm] format
         int val;
         *sep = '\0';
         val  = atoi(str);
@@ -137,7 +137,7 @@ void displayDebugArgs() {
         << "--delay=<num>  simulate C64 power-on delay (default: random)" << endl
         << "--no-audio     no audio output device" << endl
         << "--no-sid       no SID emulation" << endl
-        << "--null         no audio output device and no SID emulation" << endl;
+        << "--null         no audio output device nor SID emulation" << endl;
 }
 
 // Parse command line arguments
@@ -223,7 +223,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 
 			// set bit depth
-            else if (argv[i][1] == 'p') {
+            else if (argv[i][1] == 'd') {
                 if (argv[i][2] == '\0') // user didn't provide anything?
                     err = true;
                 {
@@ -273,8 +273,8 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
                 else if (argv[i][2] == 'o' || argv[i][2] == 'n') {
 					// use specified model
-                    m_engCfg.defaultSidModel =
-					((argv[i][2] == 'o') ? SidConfig::MOS6581 : SidConfig::MOS8580);
+                    m_engCfg.defaultSidModel = ((argv[i][2] == 'o') ?
+					SidConfig::MOS6581 : SidConfig::MOS8580);
 
 				// user wants to force that model?
                 m_engCfg.forceSidModel = ((argv[i][3] == 'f') ? true : false);
@@ -342,6 +342,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             else if (argv[i][1] == 'w') {
                 m_driver.output = OUT_WAV;
                 m_driver.file   = true;
+
                 if (argv[i][2] != '\0')
                     m_outfile = &argv[i][2];
             }
@@ -503,7 +504,7 @@ void ConsolePlayer::displayArgs (const char *arg) {
         << "-nf               disable filter emulation" << endl
         << "-o<l|s>           loop and/or make the tune single track" << endl
         << "-o<num>           start track (default: preset)" << endl
-        << "-p<num>           set depth for file output: 16 for signed" << endl
+        << "-d<num>           set depth for file output: 16 for signed" << endl
 		<< "                  16-bit, and 32 for 32-bit float. Defaults" << endl
 		<< "                  to unsigned 16-bit" << endl
         << "-s                use stereo output" << endl
