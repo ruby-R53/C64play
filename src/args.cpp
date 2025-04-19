@@ -135,9 +135,9 @@ void displayDebugArgs() {
     out << "Debug options:" << endl
         << "--cpu-debug    display CPU registers and assembly dumps" << endl
         << "--delay=<num>  simulate C64 power-on delay (default: random)" << endl
-        << "--noaudio      no audio output device" << endl
-        << "--nosid        no SID emulation" << endl
-        << "--none         no audio output device and no SID emulation" << endl;
+        << "--no-audio     no audio output device" << endl
+        << "--no-sid       no SID emulation" << endl
+        << "--null         no audio output device and no SID emulation" << endl;
 }
 
 // Parse command line arguments
@@ -167,11 +167,13 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 return 0;
             }
 
+			// debug help options
             else if (!std::strcmp(&argv[i][1], "-help-debug")) {
                 displayDebugArgs();
                 return 0;
             }
 
+			// set start time
             else if (argv[i][1] == 'b') {
                 if (!parseTime(&argv[i][2], m_timer.start))
                     err = true;
@@ -189,6 +191,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                     err = true;
             }
 
+			// set sample rate
             else if (argv[i][1] == 'f') {
                 if (argv[i][2] == '\0')
                     err = true;
@@ -196,18 +199,20 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 
             // Disable filter emulation?
-            else if (strncmp (&argv[i][1], "nf", 2) == 0) {
+            else if (strncmp(&argv[i][1], "nf", 2) == 0) {
                 if (argv[i][3] == '\0')
                     m_filter.enabled = false;
             }
 
             // Track options
 			else if (argv[i][1] == 'o') {
+				// loop
                 if (argv[i][2] == 'l') {
                     m_track.loop   = true;
                     m_track.single = ((argv[i][3] == 's') ? true : false);
                     m_track.first  = atoi(&argv[i][((argv[i][3] == 's') ? 4 : 3)]);
                 }
+				// single-tune mode
                 else if (argv[i][2] == 's') {
                     m_track.loop   = ((argv[i][3] == 'l') ? true : false);
                     m_track.single = true;
@@ -217,6 +222,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 }
             }
 
+			// set bit depth
             else if (argv[i][1] == 'p') {
                 if (argv[i][2] == '\0') // user didn't provide anything?
                     err = true;
@@ -229,6 +235,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 }
             }
 
+			// set quietness level
             else if (argv[i][1] == 'q') {
                 if (argv[i][2] == '\0')
                     m_quietLevel = 1;
@@ -236,7 +243,8 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                     m_quietLevel = atoi(&argv[i][2]);
             }
 
-            else if (argv[i][1] == 't') {
+			// set play length
+            else if (argv[i][1] == 'l') {
                 if (!parseTime(&argv[i][2], m_timer.length))
                     err = true;
 
@@ -282,14 +290,15 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
 				else {
 					// Channel muting
-                    const int voice = atoi(&argv[i][2]);
+                    const uint8_t voice = atoi(&argv[i][2]);
 
                     if (voice > 0 && voice <= m_mute_channel.size())
                         m_mute_channel[voice-1] = true;
                 }
             }
 
-            else if (std::strcmp (&argv[i][1], "-digiboost") == 0) {
+			// enable DigiBoost?
+            else if (std::strcmp(&argv[i][1], "-digiboost") == 0) {
                 m_engCfg.digiBoost = true;
             }
 
@@ -312,16 +321,19 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 										 2 : 3)] == 'f') ?  true : false);
             }
 
-            else if (strncmp (&argv[i][1], "-delay=", 7) == 0) {
+			// set power-on delay
+            else if (strncmp(&argv[i][1], "-delay=", 7) == 0) {
                 m_engCfg.powerOnDelay = (uint_least16_t) atoi(&argv[i][8]);
             }
 
-            else if (strncmp (&argv[i][1], "-fcurve=", 8) == 0) {
+			// set filter curve
+            else if (strncmp(&argv[i][1], "-curve=", 7) == 0) {
                 m_fcurve = atof(&argv[i][9]);
             }
 
 #ifdef FEAT_FILTER_RANGE
-            else if (strncmp(&argv[i][1], "-frange=", 8) == 0) {
+			// set filter range
+            else if (strncmp(&argv[i][1], "-range=", 7) == 0) {
             	m_frange = atof(&argv[i][9]);
             }
 #endif
@@ -332,13 +344,6 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                 m_driver.file   = true;
                 if (argv[i][2] != '\0')
                     m_outfile = &argv[i][2];
-            }
-
-            else if (strncmp(&argv[i][1], "-wav", 4) == 0) {
-                m_driver.output = OUT_WAV;
-                m_driver.file   = true;
-                if (argv[i][5] != '\0')
-                    m_outfile = &argv[i][5];
             }
 
             else if (strncmp(&argv[i][1], "-info", 5) == 0) {
@@ -358,16 +363,16 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESID_H
 
             // These are for debug
-            else if (std::strcmp(&argv[i][1], "-none") == 0) {
+            else if (std::strcmp(&argv[i][1], "-null") == 0) {
                 m_driver.sid    = EMU_NONE;
                 m_driver.output = OUT_NULL;
             }
 
-            else if (std::strcmp(&argv[i][1], "-nosid") == 0) {
+            else if (std::strcmp(&argv[i][1], "-no-sid") == 0) {
                 m_driver.sid = EMU_NONE;
             }
 
-            else if (std::strcmp(&argv[i][1], "-noaudio") == 0) {
+            else if (std::strcmp(&argv[i][1], "-no-audio") == 0) {
                 m_driver.output = OUT_NULL;
             }
 
@@ -483,64 +488,59 @@ void ConsolePlayer::displayArgs (const char *arg) {
     if (arg)
         out << "Invalid option: " << arg << endl;
     else
-        out << "Syntax: " << m_name << " [options] <file>" << endl;
+        out << "Usage: " << m_name << " [options] <file>" << endl;
 
     out << "Options:" << endl
-        << "--help | -h        display this screen" << endl
-        << "--help-debug       debug help menu" << endl
-        << "-b<num>            set start time in [min:]sec[.mil] format" << endl
-		<< "                   format, defaults to 0" << endl
-        << "-f<num>            set sample rate in Hz, defaults to "
+        << "--help | -h       list options (this menu)" << endl
+        << "--help-debug      debug help menu" << endl
+        << "-b<num>           set start time in [min:]sec[.mil] format" << endl
+        << "-f<num>           set sample rate in Hz, defaults to "
         << SidConfig::DEFAULT_SAMPLING_FREQ << endl
-        << "-D<addr>           set address of SID #2 (e.g. -ds0xd420)" << endl
-        << "-T<addr>           set address of SID #3 (e.g. -ts0xd440)" << endl
-        << "-m<num|a-c>        mute voice <num> (e.g. -m1 -m2), use" << endl
-		<< "                   'a','b' or 'c' for muting sample playback" << endl
-        << "-nf                disable filter emulation" << endl
-        << "-o<l|s>            loop and/or make it single track" << endl
-        << "-o<num>            start track (default: preset)" << endl
-        << "-p<num>            set format for file output: 16 for signed" << endl
-		<< "                   16-bit, and 32 for 32-bit float. Defaults" << endl
-		<< "                   to unsigned 16-bit" << endl
-        << "-s                 use stereo output" << endl
-        << "-m                 use mono output" << endl
-        << "-t<num>            set play/record length in" << endl
-		<< "                   [mins:]secs[.milli] format" << endl
-		<< "                   format, use 0 for infinite play time" << endl
-        << "-<v|q>[x]          [v]erbose or [q]uiet output, where [x] is" << endl
-		<< "                   an optional level that defaults to 1" << endl
-        << "-v[p|n][f]         set VIC's clock to [P]AL or [N]TSC, default" << endl
-		<< "                   defined by song. You may also [f]orce" << endl
-		<< "                   the setting to prevent speed fixing" << endl
-        << "-m<o|n>[f]         set SID model to [o]ld (MOS6581) or [n]ew" << endl
-		<< "                   (CSG8580), defaults to the old version. You" << endl
-        << "                   may also [f]orce that setting" << endl
-        << "--digiboost        enable the DigiBoost hack for the 8580 chip" << endl
-        << "-r[i|r][f]         set resampling method, either [i]nterpolate" << endl
-		<< "                   or [r]esample. If you're using reSID, you" << endl
-		<< "                   may also enable [f]ast resampling" << endl
-        << "--fcurve=<d|auto>  controls the filter curve for the reSIDfp" << endl
-		<< "                   emulation (default: 0.5, ranges from 0.0 to" << endl
-		<< "                   1.0)" << endl
+        << "-D<addr>          set address of SID #2 (e.g. -ds0xd420)" << endl
+        << "-T<addr>          set address of SID #3 (e.g. -ts0xd440)" << endl
+        << "-m<num|a-c>       mute voice <num> (e.g. -m1 -m2), use" << endl
+		<< "                  'a', 'b' or 'c' for muting sample playback" << endl
+        << "-nf               disable filter emulation" << endl
+        << "-o<l|s>           loop and/or make the tune single track" << endl
+        << "-o<num>           start track (default: preset)" << endl
+        << "-p<num>           set depth for file output: 16 for signed" << endl
+		<< "                  16-bit, and 32 for 32-bit float. Defaults" << endl
+		<< "                  to unsigned 16-bit" << endl
+        << "-s                use stereo output" << endl
+        << "-m                use mono output" << endl
+        << "-l<num>           set play/record length in [min:]sec[.mil]" << endl
+		<< "                  format, use 0 for infinite play time" << endl
+        << "-<v|q>[n]         [v]erbose or [q]uiet output. [n] is" << endl
+		<< "                  an optional level that defaults to 1" << endl
+        << "-v[p|n][f]        set VIC's clock to [P]AL or [N]TSC, default" << endl
+		<< "                  defined by the tune. You may also [f]orce" << endl
+		<< "                  the setting to prevent speed fixing" << endl
+        << "-m<o|n>[f]        set SID model to [o]ld (MOS6581) or [n]ew" << endl
+		<< "                  (CSG8580), default defined by the tune. You" << endl
+        << "                  can [f]orce that setting as well" << endl
+        << "--digiboost       enable the DigiBoost hack for the 8580 chip" << endl
+        << "-r[i|r][f]        set resampling method, either [i]nterpolate" << endl
+		<< "                  or [r]esample. If you're using reSID, you" << endl
+		<< "                  may can enable [f]ast resampling as well" << endl
+        << "--curve=<double>  controls the filter curve for the reSIDfp" << endl
+		<< "                  emulation (default: 0.5, ranges from -2.0 to" << endl
+		<< "                  2.0)" << endl
 
 #ifdef FEAT_FILTER_RANGE
-        << "--frange=<d|auto>  controls the filter range in the ReSIDfp" << endl
-		<< "                   emulation (same default and value range)" << endl
+        << "--range=<double>  controls the filter range in the ReSIDfp" << endl
+		<< "                  emulation (same default, ranges from 0.0 to" << endl
+		<< "                  1.0)" << endl
 #endif
-
-		<< "                   emulation. Ranges from 0.0 to 1.0 and" << endl
-		<< "                   defaults to 0.5. You may also let C64play" << endl
-		<< "                   [auto]matically change it for you" << endl
-        << "-w[name]           render a WAV file, with default name" << endl
-		<< "                   being <file>[n].wav" << endl
-        << "--info             add metadata to WAV file" << endl;
+        << "-w[name]          render tune to a WAV file, with the default" << endl
+		<< "                  name being <file>[subtune].wav" << endl
+        << "--info            add metadata to WAV file" << endl;
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
-    out << "--residfp          use reSIDfp emulation (default)" << endl;
+    out << "--residfp         use reSIDfp emulation (default)" << endl;
 #endif
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
-    out << "--resid            use reSID emulation" << endl;
+    out << "--resid           use reSID emulation" << endl;
 #endif
 
     out << endl

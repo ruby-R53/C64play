@@ -1,3 +1,23 @@
+April 19, 2025:
+- Fixes and changes to the command line options
+  - I've renamed some options to names that make a little
+    more sense. Here's what I changed:
+	- `--noaudio` -> `--no-audio` & `--nosid` -> `--no-sid`.
+	  Those are rather aesthetical than to make more sense,
+	  I mean, I literally just added a dash to them.
+	- `--none` -> `--null` (both audio driver and SID chip
+	  are nonexistent)
+	- `-t` -> `-l` ("*l*ength")
+	- `--fcurve` -> `--curve` & `--frange` -> `--range`. Those
+	  are rather aesthetical than to make more sense, again. I
+	  at least think it will still mean the same thing for
+	  everyone ¯\\\_(ツ)_/¯
+  - The `--wav` option was removed in favor of the `-w` one.
+    - I mean, the latter is much better to type. Easier to
+	  handle as well. I've always used it. Pretty sure most
+	  people who used sidplayfp have used it as well instead
+	  of the long form.
+
 April 18, 2025:
 - Fix increase on CPU usage during pause
   - I have no idea what could have possibly caused that, but
