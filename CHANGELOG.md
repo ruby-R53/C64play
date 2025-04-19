@@ -16,7 +16,7 @@ April 19, 2025:
     - I mean, the latter is much better to type. Easier to
 	  handle as well. I've always used it. Pretty sure most
 	  people who used sidplayfp have used it as well instead
-	  of the long form.
+	  of that long form.
 
 April 18, 2025:
 - Fix increase on CPU usage during pause
