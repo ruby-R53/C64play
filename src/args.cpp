@@ -328,13 +328,13 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
 			// set filter curve
             else if (strncmp(&argv[i][1], "-curve=", 7) == 0) {
-                m_fcurve = atof(&argv[i][9]);
+                m_fcurve = atof(&argv[i][8]);
             }
 
 #ifdef FEAT_FILTER_RANGE
 			// set filter range
             else if (strncmp(&argv[i][1], "-range=", 7) == 0) {
-            	m_frange = atof(&argv[i][9]);
+            	m_frange = atof(&argv[i][8]);
             }
 #endif
 
