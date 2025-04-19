@@ -632,7 +632,7 @@ bool ConsolePlayer::play() {
 
             return false;
         }
-    } else
+    } else if (m_state == playerPaused)
 		usleep(100000);
 
     switch (m_state) {
