@@ -26,19 +26,19 @@
 
 class AudioConfig {
 public:
-    uint_least32_t frequency; // sample rate (Hz)
-    uint8_t        depth;     // bit depth
-    uint8_t        channels;  // audio channels
-    uint16_t       bufSize;   // sample buffer size
+    uint32_t sampleRate; // sample rate (Hz)
+    uint8_t  depth;      // bit depth
+    uint8_t  channels;   // audio channels
+    uint16_t bufSize;    // sample buffer size
 
 	// defaults
     AudioConfig() :
-        frequency(48000),
+        sampleRate(48000),
         depth(16),
         channels(1),
         bufSize(0) {}
 
-	uint_least32_t bytesPerMillis() const { return (depth/8 * channels * frequency) / 1000; }
+	uint_least32_t bytesPerMillis() const { return (depth/8 * channels * sampleRate) / 1000; }
 };
 
 #endif  // AUDIOCONFIG_H

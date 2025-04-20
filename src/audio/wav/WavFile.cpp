@@ -126,7 +126,7 @@ bool WavFile::open(AudioConfig &cfg) {
 	unsigned short bits		  = depth;
 	unsigned short format	  = (depth == 16) ? 1 : 3;
 	unsigned short channels   = cfg.channels;
-	unsigned long  freq		  = cfg.frequency;
+	unsigned long  freq		  = cfg.sampleRate;
 	unsigned short blockAlign = (bits>>3)*channels;
 	unsigned long  bufSize	  = freq * blockAlign;
 	cfg.bufSize = bufSize;

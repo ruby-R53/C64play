@@ -319,13 +319,13 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
         return false;
     }
 
-    unsigned int tuneChannels = (tuneInfo && (tuneInfo->sidChips() > 1)) ? 2 : 1;
+    uint8_t tuneChannels = (tuneInfo && (tuneInfo->sidChips() > 1)) ? 2 : 1;
 
     // Configure with user settings
-    m_driver.cfg.frequency = m_engCfg.frequency;
-    m_driver.cfg.channels  = m_channels ? m_channels : tuneChannels;
-    m_driver.cfg.depth     = m_bitDepth;
-	m_driver.cfg.bufSize   = 0; // Recalculate
+    m_driver.cfg.sampleRate = m_engCfg.frequency;
+    m_driver.cfg.channels   = m_channels ? m_channels : tuneChannels;
+    m_driver.cfg.depth      = m_bitDepth;
+	m_driver.cfg.bufSize    = 0; // Recalculate
 
     {   // Open the hardware
         bool err = false;
@@ -346,7 +346,7 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
     }
 
     // See what we got
-    m_engCfg.frequency = m_driver.cfg.frequency;
+    m_engCfg.frequency = m_driver.cfg.sampleRate;
     switch (m_driver.cfg.channels) {
     case 1:
         m_engCfg.playback = SidConfig::MONO;
@@ -561,7 +561,7 @@ bool ConsolePlayer::open(void) {
     // As yet we don't have a required songlength
     // so try the songlength database or keep the default
     if (!m_timer.valid) {
-        const int_least32_t length = m_database.lengthMs(m_tune);
+        const uint_least32_t length = m_database.lengthMs(m_tune);
 
         if (length > 0)
             m_timer.length = length;
@@ -803,10 +803,10 @@ void ConsolePlayer::decodeKeys() {
             m_track.selected = m_track.songs;
         break;
 
-        case A_PAUSED:
+        case A_PAUSE:
             if (m_state == playerPaused) {
                 cerr << "\b\b\b\b\b\b\b\b\b";
-                // Just to make sure the text is removed from screen
+                // wipe every character out here
                 cerr << "         ";
                 cerr << "\b\b\b\b\b\b\b\b\b";
                 m_state = playerRunning;

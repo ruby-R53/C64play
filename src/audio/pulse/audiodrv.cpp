@@ -43,10 +43,10 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
     pa_sample_spec pacfg = {};
 
     pacfg.channels = cfg.channels;
-    pacfg.rate     = cfg.frequency;
+    pacfg.rate     = cfg.sampleRate;
     pacfg.format   = PA_SAMPLE_S16LE;
 
-    // Set bit depth and type of encoding.
+    // Set bit depth and encoding type.
     int err;
     _audioHandle = pa_simple_new(
         nullptr,

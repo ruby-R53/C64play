@@ -192,16 +192,16 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 
 			// set sample rate
-            else if (argv[i][1] == 'f') {
+            else if (argv[i][1] == 'r') {
                 if (argv[i][2] == '\0')
                     err = true;
-                m_engCfg.frequency = (uint_least32_t) atoi(argv[i]+2);
+
+                m_engCfg.frequency = (uint32_t) atoi(argv[i]+2);
             }
 
             // Disable filter emulation?
-            else if (strncmp(&argv[i][1], "nf", 2) == 0) {
-                if (argv[i][3] == '\0')
-                    m_filter.enabled = false;
+            else if (argv[i][1] == 'f') {
+                m_filter.enabled ? m_filter.enabled = false : m_filter.enabled = true;
             }
 
             // Track options
@@ -252,7 +252,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
             }
 
             // Resampling options
-			else if (argv[i][1] == 'r') {
+			else if (argv[i][1] == 'R') {
                 if (argv[i][2] == 'i') {
                     m_engCfg.samplingMethod = SidConfig::INTERPOLATE;
                 }
@@ -495,13 +495,14 @@ void ConsolePlayer::displayArgs (const char *arg) {
         << "--help | -h       list options (this menu)" << endl
         << "--help-debug      debug help menu" << endl
         << "-b<num>           set start time in [min:]sec[.mil] format" << endl
-        << "-f<num>           set sample rate in Hz, defaults to "
+        << "-r<num>           set sample rate in Hz, defaults to "
         << SidConfig::DEFAULT_SAMPLING_FREQ << endl
         << "-D<addr>          set address of SID #2 (e.g. -ds0xd420)" << endl
         << "-T<addr>          set address of SID #3 (e.g. -ts0xd440)" << endl
         << "-m<num|a-c>       mute voice <num> (e.g. -m1 -m2), use" << endl
 		<< "                  'a', 'b' or 'c' for muting sample playback" << endl
-        << "-nf               disable filter emulation" << endl
+        << "-f                flip filter emulation - if already enabled" << endl
+		<< "                  (default), disable it and vice-versa" << endl
         << "-o<l|s>           loop and/or make the tune single track" << endl
         << "-o<num>           start track (default: preset)" << endl
         << "-d<num>           set depth for file output: 16 for signed" << endl
@@ -518,9 +519,9 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		<< "                  the setting to prevent speed fixing" << endl
         << "-m<o|n>[f]        set SID model to [o]ld (MOS6581) or [n]ew" << endl
 		<< "                  (CSG8580), default defined by the tune. You" << endl
-        << "                  can [f]orce that setting as well" << endl
+        << "                  may [f]orce that setting as well" << endl
         << "--digiboost       enable the DigiBoost hack for the 8580 chip" << endl
-        << "-r[i|r][f]        set resampling method, either [i]nterpolate" << endl
+        << "-R[i|r][f]        set resampling method, either [i]nterpolate" << endl
 		<< "                  or [r]esample. If you're using reSID, you" << endl
 		<< "                  may can enable [f]ast resampling as well" << endl
         << "--curve=<double>  controls the filter curve for the reSIDfp" << endl

@@ -58,21 +58,21 @@ bool Audio_OSS::open(AudioConfig &cfg) {
     }
 
     try {
-        if (access (AUDIODEVICE, W_OK) == -1) {
+        if (access(AUDIODEVICE, W_OK) == -1) {
             throw error("Could not locate an audio device.");
         }
 
-        if ((_audiofd = ::open (AUDIODEVICE, O_WRONLY, 0)) == (-1)) {
+        if ((_audiofd = ::open(AUDIODEVICE, O_WRONLY, 0)) == (-1)) {
             throw error("Could not open audio device.");
         }
 
         int format = AFMT_S16_LE;
-        if (ioctl (_audiofd, SNDCTL_DSP_SETFMT, &format) == (-1)) {
+        if (ioctl(_audiofd, SNDCTL_DSP_SETFMT, &format) == (-1)) {
             throw error("Could not set sample format.");
         }
 
         // Set mono/stereo.
-        if (ioctl (_audiofd, SNDCTL_DSP_CHANNELS, &cfg.channels) == (-1)) {
+        if (ioctl(_audiofd, SNDCTL_DSP_CHANNELS, &cfg.channels) == (-1)) {
             throw error("Could not set mono/stereo.");
         }
 
@@ -86,13 +86,13 @@ bool Audio_OSS::open(AudioConfig &cfg) {
         break;
         }
 
-        // Set frequency.
-        if (ioctl (_audiofd, SNDCTL_DSP_SPEED, &cfg.frequency) == (-1)) {
-            throw error("Could not set frequency.");
+        // Set sample rate.
+        if (ioctl(_audiofd, SNDCTL_DSP_SPEED, &cfg.sampleRate) == (-1)) {
+            throw error("Could not set sample rate.");
         }
 
         int temp = 0;
-        ioctl (_audiofd, SNDCTL_DSP_GETBLKSIZE, &temp);
+        ioctl(_audiofd, SNDCTL_DSP_GETBLKSIZE, &temp);
         cfg.bufSize = (uint_least32_t) temp;
 
         try {
@@ -114,7 +114,7 @@ bool Audio_OSS::open(AudioConfig &cfg) {
             _audiofd = -1;
         }
 
-        perror (AUDIODEVICE);
+        perror(AUDIODEVICE);
         return false;
     }
 }
@@ -141,7 +141,7 @@ bool Audio_OSS::write(uint_least32_t size) {
         return false;
     }
 
-    ::write (_audiofd, _sampleBuffer, 2 * size);
+    ::write(_audiofd, _sampleBuffer, 2 * size);
     return true;
 }
 

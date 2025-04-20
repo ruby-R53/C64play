@@ -86,11 +86,11 @@ static char keytable[] = {
     'f',0,                  A_TOGGLE_FILTER,
 
     // General Keys
-    'p',0,                  A_PAUSED,
+    'p',0,                  A_PAUSE,
 
 	// new keys
 	'j',0,                  A_LEFT_ARROW,
-	'k',0,                  A_PAUSED,
+	'k',0,                  A_PAUSE,
 	'l',0,                  A_RIGHT_ARROW,
 	'q',0,                  A_QUIT,
 	'g',0,                  A_GOTO,
@@ -194,7 +194,7 @@ int keyboard_decode() {
     while (c >= 0) {
         cmd[nch++] = c;
         cmd[nch]   = '\0';
-        action     = keyboard_search (cmd);
+        action     = keyboard_search(cmd);
 
         if (action != A_PREFIX)
             break;
@@ -274,7 +274,7 @@ void keyboard_disable_raw() {
         case STDERR_FILENO:
             break;
         default:
-            close (infd);
+            close(infd);
         }
         infd = -1;
     }

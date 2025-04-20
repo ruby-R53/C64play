@@ -40,7 +40,7 @@ enum {
     A_DOWN_ARROW,
     A_HOME,
     A_END,
-    A_PAUSED,
+    A_PAUSE,
     A_QUIT,
 	A_GOTO,
 	A_REPLAY,

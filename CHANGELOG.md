@@ -1,3 +1,17 @@
+April 20, 2025:
+- More command line option changes
+  - `-f<num>` -> `-r<num>` ("sample *r*ate")
+  - `-r<i|r>[f]` -> `-R<i|r>[f]` (as a consequence of the
+    change above)
+  - `-nf` -> `-f`. Instead of only disabling the filter
+    emulation, it now flips it instead, so if filter emulation
+	is already disabled in the settings file, that means this
+	will enable it.
+- Some data type changes. Not sure if it impacts performance,
+  but it's still better to reserve the exact amount of space
+  each variable should take.
+- Happy 4/20!
+
 April 19, 2025:
 - Fixes and changes to the command line options
   - I've renamed some options to names that make a little
