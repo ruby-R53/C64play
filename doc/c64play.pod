@@ -40,19 +40,19 @@ description for each of them.
 Displays a help message for debugging-related options, plus a
 brief description for each.
 
-=item B<-f>I<< <num> >>
+=item B<-r>I<< <num> >>
 
 Set sample rate for audio output, in Hz. Defaults to 48000 Hz.
 
-=item B<-nf>
+=item B<-f>
 
-Disable SID filter emulation. Helps with speed on lower-end
-hardware at the cost of emulation quality.
+Flips filter emulation. If it's enabled (default), this will
+disable it and vice-versa.
 
 =item B<-o>I<< <num> >>
 
 Select starting track index number. Default is provided by the
-file itself.
+tune's file header.
 
 =item B<-s>
 
@@ -101,7 +101,7 @@ Channels 1 to 3 are for SID #1, 4 to 6 for SID #2, and 7 to 9 for SID #3.
 Moreover, using 'a' to 'c' makes it mute sample playback, from SID #1 to
 SID #3 respectively.
 
-=item B<-p>I<< <num> >>
+=item B<-d>I<< <num> >>
 
 Set bit depth when recording to a file. You may use either 16 for a
 signed 16-bit output, or 32 for a 32-bit float one. Defaults to 16.
@@ -117,7 +117,7 @@ ignoring the rest.
 And use I<<num>> to make playback start at a specific subtune from
 <file>.
 
-=item B<-t>I<< <num> >>
+=item B<-l>I<< <num> >>
 
 Set play time, in [min:]sec[.mil] format. Use 0 for infinite play time.
 
@@ -146,7 +146,7 @@ And use I<n> for the newer 8580 one.
 Enable DigiBost, a hack for the 8580 SID chip to make samples
 audible.
 
-=item B<-r>I<< <i|r>[f] >>
+=item B<-R>I<< <i|r>[f] >>
 
 Set resampling method. If using the reSID engine, [f]ast sampling
 is supported.
@@ -156,7 +156,7 @@ accuracy.
 And use I<r> for Resample, which prioritizes accuracy over speed
 (this is the default).
 
-=item B<-w, --wav>I<< [name] >>
+=item B<-w>I<< [name] >>
 
 Record selected tune to a WAV file. The default file name is
 <file>[subtune].wav, where [subtune] appears if the file has more
@@ -182,38 +182,38 @@ Simulate a power-on delay on the C64 in CPU cycles. If [num]
 is greater than 8191, the delay will be randomly generated,
 which is the default.
 
-=item B<--fcurve=>I<< <num>|auto >>
+=item B<--curve=>I<< <num>|auto >>
 
 Sets the filter curve on the reSIDfp emulation engine. Ranges
 from -2.0 ("light") to 2.0 ("dark"). Defaults to 0.5.
 
-=item B<--frange=>I<< <num>|auto >>
+=item B<--range=>I<< <num>|auto >>
 
 For libsidplayfp v2.7.0 and higher. Controls the filter range
 value for the 6581 chip under the reSIDfp emulation.
 
-=item B<--noaudio>
+=item B<--no-audio>
 
 Don't use an audio output device.
 
-=item B<--nosid>
+=item B<--no-sid>
 
 Don't emulate a SID.
 
-=item B<--none>
+=item B<--null>
 
-Don't emulate both the SID and also don't use an audio output
-device.
+Neither emulate a SID chip nor use an audio device.
 
 =back
 
-=head1 Key bindings
+=head1 Key Bindings
 
 =over
 
 =item 1-9
 
-Mute/unmute voice(s) 1-9.
+Mute/unmute voice(s) 1-9, where each chunk of 3 voices
+correspond to a SID's voice.
 
 =item a-d
 
@@ -233,7 +233,9 @@ Quit player.
 
 =item Up/Down arrow keys
 
-Increase/reset playback speed.
+Double/half playback speed. Maximum speed is 32x,
+which means the Up arrow key can be pressed up to 5
+times.
 
 =item j/l
 
