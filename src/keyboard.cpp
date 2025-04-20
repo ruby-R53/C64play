@@ -156,6 +156,7 @@ static int keyboard_search(char *cmd) {
                  */
                 break;
             }
+
             while (*p++ != '\0')
                 continue;
 
@@ -204,6 +205,7 @@ int keyboard_decode() {
 
         c = _getch();
     }
+
     return action;
 }
 
@@ -225,6 +227,7 @@ int _kbhit(void) {
         if (FD_ISSET(infd, &rdfs))
             return 1;
     }
+
     return 0;
 }
 

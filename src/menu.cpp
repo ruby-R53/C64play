@@ -60,7 +60,7 @@ const char *noteName[] = {
 const char SID6581[] = "MOS6581";
 const char SID8580[] = "CSG8580";
 
-const unsigned char tableWidth = 58;
+const uint8_t tableWidth = 58;
 
 const char info_file[] = "Writing audio file";
 const char info_play[] = "Prev. [j] Pause [k] Next [l] Go to [g] Quit [q]";
@@ -577,8 +577,9 @@ void ConsolePlayer::menu() {
     if (m_verboseLevel > 1) {
         consoleTable(tableSeparator);
         consoleTable(tableMiddle);
-		unsigned int movLines = (m_verboseLevel > 2) ? (tuneInfo->sidChips() * 6):
-		                                               (tuneInfo->sidChips() * 3);
+		const uint8_t movLines = (m_verboseLevel > 2) ?
+		                         (tuneInfo->sidChips() * 6):
+								 (tuneInfo->sidChips() * 3);
 
 		cerr << " Voice   Note   PW    Control Registers     Waveform(s)" << endl;
 
@@ -630,7 +631,7 @@ void ConsolePlayer::refreshRegDump() {
 					 << getNote(registers[0x00 + i * 0x07] |
 						       (registers[0x01 + i * 0x07] << 8));
 
-				// PW field
+				// Pulse Width field
 				cerr << hex << "   $" << setw(3) << setfill('0')
 					 << (registers[0x02 + i * 0x07] |
 						((registers[0x03 + i * 0x07] & 0x0f) << 8))
