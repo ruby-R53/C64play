@@ -3,13 +3,13 @@
 
 =head1 NAME
 
-c64play.ini - configuration file for L<C64play(1)>.
+B<c64play.ini> - configuration file for L<C64play(1)>.
 
 
 =head1 DESCRIPTION
 
 C64play has a configuration file formed by sections. They're names enclosed by brackets, making it easier to separate each type of setting.
-Every setting has a I<< <name> = <value> >> structure.
+Every setting has a I<< <parameter> = <value> >> structure.
 
 B<c64play.ini> has the following sections:
 
@@ -49,7 +49,7 @@ Default recording time when recording to WAV if Songlengths.md5 isn't found. Def
 
 =item B<Kernal ROM>=I<< <path> >>
 
-Full path for the Kernal ROM file. Out of all the 3 ROM slots, this is the most important one, and thus should be provided as some tunes may not play without it.
+Full path for the Kernal ROM file. Out of all the 3 ROM files, this is the most important one, and thus should be provided as some tunes may not play without it.
 By default, the program will look for a file named F<kernal> under the following places:
 
 =over
@@ -90,7 +90,7 @@ As for B<Verboseness>,
 
 use 1 for a detailed output (addresses and SID details);
 
-2 for a more detailed one (dump registers, displaying the notes being played and waveforms + control registers being used);
+2 for a more detailed one (register dumps, displaying the notes being played and waveforms + control registers being used);
 
 and 3 for an even more detailed output (dump even more registers, displaying mostly filter-related info).
 
@@ -210,7 +210,7 @@ Use the same version of the SID chip even if the tune specifies one.
 
 =item B<DigiBoost>=I<true|false>
 
-Enable DigiBoost, a hack for the 8580 SID chip to make samples audible.
+Enable DigiBoost, a hack for the 8580 SID chip to make digi samples originally meant for the 6581 audible.
 
 =item B<Filter emulation>=I<true|false>
 
@@ -218,7 +218,7 @@ Enable/disable the emulation of the SID filter.
 
 =item B<Filter bias>=I<< <number> >>
 
-Controls the SID's bias on reSID's emulation.
+Controls the SID's bias under the reSID emulation.
 Ranges from 0.0 ("dark") to 1.0 ("light"), defaults to 0.5.
 
 =item B<6581 filter curve>=I<< <number> >>
@@ -266,7 +266,7 @@ Enable reSID's fast resampling.
 
 =head1 SEE ALSO
 
-L<C64play(1)>
+L<C64play(1)> - manual page for the program itself.
 
 
 =head1 AUTHORS
@@ -276,8 +276,7 @@ L<C64play(1)>
 =item Enki Costa
 
 Riced sidplayfp over and over and called it C64play.
-
-Current maintainer.
+Also current maintainer of it.
 
 =item Leandro Nini
 

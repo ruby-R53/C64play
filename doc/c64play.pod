@@ -15,16 +15,17 @@ B<c64play> [I<options>] I<file>
 
 B<C64play> is rather a front-end to libsidplayfp, which is where
 the actual magic happens. libsidplayfp emulates an accurate C64
-environment for playing SID tunes, using the reSID emulation en-
-gine by default, which is based on reSID, a project made by the
+environment for playing SID tunes, using the reSIDfp emulation
+engine by default, which is based on reSID, a project made by the
 VICE team to reverse-engineer the SID chip and provide the best
 possible emulation for it on modern computers.
 
 C64play is currently in heavy development, it first started as
-a simple fork of sidplayfp called I<sidplayfp-red_M95> and now
-will be a more sophisticated project. Still nothing big, as the
-current developer is a beginner and there's currently no one
-else to contribute.
+a simple fork of sidplayfp called I<sidplayfp-red_M95> (the
+developer's previous handle) and now will become a much more
+sophisticated project. Still nothing big, as the current
+developer is a beginner and there's currently no one else to
+contribute.
 
 =head1 OPTIONS
 
@@ -119,7 +120,8 @@ And use I<<num>> to make playback start at a specific subtune from
 
 =item B<-l>I<< <num> >>
 
-Set play time, in [min:]sec[.mil] format. Use 0 for infinite play time.
+Set play time, in [min:]sec[.mil] format. Use 0 for infinite play time,
+which is the default if the Songlength DB is absent.
 
 =item B<-v>I<< <n|p>[f] >>
 
@@ -137,31 +139,28 @@ behavior.
 
 Set or [f]orce SID chip to be used.
 
-Use I<o> for the old 6581 model.
-
-And use I<n> for the newer 8580 one.
+Use I<o> for the old 6581 model, and I<n> for the newer 8580 one.
 
 =item B<--digiboost>
 
-Enable DigiBost, a hack for the 8580 SID chip to make samples
-audible.
+Enable DigiBost, a hack for the 8580 SID chip to make digi samples
+originally made for the 6581 chip audible.
 
 =item B<-R>I<< <i|r>[f] >>
 
 Set resampling method. If using the reSID engine, [f]ast sampling
 is supported.
-Use I<i> for Resample interpolate, which prioritizes speed over
-accuracy.
 
-And use I<r> for Resample, which prioritizes accuracy over speed
+Use I<i> for Resample interpolate, which prioritizes speed over
+accuracy, or I<r> for Resample, which prioritizes accuracy over speed
 (this is the default).
 
 =item B<-w>I<< [name] >>
 
 Record selected tune to a WAV file. The default file name is
 <file>[subtune].wav, where [subtune] appears if the file has more
-than one subtune. By providing [name], the .wav extension is added
-automatically.
+than one subtune. By providing [name] only, the .wav extension is
+added automatically.
 
 =item B<--resid>
 
@@ -182,12 +181,12 @@ Simulate a power-on delay on the C64 in CPU cycles. If [num]
 is greater than 8191, the delay will be randomly generated,
 which is the default.
 
-=item B<--curve=>I<< <num>|auto >>
+=item B<--curve=>I<< <num> >>
 
 Sets the filter curve on the reSIDfp emulation engine. Ranges
 from -2.0 ("light") to 2.0 ("dark"). Defaults to 0.5.
 
-=item B<--range=>I<< <num>|auto >>
+=item B<--range=>I<< <num> >>
 
 For libsidplayfp v2.7.0 and higher. Controls the filter range
 value for the 6581 chip under the reSIDfp emulation.
@@ -225,7 +224,7 @@ Toggle filter emulation.
 
 =item k
 
-Pause/unpause playback.
+Pause/resume playback.
 
 =item q
 
@@ -295,7 +294,7 @@ would be appreciated!
 
 =head1 SEE ALSO
 
-L<c64play.ini(5)>
+L<c64play.ini(5)> - manual page for the configuration file.
 
 
 =head1 NOTES
