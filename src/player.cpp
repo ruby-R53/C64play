@@ -277,6 +277,7 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
     if (m_driver.device != nullptr) {
         if (m_driver.device != &m_driver.null)
             delete m_driver.device;
+
         m_driver.device = nullptr;
     }
 
@@ -389,7 +390,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
             m_engCfg.sidEmulation = rs;
             if (!rs->getStatus()) goto createSidEmu_error;
-            rs->create (m_engine.info().maxsids());
+            rs->create(m_engine.info().maxsids());
             if (!rs->getStatus()) goto createSidEmu_error;
 
 #ifdef FEAT_CW_STRENGTH

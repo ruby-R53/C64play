@@ -58,14 +58,14 @@ typedef enum {
 	magenta,
 	cyan,
 	white
-} player_colour_t;
+} color_t;
 
 typedef enum {
 	tableStart,
 	tableMiddle,
 	tableSeparator,
 	tableEnd
-} player_table_t;
+} table_t;
 
 typedef enum {
     playerError = 0,
@@ -80,8 +80,8 @@ typedef enum {
 } player_state_t;
 
 typedef enum {
-    /* Same as EMU_DEFAULT except no soundcard.
-    Still allows wav generation */
+	// Same as EMU_DEFAULT except that there's
+	// no soundcard. But still allows WAV generation
     EMU_NONE = 0,
     // The following require a soundcard
     EMU_DEFAULT, EMU_RESIDFP, EMU_RESID,
@@ -89,12 +89,9 @@ typedef enum {
 } SIDEMUS;
 
 typedef enum {
-    // Define possible output sources
-    OUT_NULL = 0,
-    // Hardware
-    OUT_SOUNDCARD,
-    // File creation support
-    OUT_WAV,
+	OUT_NULL,
+	OUT_SOUNDCARD,
+	OUT_WAV,
 	OUT_END
 } OUTPUTS;
 
@@ -125,38 +122,38 @@ private:
     const char*                 m_outfile;
     std::string                 m_filename;
 
-    IniConfig         m_iniCfg;
-    SidDatabase       m_database;
+    IniConfig        m_iniCfg;
+    SidDatabase      m_database;
 
-    Setting<double>   m_fcurve;
+    Setting<double>  m_fcurve;
 
 #ifdef FEAT_FILTER_RANGE
-    Setting<double>   m_frange;
+    Setting<double>  m_frange;
 #endif
 
 #ifdef FEAT_CW_STRENGTH
     SidConfig::
-	sid_cw_t          m_combinedWaveformsStrength;
+	sid_cw_t         m_combinedWaveformsStrength;
 #endif
 
-    uint8_t           m_registers[3][32];
-    uint16_t*         m_freqTable;
+    uint8_t          m_registers[3][32];
+    uint16_t*        m_freqTable;
 
     // Display parameters
-    uint_least8_t     m_quietLevel;
-    uint_least8_t     m_verboseLevel;
+    uint8_t          m_quietLevel;
+    uint8_t          m_verboseLevel;
 
-	bool              songlengthDB;
+	bool             songlengthDB;
 
-    bool              m_cpudebug;
-	std::bitset<9>    m_mute_channel;
+    bool             m_cpudebug;
+	std::bitset<9>   m_mute_channel;
 
 #ifdef FEAT_SAMPLE_MUTE
-    std::bitset<3>    m_mute_samples;
+    std::bitset<3>   m_mute_samples;
 #endif
 
-    unsigned int      m_channels;
-    unsigned int      m_bitDepth;
+    uint8_t          m_channels;
+    uint8_t          m_bitDepth;
 
 	std::thread *m_thread = nullptr;
 
@@ -195,22 +192,22 @@ private:
     } m_timer;
 
     struct m_track_t {
-        uint_least16_t first;
-        uint_least16_t selected;
-        uint_least16_t songs;
-        bool           loop;
-        bool           single;
+        uint16_t first;
+        uint16_t selected;
+        uint16_t songs;
+        bool     loop;
+        bool     single;
     } m_track;
 
     struct m_speed_t {
-        uint_least8_t current;
-        uint_least8_t max;
+        uint8_t current;
+        uint8_t max;
     } m_speed;
 
 private:
     // Console
-    void consoleColour (player_colour_t colour, bool bold);
-    void consoleTable  (player_table_t table);
+    void consoleColour (color_t color, bool bold);
+    void consoleTable  (table_t table);
     void consoleRestore(void);
 
     // Command line args

@@ -773,11 +773,11 @@ void ConsolePlayer::refreshRegDump() {
 }
 
 // Set colour of text on console
-void ConsolePlayer::consoleColour(player_colour_t colour, bool bold) {
+void ConsolePlayer::consoleColour(color_t color, bool bold) {
     if (m_iniCfg.console().ansi) {
         const char *mode = "";
 
-        switch (colour) {
+        switch (color) {
         case black:   mode = "0"; break;
         case red:     mode = "1"; break;
         case green:   mode = "2"; break;
@@ -794,7 +794,7 @@ void ConsolePlayer::consoleColour(player_colour_t colour, bool bold) {
 }
 
 // Display menu outline
-void ConsolePlayer::consoleTable(player_table_t table) {
+void ConsolePlayer::consoleTable(table_t table) {
     consoleColour(white, true);
     switch (table) {
     case tableStart:

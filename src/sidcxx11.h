@@ -38,7 +38,7 @@
 #endif
 
 #ifndef HAVE_CXX11
-#  error "This is not a C++11 compiler"
+#  error "This is not a C++11 compiler!"
 #endif
 
 #endif
