@@ -52,6 +52,8 @@ using std::endl;
 
 #include <unordered_map>
 
+#include <chrono>
+
 using filter_map_t = std::unordered_map<std::string, double>;
 using filter_map_iter_t = std::unordered_map<std::string, double>::const_iterator;
 
@@ -561,7 +563,7 @@ bool ConsolePlayer::open(void) {
     // As yet we don't have a required songlength
     // so try the songlength database or keep the default
     if (!m_timer.valid) {
-        const uint_least32_t length = m_database.lengthMs(m_tune);
+        const uint32_t length = m_database.lengthMs(m_tune);
 
         if (length > 0)
             m_timer.length = length;
@@ -586,6 +588,17 @@ bool ConsolePlayer::open(void) {
 
     // Update display
     menu();
+
+	// update display every 16 milliseconds, yielding a ~62 Hz refresh
+	// rate (external factors taken into account)
+	uint8_t delay = 16;
+    m_thread = new std::thread([this](uint8_t delay) {
+        while (m_state != playerStopped) {
+            updateDisplay();
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+        }
+    }, delay);
 
     return true;
 }
@@ -614,25 +627,31 @@ void ConsolePlayer::close() {
 
         cerr << endl;
     }
+
+	if (m_thread) {
+        m_thread->join();
+        delete m_thread;
+    }
 }
 
 // Out play loop to be externally called
 bool ConsolePlayer::play() {
+	// prepare for playback
 	uint_least32_t retSize = 0;
+	const uint_least32_t length = getBufSize();
+	short *buffer = m_driver.selected->buffer(); // Fill buffer
 
     if (m_state == playerRunning) {
-		updateDisplay();
-
-		const uint_least32_t length = getBufSize();
-		short *buffer = m_driver.selected->buffer(); // Fill buffer
         retSize = m_engine.play(buffer, length);
+
         if ((retSize < length) || !m_engine.isPlaying()) {
 			cerr << m_engine.error();
 			m_state = playerError;
 
             return false;
         }
-    } else if (m_state == playerPaused)
+    }
+	else if (m_state == playerPaused)
 		usleep(100000);
 
     switch (m_state) {
@@ -645,9 +664,9 @@ bool ConsolePlayer::play() {
         }
 
     case playerPaused: // fall-through
-        // Check for a keypress (approx 250ms rate, but really depends
-        // on music buffer sizes). Don't do this for high quiet levels
-        // as chances are we are under remote control.
+        // Check for a keypress (rate depends on buffer size).
+        // Don't do this for high quiet levels as chances are
+		// we are under remote control.
         if ((m_quietLevel < 3) && _kbhit())
             decodeKeys();
 
@@ -716,25 +735,27 @@ uint_least32_t ConsolePlayer::getBufSize() {
 
 
 void ConsolePlayer::updateDisplay() {
-    const uint_least32_t milliseconds = m_engine.timeMs();
-    const uint_least32_t seconds = milliseconds / 1000;
+    const uint32_t milliseconds = m_engine.timeMs();
+    const uint32_t seconds = milliseconds / 1000;
 
-	if (m_verboseLevel > 1 && !m_quietLevel)
-		refreshRegDump();
+	if (m_state == playerRunning) {
+		if (m_verboseLevel > 1 && !m_quietLevel)
+			refreshRegDump();
 
-    if (!m_quietLevel && (seconds != (m_timer.current / 1000))) {
-        cerr << std::setw(2) << std::setfill('0')
-             << ((seconds / 60) % 100) << ':' << std::setw(2)
-             << std::setfill('0') << (seconds % 60) << std::flush;
+		if (!m_quietLevel && (seconds != (m_timer.current / 1000))) {
+			cerr << std::setw(2) << std::setfill('0')
+				 << ((seconds / 60) % 100) << ':' << std::setw(2)
+				 << std::setfill('0') << (seconds % 60) << std::flush;
 
-		// this hack has to be done because for some
-		// reason at both levels 1 and 0 it appends to
-		// the timer instead of overwriting it
-		if (m_verboseLevel <= 1)
-			cerr << "\b\b\b\b\b";
-    }
+			// this hack has to be done because for some
+			// reason at both levels 1 and 0 it appends to
+			// the timer instead of overwriting it
+			if (m_verboseLevel <= 1)
+				cerr << "\b\b\b\b\b";
+		}
 
-    m_timer.current = milliseconds;
+		m_timer.current = milliseconds;
+	}
 }
 
 void ConsolePlayer::displayError(const char *error) {

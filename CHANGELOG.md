@@ -1,3 +1,25 @@
+April 21, 2025:
+- Threaded display update (sorta) implemented! (VERY
+  EXPERIMENTAL!)
+  - This had actually been planned along with being able to
+    change the buffer size in the configuration file. However,
+	it turned out to be a disaster and now I'm taking smaller
+	steps.
+	I decided to implement the threaded display update first as
+	every buffer write blocks the execution of the program, so
+	it would consequently feel really janky and the thread
+	creation would be useless.
+  - Considering the above, the performance gain is promising,
+    but at the same time underwhelming.
+	At least now the display has a more consistent refresh
+	rate compared to before (around 62 Hz), but that can still
+	be further improved. I'm still a beginner, it's the first
+	project I work on that has audio involved, so I can't
+	really figure out how to implement the better-suited
+	PulseAudio Asynchronous API here at the moment.
+	I'll just wait to see if another simpler path could be
+	taken here instead.
+
 April 20, 2025:
 - More command line option changes
   - `-f<num>` -> `-r<num>` ("sample *r*ate")

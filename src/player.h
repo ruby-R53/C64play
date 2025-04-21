@@ -46,6 +46,9 @@
 #include <string>
 #include <bitset>
 
+#include <thread>
+#include <atomic>
+
 typedef enum {
 	black,
 	red,
@@ -114,13 +117,13 @@ private:
     static const char RESID_ID[];
 #endif
 
-    const char* const m_name;
-    sidplayfp         m_engine;
-    SidConfig         m_engCfg;
-    SidTune           m_tune;
-	player_state_t    m_state;
-    const char*       m_outfile;
-    std::string       m_filename;
+    const char* const           m_name;
+    sidplayfp                   m_engine;
+    SidConfig                   m_engCfg;
+    SidTune                     m_tune;
+	std::atomic<player_state_t> m_state;
+    const char*                 m_outfile;
+    std::string                 m_filename;
 
     IniConfig         m_iniCfg;
     SidDatabase       m_database;
@@ -155,6 +158,8 @@ private:
     unsigned int      m_channels;
     unsigned int      m_bitDepth;
 
+	std::thread *m_thread = nullptr;
+
     struct m_filter_t {
         bool          enabled;
 
@@ -181,12 +186,12 @@ private:
     } m_driver;
 
     struct m_timer_t { // secs
-        uint_least32_t start;
-		uint_least32_t current;
-        uint_least32_t stop;
-        uint_least32_t length;
-        bool           valid;
-        bool           starting;
+        uint_least32_t              start;
+		std::atomic<uint_least32_t> current;
+        uint_least32_t              stop;
+        uint_least32_t              length;
+        bool                        valid;
+        bool                        starting;
     } m_timer;
 
     struct m_track_t {
