@@ -447,16 +447,14 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
                                            : m_iniCfg.playercfg().playLength;
 
             songlengthDB  = false;
-            bool dbOpened = false;
             if (hvscBase) {
                 if (tryOpenDatabase(hvscBase)) {
-                    dbOpened = true;
                     songlengthDB = true;
                 }
             }
 
-            if (!dbOpened) {
-                // Try load user configured songlength DB
+            if (!songlengthDB) {
+                // Try loading user-configured songlength DB
                 if (m_iniCfg.playercfg().database.length() != 0) {
                     // Try loading the database specificed by the user
                     const char *database = m_iniCfg.playercfg().database.c_str();

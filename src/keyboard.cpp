@@ -107,7 +107,7 @@ static char keytable[] = {
  * Search a single command table for the command string in cmd.
  */
 static int keyboard_search(char *cmd) {
-    for (char *p = keytable, *q = cmd;;  p++, q++) {
+    for (char *p = keytable, *q = cmd;;  ++p, ++q) {
         if (*p == *q) {
             /*
              * Current characters match.

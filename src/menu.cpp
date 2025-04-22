@@ -150,7 +150,7 @@ string ConsolePlayer::getNote(uint16_t freq) {
     if (freq) {
         uint16_t distance = 0xffff;
 		string   result("");
-        for (int i = 0; i < 96; ++i) {
+        for (uint8_t i = 0; i < 96; ++i) {
             uint16_t d = std::abs(freq - m_freqTable[i]);
             if (d < distance)
                 distance = d;
@@ -312,10 +312,10 @@ void ConsolePlayer::menu() {
     else if (m_timer.valid)
         cerr << "Infinite";
     else if (!songlengthDB) {
-		consoleColour(yellow, false);
+		consoleColour(red, false);
         cerr << "Songlength DB not found!";
 	} else {
-		consoleColour(red, false);
+		consoleColour(yellow, false);
         cerr << "Unknown";
 	}
 
@@ -605,7 +605,8 @@ void ConsolePlayer::refreshRegDump() {
 								  (tuneInfo->sidChips() * 6 + 1):
 							      (tuneInfo->sidChips() * 3 + 1);
 
-	cerr << "\x1b[" << movLines << "F"; // Moves cursor for updating the displays
+	// Moves cursor for updating the displays
+	cerr << "\x1b[" << movLines << "F";
 
     for (int j = 0; j < tuneInfo->sidChips(); ++j) {
     	uint8_t* registers = m_registers[j];

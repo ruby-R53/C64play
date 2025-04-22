@@ -46,9 +46,6 @@
 #include <string>
 #include <bitset>
 
-#include <thread>
-#include <atomic>
-
 typedef enum {
 	black,
 	red,
@@ -114,48 +111,46 @@ private:
     static const char RESID_ID[];
 #endif
 
-    const char* const           m_name;
-    sidplayfp                   m_engine;
-    SidConfig                   m_engCfg;
-    SidTune                     m_tune;
-	std::atomic<player_state_t> m_state;
-    const char*                 m_outfile;
-    std::string                 m_filename;
+    const char* const m_name;
+    sidplayfp         m_engine;
+    SidConfig         m_engCfg;
+    SidTune           m_tune;
+	player_state_t    m_state;
+    const char*       m_outfile;
+    std::string       m_filename;
 
-    IniConfig        m_iniCfg;
-    SidDatabase      m_database;
+    IniConfig       m_iniCfg;
+    SidDatabase     m_database;
 
-    Setting<double>  m_fcurve;
+    Setting<double> m_fcurve;
 
 #ifdef FEAT_FILTER_RANGE
-    Setting<double>  m_frange;
+    Setting<double> m_frange;
 #endif
 
 #ifdef FEAT_CW_STRENGTH
     SidConfig::
-	sid_cw_t         m_combinedWaveformsStrength;
+	sid_cw_t        m_combinedWaveformsStrength;
 #endif
 
-    uint8_t          m_registers[3][32];
-    uint16_t*        m_freqTable;
+    uint8_t         m_registers[3][32];
+    uint16_t*       m_freqTable;
 
     // Display parameters
-    uint8_t          m_quietLevel;
-    uint8_t          m_verboseLevel;
+    uint8_t         m_quietLevel;
+    uint8_t         m_verboseLevel;
 
-	bool             songlengthDB;
+	bool            songlengthDB;
 
-    bool             m_cpudebug;
-	std::bitset<9>   m_mute_channel;
+    bool            m_cpudebug;
+	std::bitset<9>  m_mute_channel;
 
 #ifdef FEAT_SAMPLE_MUTE
-    std::bitset<3>   m_mute_samples;
+    std::bitset<3>  m_mute_samples;
 #endif
 
-    uint8_t          m_channels;
-    uint8_t          m_bitDepth;
-
-	std::thread *m_thread = nullptr;
+    uint8_t         m_channels;
+    uint8_t         m_bitDepth;
 
     struct m_filter_t {
         bool          enabled;
@@ -183,12 +178,12 @@ private:
     } m_driver;
 
     struct m_timer_t { // secs
-        uint_least32_t              start;
-		std::atomic<uint_least32_t> current;
-        uint_least32_t              stop;
-        uint_least32_t              length;
-        bool                        valid;
-        bool                        starting;
+        uint_least32_t start;
+		uint_least32_t current;
+        uint_least32_t stop;
+        uint_least32_t length;
+        bool           valid;
+        bool           starting;
     } m_timer;
 
     struct m_track_t {
@@ -216,9 +211,9 @@ private:
     bool createOutput  (OUTPUTS driver, const SidTuneInfo *tuneInfo);
     bool createSidEmu  (SIDEMUS emu, const SidTuneInfo *tuneInfo);
     void decodeKeys    (void);
-    void updateDisplay ();
+    void updateDisplay (void);
     void menu          (void);
-    void refreshRegDump();
+    void refreshRegDump(void);
 
     uint_least32_t getBufSize();
 

@@ -52,12 +52,8 @@ using std::endl;
 
 #include <unordered_map>
 
-#include <chrono>
-
 using filter_map_t = std::unordered_map<std::string, double>;
 using filter_map_iter_t = std::unordered_map<std::string, double>::const_iterator;
-
-const char* ERR_NOT_ENOUGH_MEMORY = "ERROR: not enough memory!";
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 #  include <sidplayfp/builders/residfp.h>
@@ -317,7 +313,7 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
     // Audio driver failed
     if (!m_driver.device) {
         m_driver.device = &m_driver.null;
-        displayError(ERR_NOT_ENOUGH_MEMORY);
+        displayError("ERROR: not enough memory!");
 
         return false;
     }
@@ -468,7 +464,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
     if (!m_engCfg.sidEmulation) {
         if (emu > EMU_DEFAULT) { // No SID emulation?
-            displayError(ERR_NOT_ENOUGH_MEMORY);
+            displayError("ERROR: not enough memory!");
             return false;
         }
     }
@@ -564,7 +560,7 @@ bool ConsolePlayer::open(void) {
     // As yet we don't have a required songlength
     // so try the songlength database or keep the default
     if (!m_timer.valid) {
-        const uint32_t length = m_database.lengthMs(m_tune);
+        const int_least32_t length = m_database.lengthMs(m_tune);
 
         if (length > 0)
             m_timer.length = length;
@@ -578,7 +574,7 @@ bool ConsolePlayer::open(void) {
             m_timer.stop += m_timer.start;
     } else { // Make sure start time dosen't exceed end time
         if ((m_timer.stop != 0) && (m_timer.start >= m_timer.stop)) {
-            displayError("ERROR: start time exceeds song length!");
+            displayError("ERROR: start time exceeds the song's duration!");
             return false;
         }
     }
@@ -589,17 +585,7 @@ bool ConsolePlayer::open(void) {
 
     // Update display
     menu();
-
-	// update display every 16 milliseconds, yielding a ~62 Hz refresh
-	// rate (external factors taken into account)
-	uint8_t delay = 16;
-    m_thread = new std::thread([this](uint8_t delay) {
-        while (m_state != playerStopped) {
-            updateDisplay();
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-        }
-    }, delay);
+	updateDisplay();
 
     return true;
 }
@@ -628,21 +614,18 @@ void ConsolePlayer::close() {
 
         cerr << endl;
     }
-
-	if (m_thread) {
-        m_thread->join();
-        delete m_thread;
-    }
 }
 
 // Out play loop to be externally called
 bool ConsolePlayer::play() {
 	// prepare for playback
 	uint_least32_t retSize = 0;
-	const uint_least32_t length = getBufSize();
-	short *buffer = m_driver.selected->buffer(); // Fill buffer
 
     if (m_state == playerRunning) {
+		updateDisplay();
+
+		const uint_least32_t length = getBufSize();
+		short *buffer = m_driver.selected->buffer(); // Fill buffer
         retSize = m_engine.play(buffer, length);
 
         if ((retSize < length) || !m_engine.isPlaying()) {
@@ -696,7 +679,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
     if (m_timer.starting && (m_timer.current >= m_timer.start)) {
         m_timer.starting  = false;
         m_driver.selected = m_driver.device;
-        memset(m_driver.selected->buffer(), 0, m_driver.cfg.bufSize); // FIXME
+        memset(m_driver.selected->buffer(), 0, m_driver.cfg.bufSize);
         m_speed.current = 1;
         m_engine.fastForward(100);
 
@@ -706,23 +689,21 @@ uint_least32_t ConsolePlayer::getBufSize() {
 	else if ((m_timer.stop != 0) && (m_timer.current >= m_timer.stop)) {
         m_state = playerExit;
 
-		if (m_track.loop) {
+		if (m_track.loop)
 			m_state = playerRestart;
-		} else {
-            if (m_track.single)
-                return 0;
+		else if (m_track.single)
+            return 0;
 
-            // Move to next track
-            ++m_track.selected;
-			
-            if (m_track.selected > m_track.songs)
-                m_track.selected = 1;
-			
-            if (m_track.selected == m_track.first)
-                return 0;
-			
-            m_state = playerRestart;
-        }
+		// Move to next track
+		++m_track.selected;
+		
+		if (m_track.selected > m_track.songs)
+			m_track.selected = 1;
+		
+		if (m_track.selected == m_track.first)
+			return 0;
+		
+		m_state = playerRestart;
     } else {
 		uint_least32_t remaining = m_timer.stop - m_timer.current;
         uint_least32_t bufSize   = remaining * m_driver.cfg.bytesPerMillis();
@@ -736,27 +717,25 @@ uint_least32_t ConsolePlayer::getBufSize() {
 
 
 void ConsolePlayer::updateDisplay() {
-    const uint32_t milliseconds = m_engine.timeMs();
-    const uint32_t seconds = milliseconds / 1000;
+    const uint_least32_t milliseconds = m_engine.timeMs();
+    const uint_least32_t seconds = milliseconds / 1000;
 
-	if (m_state == playerRunning) {
-		if (m_verboseLevel > 1 && !m_quietLevel)
-			refreshRegDump();
+	if (m_verboseLevel > 1 && !m_quietLevel)
+		refreshRegDump();
 
-		if (!m_quietLevel && (seconds != (m_timer.current / 1000))) {
-			cerr << std::setw(2) << std::setfill('0')
-				 << ((seconds / 60) % 100) << ':' << std::setw(2)
-				 << std::setfill('0') << (seconds % 60) << std::flush;
+	if (!m_quietLevel && (seconds != (m_timer.current / 1000))) {
+		cerr << std::setw(2) << std::setfill('0')
+			 << ((seconds / 60) % 100) << ':' << std::setw(2)
+			 << std::setfill('0') << (seconds % 60) << std::flush;
 
-			// this hack has to be done because for some
-			// reason at both levels 1 and 0 it appends to
-			// the timer instead of overwriting it
-			if (m_verboseLevel <= 1)
-				cerr << "\b\b\b\b\b";
-		}
-
-		m_timer.current = milliseconds;
+		// this hack has to be done because for some
+		// reason at both level 1 and 0 it appends to
+		// the timer instead of overwriting it
+		if (m_verboseLevel <= 1)
+			cerr << "\b\b\b\b\b";
 	}
+
+	m_timer.current = milliseconds;
 }
 
 void ConsolePlayer::displayError(const char *error) {
@@ -765,7 +744,7 @@ void ConsolePlayer::displayError(const char *error) {
 
 // Keyboard handling
 void ConsolePlayer::decodeKeys() {
-    do {
+    while (_kbhit()) {
         const int action = keyboard_decode();
         if (action == A_INVALID)
             continue;
@@ -796,6 +775,7 @@ void ConsolePlayer::decodeKeys() {
         case A_UP_ARROW:
 		case A_INCREASE:
             m_speed.current *= 2;
+
             if (m_speed.current > m_speed.max)
                 m_speed.current = m_speed.max;
   
@@ -843,6 +823,7 @@ void ConsolePlayer::decodeKeys() {
 			if (m_track.single || m_track.songs == 1)
 				break;
 
+			m_state = playerStopped;
 			cerr << "\x1b[2K\r";
             cerr << "Jumping to subtune: ";
 			keyboard_disable_raw();
@@ -936,5 +917,5 @@ void ConsolePlayer::decodeKeys() {
             return;
         break;
         }
-    } while (_kbhit());
+    }
 }

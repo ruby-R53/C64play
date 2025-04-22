@@ -1,3 +1,14 @@
+April 22, 2025:
+- Meh, not implementing multi-threading for now.
+  - I changed my mind because of the bugs below. I just
+    couldn't figure out what the hell was wrong, and no
+	debugger was able to help. The program simply crashed, but
+	nothing meaningful was displayed on the trace whatsoever.
+	Weirdly enough, it works just fine on sidplayfp, even on
+	its latest code···
+  - So yeah, the bugs below really were caused by the multi-
+    thread implementation. I wonder why. I really wonder why.
+
 April 21, 2025:
 - Threaded display update (sorta) implemented! (VERY
   EXPERIMENTAL!)
@@ -19,6 +30,15 @@ April 21, 2025:
 	PulseAudio Asynchronous API here at the moment.
 	I'll just wait to see if another simpler path could be
 	taken here instead.
+- NEW BUGS
+  - Playing with `-l0` now crashes the program's audio
+    handling.
+  - Whenever a tune doesn't have an SLDB entry, its duration
+    won't be infinite, and instead will be 82:47.295.
+  - Those all appeared after I implemented the threaded display
+    updates. I actually wonder if that's really what caused it
+	to behave like that, or if it's some change I made a little
+	after. Bummer x(
 
 April 20, 2025:
 - More command line option changes
