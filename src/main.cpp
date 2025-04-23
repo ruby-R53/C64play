@@ -74,9 +74,9 @@ main_restart:
     keyboard_disable_raw();
 
     // Restore default signal error handlers
-    if ((signal (SIGINT,  SIG_DFL) == SIG_ERR)
-     	|| (signal (SIGABRT, SIG_DFL) == SIG_ERR)
-     	|| (signal (SIGTERM, SIG_DFL) == SIG_ERR)) {
+    if ((signal(SIGINT,  SIG_DFL) == SIG_ERR)
+     	|| (signal(SIGABRT, SIG_DFL) == SIG_ERR)
+     	|| (signal(SIGTERM, SIG_DFL) == SIG_ERR)) {
         player.displayError(ERR_SIGHANDLER);
         goto main_error;
     }

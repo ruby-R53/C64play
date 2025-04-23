@@ -620,12 +620,12 @@ void ConsolePlayer::close() {
 bool ConsolePlayer::play() {
 	// prepare for playback
 	uint_least32_t retSize = 0;
+	const uint_least32_t length = getBufSize();
+	short *buffer = m_driver.selected->buffer(); // Fill buffer
 
     if (m_state == playerRunning) {
 		updateDisplay();
 
-		const uint_least32_t length = getBufSize();
-		short *buffer = m_driver.selected->buffer(); // Fill buffer
         retSize = m_engine.play(buffer, length);
 
         if ((retSize < length) || !m_engine.isPlaying()) {

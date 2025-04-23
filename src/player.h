@@ -153,17 +153,17 @@ private:
     uint8_t         m_bitDepth;
 
     struct m_filter_t {
-        bool          enabled;
+        bool        enabled;
 
         // Filter parameter for reSID
-        double        bias;
+        double      bias;
 
         // Filter parameters for reSIDfp
-        double        filterCurve6581;
+        double      filterCurve6581;
 #ifdef FEAT_FILTER_RANGE
-        double        filterRange6581;
+        double      filterRange6581;
 #endif
-        double        filterCurve8580;
+        double      filterCurve8580;
     } m_filter;
 
     struct m_driver_t {
@@ -201,7 +201,7 @@ private:
 
 private:
     // Console
-    void consoleColour (color_t color, bool bold);
+    void consoleColor  (color_t color, bool bold);
     void consoleTable  (table_t table);
     void consoleRestore(void);
 
