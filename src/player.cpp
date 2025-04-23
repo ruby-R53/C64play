@@ -50,6 +50,7 @@ using std::endl;
 #include <sidplayfp/SidInfo.h>
 #include <sidplayfp/SidTuneInfo.h>
 
+//#include <chrono>
 #include <unordered_map>
 
 using filter_map_t = std::unordered_map<std::string, double>;
@@ -587,6 +588,18 @@ bool ConsolePlayer::open(void) {
     menu();
 	updateDisplay();
 
+	/*
+	// Update display at 50/60Hz
+    int delay = 16;
+    m_thread = new std::thread([this](int delay) {
+        while (m_state != playerStopped) {
+            if (m_state == playerRunning)
+                updateDisplay();
+            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+        }
+    }, delay);
+	*/
+
     return true;
 }
 
@@ -614,18 +627,25 @@ void ConsolePlayer::close() {
 
         cerr << endl;
     }
+
+	/*
+	if (m_thread) {
+		m_thread->join();
+		delete m_thread;
+	}
+	*/
 }
 
 // Out play loop to be externally called
 bool ConsolePlayer::play() {
 	// prepare for playback
 	uint_least32_t retSize = 0;
-	const uint_least32_t length = getBufSize();
-	short *buffer = m_driver.selected->buffer(); // Fill buffer
 
     if (m_state == playerRunning) {
 		updateDisplay();
 
+		const uint_least32_t length = getBufSize();
+		short *buffer = m_driver.selected->buffer(); // Fill buffer
         retSize = m_engine.play(buffer, length);
 
         if ((retSize < length) || !m_engine.isPlaying()) {
@@ -706,7 +726,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
 		m_state = playerRestart;
     } else {
 		uint_least32_t remaining = m_timer.stop - m_timer.current;
-        uint_least32_t bufSize   = remaining * m_driver.cfg.bytesPerMillis();
+        uint_least32_t bufSize   = (remaining * m_driver.cfg.sampleRate) / 1000;
 
         if (bufSize < m_driver.cfg.bufSize)
             return bufSize;
