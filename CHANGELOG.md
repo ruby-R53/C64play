@@ -11,7 +11,10 @@ April 24, 2025:
 	(like the ones that use Digi samples) the bug gets worse.
 	Meanwhile, on normal 50 Hz VBI ones that bug is nearly
 	non-existent. What the heck is going on???
-  - Result: I won't implement multi-threading. FOR NOW :) 
+  - Result: I won't implement multi-threading. FOR NOW :)
+    Because of that, I'm making a new branch containing the
+	multi-thread implementation, so that I don't need to keep
+	commenting stuff out and making a mess on the code.
 
 April 22, 2025:
 - Meh, not implementing multi-threading for now.
