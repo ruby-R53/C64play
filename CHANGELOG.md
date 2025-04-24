@@ -1,3 +1,18 @@
+April 24, 2025:
+- I KEEP CHANGING MY MIND. I WANT MULTI-THREADING. I DON'T WANT
+  MULTI-THREADING. AAAAAAAAAAAAAAA
+  - I did get some progress this time. I had to split the
+    `updateDisplay()` function in `updateTimer()` and the
+	already existing `refreshRegDump()`. And that fixed the
+	`-l0` and missing SLDB entry problems. However···
+  - The damn display throws unprocessed data onto the screeen.
+    Could it be that my refresh rate was set way too fast?
+	Well, I did notice that if a tune has a very high speed
+	(like the ones that use Digi samples) the bug gets worse.
+	Meanwhile, on normal 50 Hz VBI ones that bug is nearly
+	non-existent. What the heck is going on???
+  - Result: I won't implement multi-threading. FOR NOW :) 
+
 April 22, 2025:
 - Meh, not implementing multi-threading for now.
   - I changed my mind because of the bugs below. I just

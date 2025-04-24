@@ -492,7 +492,7 @@ void ConsolePlayer::displayArgs (const char *arg) {
     out << "Options:" << endl
         << "--help | -h       list options (this menu)" << endl
         << "--help-debug      debug help menu" << endl
-        << "-b<num>           set start time in [min:]sec[.mil] format" << endl
+        << "-b<num>           begin playback at [min:]sec[.mil] mark" << endl
         << "-r<num>           set sample rate in Hz, defaults to "
         << SidConfig::DEFAULT_SAMPLING_FREQ << endl
         << "-D<addr>          set address of SID #2 (e.g. -ds0xd420)" << endl

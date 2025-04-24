@@ -27,8 +27,6 @@
 #  include "config.h"
 #endif
 
-#include <string>
-
 #include <sidplayfp/SidTune.h>
 #include <sidplayfp/sidplayfp.h>
 #include <sidplayfp/SidConfig.h>
@@ -45,8 +43,9 @@
 
 #include <string>
 #include <bitset>
-//#include <thread>
-//#include <atomic>
+
+#include <thread>
+#include <atomic>
 
 typedef enum {
 	black,
@@ -113,14 +112,13 @@ private:
     static const char RESID_ID[];
 #endif
 
-    const char* const m_name;
-    sidplayfp         m_engine;
-    SidConfig         m_engCfg;
-    SidTune           m_tune;
-	//std::atomic<player_state_t> m_state;
-	player_state_t    m_state;
-    const char*       m_outfile;
-    std::string       m_filename;
+    const char* const           m_name;
+    sidplayfp                   m_engine;
+    SidConfig                   m_engCfg;
+    SidTune                     m_tune;
+	std::atomic<player_state_t> m_state;
+    const char*                 m_outfile;
+    std::string                 m_filename;
 
     IniConfig       m_iniCfg;
     SidDatabase     m_database;
@@ -155,7 +153,7 @@ private:
     uint8_t         m_channels;
     uint8_t         m_bitDepth;
 
-	//std::thread *m_thread = nullptr;
+	std::thread *m_thread = nullptr;
 
     struct m_filter_t {
         bool        enabled;
@@ -183,13 +181,12 @@ private:
     } m_driver;
 
     struct m_timer_t { // secs
-        uint_least32_t start;
-		//std::atomic<uint_least32_t> current;
-		uint_least32_t current;
-        uint_least32_t stop;
-        uint_least32_t length;
-        bool           valid;
-        bool           starting;
+        uint_least32_t              start;
+		std::atomic<uint_least32_t> current;
+        uint_least32_t              stop;
+        uint_least32_t              length;
+        bool                        valid;
+        bool                        starting;
     } m_timer;
 
     struct m_track_t {
@@ -217,7 +214,7 @@ private:
     bool createOutput  (OUTPUTS driver, const SidTuneInfo *tuneInfo);
     bool createSidEmu  (SIDEMUS emu, const SidTuneInfo *tuneInfo);
     void decodeKeys    (void);
-    void updateDisplay (void);
+	void updateTimer   (void);
     void menu          (void);
     void refreshRegDump(void);
 

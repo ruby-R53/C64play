@@ -34,8 +34,6 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-#include <cstdlib>
-
 #include <unistd.h>
 
 #include "utils.h"
@@ -50,7 +48,7 @@ using std::endl;
 #include <sidplayfp/SidInfo.h>
 #include <sidplayfp/SidTuneInfo.h>
 
-//#include <chrono>
+#include <chrono>
 #include <unordered_map>
 
 using filter_map_t = std::unordered_map<std::string, double>;
@@ -319,7 +317,7 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
         return false;
     }
 
-    uint8_t tuneChannels = (tuneInfo && (tuneInfo->sidChips() > 1)) ? 2 : 1;
+    uint_least8_t tuneChannels = (tuneInfo && (tuneInfo->sidChips() > 1)) ? 2 : 1;
 
     // Configure with user settings
     m_driver.cfg.sampleRate = m_engCfg.frequency;
@@ -584,21 +582,22 @@ bool ConsolePlayer::open(void) {
     m_timer.starting = true;
     m_state = playerRunning;
 
-    // Update display
+    // Show menu and first frame of the
+	// register dump
     menu();
-	updateDisplay();
+	updateTimer();
+	if (m_verboseLevel > 1 && !m_quietLevel) {
+		// Update display according to the tune's timing
+		uint_least8_t delay = isNTSC ? 16 : 20;
+		m_thread = new std::thread([this](uint_least8_t delay) {
+			while (m_state != playerStopped) {
+				if (m_engine.isPlaying())
+					refreshRegDump();
 
-	/*
-	// Update display at 50/60Hz
-    int delay = 16;
-    m_thread = new std::thread([this](int delay) {
-        while (m_state != playerStopped) {
-            if (m_state == playerRunning)
-                updateDisplay();
-            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-        }
-    }, delay);
-	*/
+				std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+			}
+		}, delay);
+	}
 
     return true;
 }
@@ -628,12 +627,10 @@ void ConsolePlayer::close() {
         cerr << endl;
     }
 
-	/*
 	if (m_thread) {
 		m_thread->join();
 		delete m_thread;
 	}
-	*/
 }
 
 // Out play loop to be externally called
@@ -642,7 +639,7 @@ bool ConsolePlayer::play() {
 	uint_least32_t retSize = 0;
 
     if (m_state == playerRunning) {
-		updateDisplay();
+		updateTimer();
 
 		const uint_least32_t length = getBufSize();
 		short *buffer = m_driver.selected->buffer(); // Fill buffer
@@ -735,13 +732,9 @@ uint_least32_t ConsolePlayer::getBufSize() {
     return m_driver.cfg.bufSize;
 }
 
-
-void ConsolePlayer::updateDisplay() {
-    const uint_least32_t milliseconds = m_engine.timeMs();
-    const uint_least32_t seconds = milliseconds / 1000;
-
-	if (m_verboseLevel > 1 && !m_quietLevel)
-		refreshRegDump();
+void ConsolePlayer::updateTimer() {
+	const uint_least32_t milliseconds = m_engine.timeMs();
+	const uint_least32_t seconds = milliseconds / 1000;
 
 	if (!m_quietLevel && (seconds != (m_timer.current / 1000))) {
 		cerr << std::setw(2) << std::setfill('0')
