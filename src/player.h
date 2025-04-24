@@ -45,8 +45,6 @@
 
 #include <string>
 #include <bitset>
-//#include <thread>
-//#include <atomic>
 
 typedef enum {
 	black,
@@ -117,7 +115,6 @@ private:
     sidplayfp         m_engine;
     SidConfig         m_engCfg;
     SidTune           m_tune;
-	//std::atomic<player_state_t> m_state;
 	player_state_t    m_state;
     const char*       m_outfile;
     std::string       m_filename;
@@ -140,8 +137,8 @@ private:
     uint16_t*       m_freqTable;
 
     // Display parameters
-    uint8_t         m_quietLevel;
-    uint8_t         m_verboseLevel;
+    uint_least8_t   m_quietLevel;
+    uint_least8_t   m_verboseLevel;
 
 	bool            songlengthDB;
 
@@ -152,10 +149,8 @@ private:
     std::bitset<3>  m_mute_samples;
 #endif
 
-    uint8_t         m_channels;
-    uint8_t         m_bitDepth;
-
-	//std::thread *m_thread = nullptr;
+    uint_least8_t   m_channels;
+    uint_least8_t   m_bitDepth;
 
     struct m_filter_t {
         bool        enabled;
@@ -184,7 +179,6 @@ private:
 
     struct m_timer_t { // secs
         uint_least32_t start;
-		//std::atomic<uint_least32_t> current;
 		uint_least32_t current;
         uint_least32_t stop;
         uint_least32_t length;

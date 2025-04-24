@@ -34,8 +34,6 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-#include <cstdlib>
-
 #include <unistd.h>
 
 #include "utils.h"
@@ -50,7 +48,6 @@ using std::endl;
 #include <sidplayfp/SidInfo.h>
 #include <sidplayfp/SidTuneInfo.h>
 
-//#include <chrono>
 #include <unordered_map>
 
 using filter_map_t = std::unordered_map<std::string, double>;
@@ -319,7 +316,7 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
         return false;
     }
 
-    uint8_t tuneChannels = (tuneInfo && (tuneInfo->sidChips() > 1)) ? 2 : 1;
+    uint_least8_t tuneChannels = (tuneInfo && (tuneInfo->sidChips() > 1)) ? 2 : 1;
 
     // Configure with user settings
     m_driver.cfg.sampleRate = m_engCfg.frequency;
@@ -524,18 +521,17 @@ bool ConsolePlayer::open(void) {
         return false;
     }
 
-    const bool isNTSC = ((m_engCfg.defaultC64Model == SidConfig::NTSC) &&
-                         (m_engCfg.forceC64Model ||
-				         (tuneInfo->clockSpeed() != SidTuneInfo::CLOCK_PAL))) ||
-                         (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_NTSC);
-
 #ifdef FEAT_FILTER_DISABLE
     m_engine.filter(0, m_filter.enabled);
     m_engine.filter(1, m_filter.enabled);
     m_engine.filter(2, m_filter.enabled);
 #endif
 
-	m_freqTable = isNTSC ? freqTableNtsc : freqTablePal;
+	m_freqTable = (((m_engCfg.defaultC64Model == SidConfig::NTSC) &&
+                    (m_engCfg.forceC64Model ||
+				    (tuneInfo->clockSpeed() != SidTuneInfo::CLOCK_PAL))) ||
+                   (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_NTSC))
+				   ? freqTableNtsc : freqTablePal;
 
     // Start the player. Do this by fast
     // forwarding to the start position
@@ -588,18 +584,6 @@ bool ConsolePlayer::open(void) {
     menu();
 	updateDisplay();
 
-	/*
-	// Update display at 50/60Hz
-    int delay = 16;
-    m_thread = new std::thread([this](int delay) {
-        while (m_state != playerStopped) {
-            if (m_state == playerRunning)
-                updateDisplay();
-            std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-        }
-    }, delay);
-	*/
-
     return true;
 }
 
@@ -627,13 +611,6 @@ void ConsolePlayer::close() {
 
         cerr << endl;
     }
-
-	/*
-	if (m_thread) {
-		m_thread->join();
-		delete m_thread;
-	}
-	*/
 }
 
 // Out play loop to be externally called

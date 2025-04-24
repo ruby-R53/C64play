@@ -605,11 +605,13 @@ void ConsolePlayer::refreshRegDump() {
 								  (tuneInfo->sidChips() * 6 + 1):
 							      (tuneInfo->sidChips() * 3 + 1);
 
+	uint8_t* registers;
+
 	// Moves cursor for updating the displays
 	cerr << "\x1b[" << movLines << "F";
 
     for (int j = 0; j < tuneInfo->sidChips(); ++j) {
-    	uint8_t* registers = m_registers[j];
+    	registers = m_registers[j];
         uint8_t  oldCtl[3];
         oldCtl[0] = registers[0x04];
         oldCtl[1] = registers[0x0b];
@@ -710,7 +712,7 @@ void ConsolePlayer::refreshRegDump() {
 
 	else if (m_verboseLevel > 2) {
         for (int j = 0; j < tuneInfo->sidChips(); ++j) {
-            uint8_t* registers = m_registers[j];
+            registers = m_registers[j];
 			string miscInfo;
 			miscInfo.reserve(tableWidth);
 			miscInfo.append("M. Vol.    Filters    F. Chn.  F. Res.  Cutoff");
