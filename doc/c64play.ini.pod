@@ -1,0 +1,359 @@
+﻿=encoding utf8
+
+
+=head1 NAME
+
+B<c64play.ini> - configuration file for L<C64play(1)>.
+
+
+=head1 DESCRIPTION
+
+C64play has a configuration file formed by sections. They're names enclosed by brackets, making it easier to separate each type of setting.
+Every setting has a I<< <parameter> = <value> >> structure.
+
+B<c64play.ini> has the following sections:
+
+B<[Player]> - Player settings
+
+B<[Console]> - Console output settings
+
+B<[Audio]> - Audio output settings
+
+B<[Emulation]> - Emulation parameters
+
+If a setting is specified more than once, the last mention of it will be used by the program.
+
+And, if any of those settings are outside of their section, it will be ignored.
+
+=head2 [Player]
+
+=over
+
+=item B<Songlength DB>=I<< <path> >>
+
+Full path for the Songlength database.
+
+By default, the program will look for F<DOCUMENTS/Songlengths.md5> under the HVSC
+path, if $HVSC_BASE is set.
+
+If this variable is not set, C64play will try
+F<$PREFIX/share/C64play/Songlengths.md5> instead.
+
+=item B<Default play time>=I<MM:SS.mmm>
+
+Default play time if Songlengths.md5 isn't found. Defaults to 0, which means infinite play time.
+
+=item B<Default record time>=I<MM:SS.mmm>
+
+Default recording time when recording to WAV if Songlengths.md5 isn't found. Defaults to 4 minutes.
+
+=item B<Kernal ROM>=I<< <path> >>
+
+Full path for the Kernal ROM file. Out of all the 3 ROM files, this is the most important one, and thus should be provided as some tunes may not play without it.
+By default, the program will look for a file named F<kernal> under the following places:
+
+=over
+
+=item * $XDG_DATA_HOME/C64play/
+
+if $XDG_DATA_HOME is set;
+
+=item * $HOME/.local/share/C64play/
+
+if $XDG_DATA_HOME isn't set, and
+
+=item * $PREFIX/share/C64play
+
+if not found in any of the directories above.
+
+=back
+
+=item B<BASIC ROM>=I<< <path> >>
+
+Full path for the BASIC ROM file. This is mostly useful for playing tunes made in BASIC.
+
+By default the program will look for a file named F<basic> under the same locations as above.
+
+=item B<Chargen ROM>=I<< <path> >>
+
+Full path for the Character generator ROM file. Almost useless for actually playing tunes, but included for completeness.
+
+By default the program will look for a file named F<chargen> under the same locations as above too.
+
+=item B<Verboseness>=I<< <num> >>
+
+=item B<Quietness>=I<< <num> >>
+
+Those are the console output levels, both default to 0.
+
+As for B<Verboseness>,
+
+use 1 for a detailed output (addresses and SID details);
+
+2 for a more detailed one (register dumps, displaying the notes being played and waveforms + control registers being used);
+
+and 3 for an even more detailed output (dump even more registers, displaying mostly filter-related info).
+
+It works the same way on B<Quietness>, except that it reduces the amount of output instead.
+
+I might try merging those into one single setting in a future release.
+
+=back
+
+
+=head2 [Console]
+
+=over
+
+=item B<ANSI>=I<true|false>
+
+Use ANSI escape sequences to provide a fancier output (it adds colors and hides the
+console cursor).
+
+=item B<Top left char>=I<< <char> >>
+
+Character for the top left corner.
+
+=item B<Top right char>=I<< <char> >>
+
+Character for the top right corner.
+
+=item B<Bottom left char>=I<< <char> >>
+
+Character for the bottom left corner.
+
+=item B<Bottom right char>=I<< <char> >>
+
+Character for the bottom right corner.
+
+=item B<Vertical char>=I<< <char> >>
+
+Character for vertical lines.
+
+=item B<Horizontal char>=I<< <char> >>
+
+Character for horizontal lines.
+
+=item B<Junction left char>=I<< <char> >>
+
+Character for junctions on the left.
+
+=item B<Junction right char>=I<< <char> >>
+
+Character for junctions on the right.
+
+=back
+
+
+=head2 [Audio]
+
+=over
+
+=item B<Sample rate>=I<< <number> >>
+
+Playback sample rate in Hz. Defaults to 48000.
+
+=item B<Channels>=I<< <number> >>
+
+Number of channels:
+
+Use 1 for mono playback.
+
+Use 2 for stereo playback.
+
+If not specified, C64play will use mono playback on single-SID tunes
+and stereo playback on 2- or 3SID ones.
+
+=item B<Bit depth>=I<< <16|32> >>
+
+Number of bits per sample, used for WAV rendering only.
+
+=back
+
+=head2 [Emulation]
+
+=over
+
+=item B<Engine>=I<< <RESIDFP|RESID|NONE> >>
+
+Set the SID emulation engine. Defaults to RESIDFP.
+
+=item B<Video mode>=I<< <PAL|NTSC|OLD_NTSC|DREAN> >>
+
+Default video signal to use if not specified by tune:
+
+PAL for the European PAL-B model;
+
+NTSC for American/Japanese NTSC-M models;
+
+OLD_NTSC for NTSC-M models with the old VIC chip;
+
+and DREAN for the Argentinian PAL-N model.
+
+Defaults to PAL.
+
+=item B<Force video mode>=I<true|false>
+
+Use the same video mode even if the tune specifies one.
+
+=item B<CIA version>=I<< <MOS6526|MOS8521> >>
+
+Select which CIA chip to emulate, the old MOS 6526 or the newer MOS 8521.
+
+=item B<SID version>=I<< <MOS6581|MOS8580> >>
+
+Default SID chip model, the old MOS 6581 or the newer MOS 8580.
+
+=item B<Force SID version>=I<true|false>
+
+Use the same version of the SID chip even if the tune specifies one.
+
+=item B<DigiBoost>=I<true|false>
+
+Enable DigiBoost, a hack for the 8580 SID chip to make digi samples originally meant for the 6581 audible.
+
+=item B<Filter emulation>=I<true|false>
+
+Enable/disable the emulation of the SID filter.
+
+=item B<Filter bias>=I<< <number> >>
+
+Controls the SID's bias under the reSID emulation.
+Ranges from 0.0 ("dark") to 1.0 ("light"), defaults to 0.5.
+
+=item B<6581 filter curve>=I<< <number> >>
+
+Controls the SID's filter curve on reSIDfp's emulation.
+Ranges from -2.0 ("bright") to 2.0 ("dark"), defaults to 0.5.
+
+=item B<6581 filter range>=I<< <number> >>
+
+Controls the filter's uCox parameter for the 6581 chip on reSIDfp's
+emulation.
+Ranges from 0.0 ("dark") to 1.0 ("bright"), defaults to 0.5.
+
+=item B<8580 filter curve>=I<< <number> >>
+
+Controls the filter curve for the 8580 model on reSIDfp's
+emulation. 
+Ranges from 0.0 ("light") to 1.0 ("dark"), defaults to 0.5.
+
+=item B<Combined wave strength>=I<< <AVERAGE|WEAK|STRONG> >>
+
+Controls the combined waveforms strength on reSIDfp's
+emulation. Defaults to AVERAGE.
+
+=item B<Power-on delay>=I<< <number> >>
+
+Simulates the C64's power-on delay in CPU cycles.
+
+If <number> is higher than 8191, that delay will be randomly generated, and that's the default.
+
+=item B<Resampling>=I<< <INTERPOLATE|RESAMPLE> >>
+
+Set resampling method:
+
+I<INTERPOLATE> for a speedier output;
+
+I<RESAMPLE> for a more accurate one at the cost of hardware resources.
+
+=item B<reSID's fast sampling>=I<< <true|false> >>
+
+Enable reSID's fast resampling.
+
+=back
+
+
+=head1 SEE ALSO
+
+L<C64play(1)> - manual page for the program itself.
+
+
+=head1 AUTHORS
+
+=over
+
+=item Enki Costa
+
+Riced sidplayfp over and over and called it C64play.
+Also current maintainer of it.
+
+=item Leandro Nini
+
+Current maintainer of sidplayfp.
+
+=item Simon White
+
+Wrote the original Sidplay2.
+
+=item Dag Lem
+
+Wrote the reSID emulation engine.
+
+=item Antti S. Lankila
+
+Wrote the reSIDfp emulation engine as a fork of reSID 0.16.
+
+=item The VICE team
+
+Large part of the emulation is based on the VICE's code.
+
+=item André Fachat
+
+Wrote the original reloc65 utility.
+
+=item Michael Schwendt
+
+Wrote the original SidTune library and MD5 class (based on work by L. Peter Deutsch).
+
+=item Mikko Kilponen
+
+Wrote the original man page.
+
+=back
+
+
+=head1 RESOURCES
+
+=over
+
+=item C64play: L<https://github.com/ruby-R53/C64play/>
+
+=item libsidplayfp: L<https://github.com/libsidplayfp/>
+
+=item Sidplay2: L<http://sidplay2.sourceforge.net/>
+
+=item High Voltage Sid Collection (HVSC): L<http://hvsc.c64.org/>
+
+=back
+
+
+=head1 COPYING
+
+=over
+
+=item Copyright (C) 2000-2004 Simon White
+
+=item Copyright (C) 2007-2010 Antti Lankila
+
+=item Copyright (C) 2009-2015 VICE Project
+
+=item Copyright (C) 2010-2024 Leandro Nini
+
+=item Copyright (C) 2024-2025 Enki Costa
+
+=back
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
