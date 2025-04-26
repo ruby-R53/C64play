@@ -27,8 +27,6 @@
 #  include "config.h"
 #endif
 
-#include <string>
-
 #include <sidplayfp/SidTune.h>
 #include <sidplayfp/sidplayfp.h>
 #include <sidplayfp/SidConfig.h>

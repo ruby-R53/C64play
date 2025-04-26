@@ -30,7 +30,6 @@
 #include <sstream>
 #include <new>
 
-using std::cout;
 using std::cerr;
 using std::endl;
 
@@ -676,7 +675,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
     if (m_timer.starting && (m_timer.current >= m_timer.start)) {
         m_timer.starting  = false;
         m_driver.selected = m_driver.device;
-        memset(m_driver.selected->buffer(), 0, m_driver.cfg.bufSize);
+        m_driver.selected->clearBuffer();
         m_speed.current = 1;
         m_engine.fastForward(100);
 

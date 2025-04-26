@@ -1,3 +1,12 @@
+April 25, 2025:
+- Properly clear audio buffer
+  - I actually have been wanting to do that for quite a while,
+    but only now I was able to figure out what the heck was
+	wrong that didn't make it work like in sidplayfp. Turns out
+	I had to hard code the 16-bit audio depth because it'd
+	conflict with PulseAudio's setting (or at least that's my
+	understanding of it). Nice.
+
 April 24, 2025:
 - I KEEP CHANGING MY MIND. I WANT MULTI-THREADING. I DON'T WANT
   MULTI-THREADING. AAAAAAAAAAAAAAA

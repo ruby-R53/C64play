@@ -167,11 +167,14 @@ string ConsolePlayer::getNote(uint16_t freq) {
         }
         return noteName[96]; // 12 notes times 8 octaves
     }
+
     return noteName[0];
 }
 
 // Display console menu
 void ConsolePlayer::menu() {
+	std::ios_base::sync_with_stdio(false);
+
     if (m_quietLevel > 1) {
 		if (m_driver.file)
             cerr << info_file;

@@ -74,6 +74,7 @@ bool Audio_Pulse::open(AudioConfig &cfg) {
             throw error("Unable to allocate memory for sample buffers!");
         }
 
+		cfg.depth = 16;
         _settings = cfg;
 
         return true;
