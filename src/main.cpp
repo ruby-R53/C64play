@@ -39,69 +39,69 @@ static void sighandler(int signum);
 static ConsolePlayer *g_player;
 
 int main(int argc, char *argv[]) {
-    ConsolePlayer player(argv[0]);
-    g_player = &player;
+	ConsolePlayer player(argv[0]);
+	g_player = &player;
 
-    { // Decode the command line args
-        const int ret = player.args(argc - 1, const_cast<const char**>(argv + 1));
-        if (ret < 0)
-            goto main_error;
-        else if (!ret)
-            goto main_exit;
-    }
+	{ // Decode the command line args
+		const int ret = player.args(argc - 1, const_cast<const char**>(argv + 1));
+		if (ret < 0)
+			goto main_error;
+		else if (!ret)
+			goto main_exit;
+	}
 
 main_restart:
-    if (!player.open())
-        goto main_error;
+	if (!player.open())
+		goto main_error;
 
-    // Install signal error handlers
-    if ((signal(SIGINT, &sighandler) == SIG_ERR)
+	// Install signal error handlers
+	if ((signal(SIGINT, &sighandler) == SIG_ERR)
 		|| (signal(SIGABRT, &sighandler) == SIG_ERR)
 		|| (signal(SIGTERM, &sighandler) == SIG_ERR)) {
-        player.displayError(ERR_SIGHANDLER);
-        goto main_error;
-    }
+		player.displayError(ERR_SIGHANDLER);
+		goto main_error;
+	}
 
-    // Configure terminal to allow direct access to key events
-    keyboard_enable_raw();
+	// Configure terminal to allow direct access to key events
+	keyboard_enable_raw();
 
-    // Play loop
-    for (;;) {
-        if (!player.play())
-            break;
-    }
+	// Play loop
+	for (;;) {
+		if (!player.play())
+			break;
+	}
 
-    keyboard_disable_raw();
+	keyboard_disable_raw();
 
-    // Restore default signal error handlers
-    if ((signal(SIGINT,  SIG_DFL) == SIG_ERR)
-     	|| (signal(SIGABRT, SIG_DFL) == SIG_ERR)
-     	|| (signal(SIGTERM, SIG_DFL) == SIG_ERR)) {
-        player.displayError(ERR_SIGHANDLER);
-        goto main_error;
-    }
+	// Restore default signal error handlers
+	if ((signal(SIGINT,  SIG_DFL) == SIG_ERR)
+		|| (signal(SIGABRT, SIG_DFL) == SIG_ERR)
+		|| (signal(SIGTERM, SIG_DFL) == SIG_ERR)) {
+		player.displayError(ERR_SIGHANDLER);
+		goto main_error;
+	}
 
-    if ((player.state() & ~playerFast) == playerRestart)
-        goto main_restart;
+	if ((player.state() & ~playerFast) == playerRestart)
+		goto main_restart;
 
 main_exit:
-    player.close();
-    return EXIT_SUCCESS;
+	player.close();
+	return EXIT_SUCCESS;
 
 main_error:
-    player.close();
-    return EXIT_FAILURE;
+	player.close();
+	return EXIT_FAILURE;
 }
 
 
 void sighandler(int signum) {
-    switch (signum) {
-    case SIGINT:
-    case SIGABRT:
-    case SIGTERM:
-        // Exit now!
-        g_player->stop();
-        break;
-    default: break;
-    }
+	switch (signum) {
+	case SIGINT:
+	case SIGABRT:
+	case SIGTERM:
+		// Exit now!
+		g_player->stop();
+		break;
+	default: break;
+	}
 }

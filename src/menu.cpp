@@ -194,8 +194,8 @@ void ConsolePlayer::menu() {
 		cerr << "\x1b[?25l"; // and hide it
     }
 
-    consoleTable (tableStart);
-    consoleTable (tableMiddle);
+    consoleTable(tableStart);
+    consoleTable(tableMiddle);
     consoleColor(white, true);
 
 	string header;
@@ -204,7 +204,7 @@ void ConsolePlayer::menu() {
 	// the title first
     header.append("C64play - SID tune player");
 	cerr << setw(tableWidth/2 + header.length()/2) << header << endl;
-    consoleTable (tableMiddle);
+    consoleTable(tableMiddle);
     consoleColor(white, false);
 
 	// then the description
@@ -217,19 +217,19 @@ void ConsolePlayer::menu() {
     if (n) {
         codeConvert codeset;
 
-        consoleTable (tableSeparator);
-        consoleTable (tableMiddle);
+        consoleTable(tableSeparator);
+        consoleTable(tableMiddle);
         consoleColor(cyan, true);
         cerr << " Name         : ";
         consoleColor(white, false);
         cerr << codeset.convert(tuneInfo->infoString(0)) << endl;
         if (n > 1) {
-            consoleTable (tableMiddle);
+            consoleTable(tableMiddle);
             consoleColor(cyan, true);
             cerr << " Artist(s)    : ";
             consoleColor(white, false);
             cerr << codeset.convert(tuneInfo->infoString(1)) << endl;
-            consoleTable (tableMiddle);
+            consoleTable(tableMiddle);
             consoleColor(cyan, true);
             cerr << " Copyright    : ";
             consoleColor(white, false);
@@ -238,7 +238,7 @@ void ConsolePlayer::menu() {
     }
 
     for (unsigned int i = 0; i < tuneInfo->numberOfCommentStrings(); ++i) {
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(cyan, true);
         cerr << " Comment      : ";
         consoleColor(magenta, false);
@@ -248,12 +248,12 @@ void ConsolePlayer::menu() {
     consoleTable(tableSeparator);
 
     if (m_verboseLevel) {
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(green, true);
         cerr << " Format       : ";
         consoleColor(white, false);
         cerr << tuneInfo->formatString() << endl;
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(green, true);
         cerr << " File Name    : ";
         consoleColor(white, false);
@@ -261,28 +261,28 @@ void ConsolePlayer::menu() {
 
         // Second file is only sometimes present
         if (tuneInfo->infoFileName()) {
-            consoleTable (tableMiddle);
+            consoleTable(tableMiddle);
             consoleColor(green, true);
             cerr << "              : ";
             consoleColor(white, false);
             cerr << tuneInfo->infoFileName() << endl;
         }
 
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(green, true);
         cerr << " Condition    : ";
         consoleColor(white, false);
         cerr << m_tune.statusString() << endl;
     }
 
-    consoleTable (tableMiddle);
+    consoleTable(tableMiddle);
     consoleColor(green, true);
 
 	if (tuneInfo->songs() == 1) {
 		cerr << " On Loop?     : ";
     	consoleColor(white, false);
 
-		cerr << ((m_track.loop) ? "Yes" : "No");
+		cerr << (m_track.loop ? "Yes" : "No");
 	} else {
     	cerr << " Subtune      : ";
     	consoleColor(white, false);
@@ -295,14 +295,14 @@ void ConsolePlayer::menu() {
     cerr << endl;
 
     if (m_verboseLevel) {
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(green, true);
         cerr << " Video Signal : ";
         consoleColor(white, false);
         cerr << getClock(tuneInfo->clockSpeed()) << endl;
     }
 
-    consoleTable (tableMiddle);
+    consoleTable(tableMiddle);
     consoleColor(green, true);
     cerr << " Duration     : ";
     consoleColor(white, false);
@@ -331,9 +331,9 @@ void ConsolePlayer::menu() {
     cerr << endl;
 
     if (m_verboseLevel) {
-        consoleTable (tableSeparator);
+        consoleTable(tableSeparator);
 
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(yellow, true);
         cerr << " Subroutines  : ";
         consoleColor(white, false);
@@ -357,7 +357,7 @@ void ConsolePlayer::menu() {
 			     << tuneInfo->initAddr();
         cerr << endl;
 
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(yellow, true);
         cerr << "              : ";
         consoleColor(white, false);
@@ -372,14 +372,14 @@ void ConsolePlayer::menu() {
 
         cerr << endl;
 
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(yellow, true);
         cerr << " SID Details  : ";
         consoleColor(white, false);
 
 		for (int i = 0; i < tuneInfo->sidChips(); ++i) {
 			if (i >= 1) {
-				consoleTable (tableMiddle);
+				consoleTable(tableMiddle);
 				consoleColor(yellow, true);
             	cerr << "              : ";
 				consoleColor(white, false);
@@ -398,34 +398,34 @@ void ConsolePlayer::menu() {
         consoleTable(tableSeparator);
 
         if (m_verboseLevel > 1) {
-            consoleTable (tableMiddle);
+            consoleTable(tableMiddle);
             consoleColor(yellow, true);
             cerr << " Delay        : ";
             consoleColor(white, false);
             cerr << info.powerOnDelay() << " cycles at power-on" << endl;
         }
 
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(yellow, true);
         cerr << " Timing       : ";
         consoleColor(white, false);
         cerr << info.speedString() << endl;
 
 		if (m_verboseLevel > 1) {
-			consoleTable (tableMiddle);
+			consoleTable(tableMiddle);
 			consoleColor(yellow, true);
 			cerr << " CIA Model    : ";
 			consoleColor(white, false);
 			cerr << getCia(m_engCfg.ciaModel) << endl;
 		}
 
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(yellow, true);
         cerr << " Channels     : ";
         consoleColor(white, false);
         cerr << (info.channels() == 1 ? "Mono" : "Stereo") << endl;
 
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(yellow, true);
         cerr << " SID Model    : ";
         consoleColor(white, false);
@@ -433,7 +433,7 @@ void ConsolePlayer::menu() {
 			 << (m_engCfg.forceSidModel ? "(forced)" : "(default)")
 			 << endl;
 
-        consoleTable (tableMiddle);
+        consoleTable(tableMiddle);
         consoleColor(yellow, true);
         cerr << " Filter       : ";
         consoleColor(white, false);
@@ -445,7 +445,7 @@ void ConsolePlayer::menu() {
 		if (m_filter.enabled) {
 			// check if filter curve is provided by the command line
 			// or by the config file
-			consoleTable (tableMiddle);
+			consoleTable(tableMiddle);
 			consoleColor(yellow, true);
 			cerr << " Filter Curve : ";
 			consoleColor(white, false);
@@ -481,7 +481,7 @@ void ConsolePlayer::menu() {
 			// same with filter range here
 			case Chip::MOS6581:
 				if (m_filter.enabled) {
-					consoleTable (tableMiddle);
+					consoleTable(tableMiddle);
 					consoleColor(yellow, true);
 					cerr << " Filter Range : ";
 					consoleColor(white, false);
@@ -491,7 +491,7 @@ void ConsolePlayer::menu() {
 				break;
 #endif
 			case Chip::CSG8580:
-       			consoleTable (tableMiddle);
+       			consoleTable(tableMiddle);
        			consoleColor(yellow, true);
        			cerr << " DigiBoost    : ";
        			consoleColor(white, false);
@@ -506,7 +506,7 @@ void ConsolePlayer::menu() {
 #ifdef FEAT_FILTER_RANGE
 			case Chip::MOS6581:
 				if (m_filter.enabled) {
-					consoleTable (tableMiddle);
+					consoleTable(tableMiddle);
 					consoleColor(yellow, true);
 					cerr << " Filter Range : ";
 					consoleColor(white, false);
@@ -516,7 +516,7 @@ void ConsolePlayer::menu() {
 				break;
 #endif
 			case Chip::CSG8580:
-       			consoleTable (tableMiddle);
+       			consoleTable(tableMiddle);
        			consoleColor(yellow, true);
        			cerr << " DigiBoost    : ";
        			consoleColor(white, false);
@@ -529,9 +529,9 @@ void ConsolePlayer::menu() {
 
     const char* romDesc = info.kernalDesc();
 
-    consoleTable (tableSeparator);
+    consoleTable(tableSeparator);
 
-    consoleTable (tableMiddle);
+    consoleTable(tableMiddle);
     consoleColor(magenta, true);
     cerr << " Kernal ROM   : ";
     if (std::strlen(romDesc) == 0) {
@@ -545,7 +545,7 @@ void ConsolePlayer::menu() {
 
     romDesc = info.basicDesc();
 
-    consoleTable (tableMiddle);
+    consoleTable(tableMiddle);
     consoleColor(magenta, true);
     cerr << " BASIC ROM    : ";
     if (std::strlen(romDesc) == 0) {
@@ -559,7 +559,7 @@ void ConsolePlayer::menu() {
 
     romDesc = info.chargenDesc();
 
-    consoleTable (tableMiddle);
+    consoleTable(tableMiddle);
     consoleColor(magenta, true);
     cerr << " Chargen ROM  : ";
     if (std::strlen(romDesc) == 0) {
@@ -608,17 +608,14 @@ void ConsolePlayer::refreshRegDump() {
 								  (tuneInfo->sidChips() * 6 + 1):
 							      (tuneInfo->sidChips() * 3 + 1);
 
-	uint8_t* registers;
-
 	// Moves cursor for updating the displays
 	cerr << "\x1b[" << movLines << "F";
 
     for (int j = 0; j < tuneInfo->sidChips(); ++j) {
-    	registers = m_registers[j];
-        uint8_t  oldCtl[3];
-        oldCtl[0] = registers[0x04];
-        oldCtl[1] = registers[0x0b];
-        oldCtl[2] = registers[0x12];
+    	uint8_t* registers = m_registers[j];
+        uint8_t  oldCtl[3] = { registers[0x04],
+		                       registers[0x0b],
+							   registers[0x12] };
 
         if (m_engine.getSidStatus(j, registers)) {
             oldCtl[0] ^= registers[0x04];
@@ -626,7 +623,7 @@ void ConsolePlayer::refreshRegDump() {
             oldCtl[2] ^= registers[0x12];
 
             for (int i = 0; i < 3; ++i) {
-                consoleTable (tableMiddle);
+                consoleTable(tableMiddle);
 
                 cerr << "   " << (j*3 + i+1) << "    ";
 
@@ -715,7 +712,7 @@ void ConsolePlayer::refreshRegDump() {
 
 	else if (m_verboseLevel > 2) {
         for (int j = 0; j < tuneInfo->sidChips(); ++j) {
-            registers = m_registers[j];
+            uint8_t* registers = m_registers[j];
 			string miscInfo;
 			miscInfo.reserve(tableWidth);
 			miscInfo.append("M. Vol.    Filters    F. Chn.  F. Res.  Cutoff");
