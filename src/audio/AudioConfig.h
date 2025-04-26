@@ -37,8 +37,6 @@ public:
         depth(16),
         channels(1),
         bufSize(0) {}
-
-	uint_least32_t getBufBytes() const { return bufSize * channels * (depth/8); }
 };
 
 #endif  // AUDIOCONFIG_H

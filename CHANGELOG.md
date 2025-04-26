@@ -1,3 +1,12 @@
+April 26, 2025:
+- New player API support!
+  - Not sure if I'll benefit much from it, but if it's new I
+    guess it should be better, right?
+- And actually, fuck the "properly clear audio buffer" thing. I
+  just reverted that and it's now working properly.
+  - I guess the code used for that really was targeted towards
+    the new audio buffer thing in sidplayfp. Fun.
+
 April 25, 2025:
 - Properly clear audio buffer
   - I actually have been wanting to do that for quite a while,

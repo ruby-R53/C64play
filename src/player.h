@@ -41,6 +41,10 @@
 
 #include "sidlib_features.h"
 
+#ifdef FEAT_NEW_PLAY_API
+# include <mixer.h>
+#endif
+
 #include <string>
 #include <bitset>
 
@@ -149,6 +153,10 @@ private:
 
     uint_least8_t   m_channels;
     uint_least8_t   m_bitDepth;
+
+#ifdef FEAT_NEW_PLAY_API
+	Mixer m_mixer;
+#endif
 
     struct m_filter_t {
         bool        enabled;

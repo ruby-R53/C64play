@@ -532,10 +532,18 @@ bool ConsolePlayer::open(void) {
                    (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_NTSC))
 				   ? freqTableNtsc : freqTablePal;
 
+#ifdef FEAT_NEW_PLAY_API
+	m_mixer.initialize(m_engine.installedSIDs(), m_engCfg.playback == SidConfig::STEREO);
+#endif
+
     // Start the player. Do this by fast
     // forwarding to the start position
     m_driver.selected = &m_driver.null;
+#ifdef FEAT_NEW_PLAY_API
+	m_mixer.setFastForward(m_speed.current);
+#else
     m_engine.fastForward(100 * m_speed.current);
+#endif
 
     m_engine.mute(0, 0, m_mute_channel[0]);
     m_engine.mute(0, 1, m_mute_channel[1]);
@@ -615,28 +623,47 @@ void ConsolePlayer::close() {
 // Out play loop to be externally called
 bool ConsolePlayer::play() {
 	// prepare for playback
-	uint_least32_t retSize = 0;
+	uint_least32_t length = 0;
 
     if (m_state == playerRunning) {
 		updateDisplay();
 
-		const uint_least32_t length = getBufSize();
+		length = getBufSize();
 		short *buffer = m_driver.selected->buffer(); // Fill buffer
-        retSize = m_engine.play(buffer, length);
 
-        if ((retSize < length) || !m_engine.isPlaying()) {
+#ifdef FEAT_NEW_PLAY_API
+		m_mixer.begin(buffer, length);
+		short* buffers[3];
+		m_engine.buffers(buffers);
+
+		do {
+			int samples = m_engine.play(2000);
+			
+			if (samples < 0) {
+				cerr << m_engine.error();
+				m_state = playerError;
+				return false;
+			}
+
+			m_mixer.doMix(buffers, samples);
+		} while (!m_mixer.isFull());
+#else
+        length = m_engine.play(buffer, length);
+
+        if (!m_engine.isPlaying()) {
 			cerr << m_engine.error();
 			m_state = playerError;
 
             return false;
         }
+#endif
     }
 	else if (m_state == playerPaused)
 		usleep(100000);
 
     switch (m_state) {
     case playerRunning:
-        if (!m_driver.selected->write(retSize)) {
+        if (!m_driver.selected->write(length)) {
             cerr << m_driver.selected->getErrorString();
             m_state = playerError;
 
@@ -675,9 +702,14 @@ uint_least32_t ConsolePlayer::getBufSize() {
     if (m_timer.starting && (m_timer.current >= m_timer.start)) {
         m_timer.starting  = false;
         m_driver.selected = m_driver.device;
-        m_driver.selected->clearBuffer();
+		memset(m_driver.selected->buffer(), 0, m_driver.cfg.bufSize);
+#ifdef FEAT_NEW_PLAY_API
+		m_mixer.clear();
+		m_mixer.setFastForward(1);
+#else
+		m_engine.fastForward(100);
+#endif
         m_speed.current = 1;
-        m_engine.fastForward(100);
 
         if (m_cpudebug)
             m_engine.debug(true, nullptr);
@@ -774,8 +806,12 @@ void ConsolePlayer::decodeKeys() {
 
             if (m_speed.current > m_speed.max)
                 m_speed.current = m_speed.max;
-  
+
+#ifdef FEAT_NEW_PLAY_API
+			m_mixer.setFastForward(m_speed.current);
+#else
             m_engine.fastForward(100 * m_speed.current);
+#endif
         break;
 
         case A_DOWN_ARROW:
@@ -783,7 +819,11 @@ void ConsolePlayer::decodeKeys() {
 			if (m_speed.current > 1)
 				m_speed.current /= 2;
 
+#ifdef FEAT_NEW_PLAY_API
+			m_mixer.setFastForward(m_speed.current);
+#else
 			m_engine.fastForward(100 * m_speed.current);
+#endif
 		break;
 
 		case A_RESTORE:

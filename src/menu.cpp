@@ -581,8 +581,13 @@ void ConsolePlayer::menu() {
         consoleTable(tableSeparator);
         consoleTable(tableMiddle);
 		const uint8_t movLines = (m_verboseLevel > 2) ?
+#ifdef FEAT_NEW_PLAY_API
+                                 (m_engine.installedSIDs() * 6):
+								 (m_engine.installedSIDs() * 3);
+#else
 		                         (tuneInfo->sidChips() * 6):
 								 (tuneInfo->sidChips() * 3);
+#endif
 
 		cerr << " Voice   Note   PW    Control Registers     Waveform(s)" << endl;
 
@@ -605,13 +610,18 @@ void ConsolePlayer::menu() {
 void ConsolePlayer::refreshRegDump() {
     const SidTuneInfo* tuneInfo = m_tune.getInfo();
 	const unsigned int movLines = (m_verboseLevel > 2) ?
+#ifdef FEAT_NEW_PLAY_API
+                                  (m_engine.installedSIDs() * 6 + 1):
+								  (m_engine.installedSIDs() * 3 + 1);
+#else
 								  (tuneInfo->sidChips() * 6 + 1):
 							      (tuneInfo->sidChips() * 3 + 1);
+#endif
 
 	// Moves cursor for updating the displays
 	cerr << "\x1b[" << movLines << "F";
 
-    for (int j = 0; j < tuneInfo->sidChips(); ++j) {
+    for (uint_least8_t j = 0; j < tuneInfo->sidChips(); ++j) {
     	uint8_t* registers = m_registers[j];
         uint8_t  oldCtl[3] = { registers[0x04],
 		                       registers[0x0b],
