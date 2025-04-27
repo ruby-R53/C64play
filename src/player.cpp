@@ -700,6 +700,11 @@ void ConsolePlayer::stop() {
 
 
 uint_least32_t ConsolePlayer::getBufSize() {
+	const uint_least32_t bytesPerMillis =
+		(m_driver.cfg.depth / 8 *
+		 m_driver.cfg.channels *
+		 m_driver.cfg.sampleRate) / 1000;
+
 	// Switch audio drivers.
     if (m_timer.starting && (m_timer.current >= m_timer.start)) {
         m_timer.starting  = false;
@@ -734,7 +739,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
 		m_state = playerRestart;
     } else {
 		uint_least32_t remaining = m_timer.stop - m_timer.current;
-        uint_least32_t bufSize   = remaining * m_driver.cfg.bytesPerMillis();
+        uint_least32_t bufSize   = remaining * bytesPerMillis;
 
         if (bufSize < m_driver.cfg.bufSize)
             return bufSize;
