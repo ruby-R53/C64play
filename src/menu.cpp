@@ -220,7 +220,7 @@ void ConsolePlayer::menu() {
 		consoleTable(tableSeparator);
 		consoleTable(tableMiddle);
 		consoleColor(cyan, true);
-		cerr << " Name		   : ";
+		cerr << " Name         : ";
 		consoleColor(white, false);
 		cerr << codeset.convert(tuneInfo->infoString(0)) << endl;
 		if (n > 1) {
@@ -240,7 +240,7 @@ void ConsolePlayer::menu() {
 	for (unsigned int i = 0; i < tuneInfo->numberOfCommentStrings(); ++i) {
 		consoleTable(tableMiddle);
 		consoleColor(cyan, true);
-		cerr << " Comment	   : ";
+		cerr << " Comment      : ";
 		consoleColor(magenta, false);
 		cerr << tuneInfo->commentString(i) << endl;
 	}
@@ -250,7 +250,7 @@ void ConsolePlayer::menu() {
 	if (m_verboseLevel) {
 		consoleTable(tableMiddle);
 		consoleColor(green, true);
-		cerr << " Format	   : ";
+		cerr << " Format       : ";
 		consoleColor(white, false);
 		cerr << tuneInfo->formatString() << endl;
 		consoleTable(tableMiddle);
@@ -263,7 +263,7 @@ void ConsolePlayer::menu() {
 		if (tuneInfo->infoFileName()) {
 			consoleTable(tableMiddle);
 			consoleColor(green, true);
-			cerr << "			   : ";
+			cerr << "              : ";
 			consoleColor(white, false);
 			cerr << tuneInfo->infoFileName() << endl;
 		}
@@ -279,12 +279,12 @@ void ConsolePlayer::menu() {
 	consoleColor(green, true);
 
 	if (tuneInfo->songs() == 1) {
-		cerr << " On Loop?	   : ";
+		cerr << " On Loop?     : ";
 		consoleColor(white, false);
 
 		cerr << (m_track.loop ? "Yes" : "No");
 	} else {
-		cerr << " Subtune	   : ";
+		cerr << " Subtune      : ";
 		consoleColor(white, false);
 
 		cerr << tuneInfo->currentSong() << '/' << tuneInfo->songs() << " "
@@ -304,7 +304,7 @@ void ConsolePlayer::menu() {
 
 	consoleTable(tableMiddle);
 	consoleColor(green, true);
-	cerr << " Duration	   : ";
+	cerr << " Duration     : ";
 	consoleColor(white, false);
 	if (m_timer.stop) {
 		const uint_least32_t seconds = m_timer.stop / 1000;
@@ -359,7 +359,7 @@ void ConsolePlayer::menu() {
 
 		consoleTable(tableMiddle);
 		consoleColor(yellow, true);
-		cerr << "			   : ";
+		cerr << "              : ";
 		consoleColor(white, false);
 		cerr << "LOAD  : $" << setw(4) << setfill('0')
 			 << tuneInfo->loadAddr()
@@ -400,14 +400,14 @@ void ConsolePlayer::menu() {
 		if (m_verboseLevel > 1) {
 			consoleTable(tableMiddle);
 			consoleColor(yellow, true);
-			cerr << " Delay		   : ";
+			cerr << " Delay        : ";
 			consoleColor(white, false);
 			cerr << info.powerOnDelay() << " cycles at power-on" << endl;
 		}
 
 		consoleTable(tableMiddle);
 		consoleColor(yellow, true);
-		cerr << " Timing	   : ";
+		cerr << " Timing       : ";
 		consoleColor(white, false);
 		cerr << info.speedString() << endl;
 
@@ -421,7 +421,7 @@ void ConsolePlayer::menu() {
 
 		consoleTable(tableMiddle);
 		consoleColor(yellow, true);
-		cerr << " Channels	   : ";
+		cerr << " Channels     : ";
 		consoleColor(white, false);
 		cerr << (info.channels() == 1 ? "Mono" : "Stereo") << endl;
 
@@ -435,7 +435,7 @@ void ConsolePlayer::menu() {
 
 		consoleTable(tableMiddle);
 		consoleColor(yellow, true);
-		cerr << " Filter	   : ";
+		cerr << " Filter       : ";
 		consoleColor(white, false);
 		cerr << (m_filter.enabled ? "Enabled" : "Disabled") << endl;
 
@@ -589,7 +589,7 @@ void ConsolePlayer::menu() {
 								 (tuneInfo->sidChips() * 3);
 #endif
 
-		cerr << " Voice   Note	 PW    Control Registers	 Waveform(s)" << endl;
+		cerr << " Voice   Note   PW    Control Registers     Waveform(s)" << endl;
 
 		for (int i = 0; i < movLines; ++i) {
 			consoleTable(tableMiddle);
@@ -635,7 +635,7 @@ void ConsolePlayer::refreshRegDump() {
 			for (int i = 0; i < 3; ++i) {
 				consoleTable(tableMiddle);
 
-				cerr << "	" << (j*3 + i+1) << "	 ";
+				cerr << "   " << (j*3 + i+1) << "    ";
 
 				consoleColor(cyan, false);
 
@@ -725,7 +725,7 @@ void ConsolePlayer::refreshRegDump() {
 			uint8_t* registers = m_registers[j];
 			string miscInfo;
 			miscInfo.reserve(tableWidth);
-			miscInfo.append("M. Vol.	Filters    F. Chn.	F. Res.  Cutoff");
+			miscInfo.append("M. Vol.    Filters    F. Chn.  F. Res.  Cutoff");
 
 			consoleTable(tableSeparator);
 			consoleTable(tableMiddle);
@@ -741,11 +741,11 @@ void ConsolePlayer::refreshRegDump() {
 			// master volume display
 			consoleColor(yellow, false);
 			cerr << hex
-				 << ((tuneInfo->sidChips() >= 2) ? "			" : "		 ")
+                 << ((tuneInfo->sidChips() >= 2) ? "            " : "        ")
 				 << "$" << (registers[0x18] & 0x0f);
 
 			// the filters!
-			cerr << "	  "
+			cerr << "     "
 				 << ((registers[0x18] & 0x10) ? "LP" : "lp")
 				 << " "
 				 << ((registers[0x18] & 0x20) ? "BP" : "bp")
@@ -755,17 +755,17 @@ void ConsolePlayer::refreshRegDump() {
 				 << ((registers[0x18] & 0x80) ? "3O" : "3o");
 
 			// see which voices are being filtered
-			cerr << "	 "
+			cerr << "    "
 				 << ((registers[0x17] & 0x01) ? "1" : "-")
 				 << ((registers[0x17] & 0x02) ? "2" : "-")
 				 << ((registers[0x17] & 0x04) ? "3" : "-");
 
 			// filter resonance display
-			cerr << "	   "
+			cerr << "      "
 				 << "$" << (registers[0x17] >> 4);
 
 			// filter cutoff frequency display
-			cerr << "	   "
+			cerr << "      "
 				 << "$" << setw(3) << setfill('0')
 				 << (registers[0x16] << 4 | registers[0x15] & 0x07)
 			

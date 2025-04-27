@@ -82,8 +82,9 @@ private:
 	// Mono mixing
 	template <unsigned int Chips>
 	int_least32_t mono() const {
+		static_assert((Chips >= 1) && (Chips <= 3), "Unsupported number of chips!");
 		int_least32_t res = 0;
-		for (unsigned int i = 0; i < Chips; i++)
+		for (unsigned int i = 0; i < Chips; ++i)
 			res += m_iSamples[i];
 
 		return res * SCALE[Chips-1] / SCALE_FACTOR;

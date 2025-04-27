@@ -1,4 +1,6 @@
 /*
+ *  This file is part of C64play, a console SID tune player.
+ *
  *  Copyright (C) 2014 Leandro Nini
  *
  *  This program is free software; you can redistribute it and/or modify
