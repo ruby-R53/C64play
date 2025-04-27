@@ -381,7 +381,7 @@ void ConsolePlayer::menu() {
 			if (i >= 1) {
 				consoleTable(tableMiddle);
 				consoleColor(yellow, true);
-				cerr << "			   : ";
+				cerr << "              : ";
 				consoleColor(white, false);
 			}
 			
