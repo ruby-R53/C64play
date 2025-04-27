@@ -850,10 +850,10 @@ void ConsolePlayer::decodeKeys() {
 
 		case A_PAUSE:
 			if (m_state == playerPaused) {
-				cerr << "\b\b\b\b\b\b\b\b\b";
+				cerr << "\b\b\b\b\b\b\b\b";
 				// wipe every character out here
-				cerr << "		  ";
-				cerr << "\b\b\b\b\b\b\b\b\b";
+				cerr << "        ";
+				cerr << "\b\b\b\b\b\b\b\b";
 				m_state = playerRunning;
 			} else {
 				cerr << "(paused)";
