@@ -28,14 +28,14 @@
 
 class utils {
 public:
-    class error {};
+	class error {};
 
 private:
-    static SID_STRING getPath(const char* id, const char* def);
+	static SID_STRING getPath(const char* id, const char* def);
 
 public:
-    static SID_STRING getDataPath();
-    static SID_STRING getConfigPath();
+	static SID_STRING getDataPath();
+	static SID_STRING getConfigPath();
 };
 
 #endif

@@ -30,21 +30,21 @@
 #include "../AudioBase.h"
 
 /*
- * Null audio driver used for songlength detection
+ * Null audio driver, used for songlength detection
  */
 class Audio_Null: public AudioBase {
 private:
-    bool isOpen;
+	bool isOpen;
 
 public:
-    Audio_Null();
-    ~Audio_Null() override;
+	Audio_Null();
+	~Audio_Null() override;
 
-    bool open (AudioConfig &cfg) override;
-    void close() override;
-    void reset() override {}
+	bool open (AudioConfig &cfg) override;
+	void close() override;
+	void reset() override {}
 	bool write(uint_least32_t size) override;
-    void pause() override {}
+	void pause() override {}
 };
 
 #endif // AUDIO_NULL_H

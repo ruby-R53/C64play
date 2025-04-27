@@ -27,9 +27,9 @@
 #endif
 
 #if defined(HAVE_SYS_SOUNDCARD_H) \
-    || defined(HAVE_LINUX_SOUNDCARD_H) \
-    || defined(HAVE_MACHINE_SOUNDCARD_H) \
-    || defined(HAVE_SOUNDCARD_H) \
+	|| defined(HAVE_LINUX_SOUNDCARD_H) \
+	|| defined(HAVE_MACHINE_SOUNDCARD_H) \
+	|| defined(HAVE_SOUNDCARD_H) \
 
 #define HAVE_OSS
 
@@ -54,23 +54,22 @@
 /*
  * Open Sound System (OSS) specific audio driver interface.
  */
-class Audio_OSS: public AudioBase
-{
-private:  // ------------------------------------------------------- private
-    static   const char AUDIODEVICE[];
-    volatile int   _audiofd;
+class Audio_OSS: public AudioBase {
+private:
+	static	 const char AUDIODEVICE[];
+	volatile int   _audiofd;
 
-    void outOfOrder ();
+	void outOfOrder ();
 
-public:  // --------------------------------------------------------- public
-    Audio_OSS();
-    ~Audio_OSS() override;
+public:
+	Audio_OSS();
+	~Audio_OSS() override;
 
-    bool open (AudioConfig &cfg) override;
-    void close() override;
-    void reset() override;
-    bool write(uint_least32_t size) override;
-    void pause() override {}
+	bool open (AudioConfig &cfg) override;
+	void close() override;
+	void reset() override;
+	bool write(uint_least32_t size) override;
+	void pause() override {}
 };
 
 #endif // HAVE_*_SOUNDCARD_H

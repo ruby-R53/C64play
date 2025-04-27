@@ -37,33 +37,33 @@ inline uint8_t endian_32lo8(uint_least32_t dword) {
 }
 
 // Get the hi byte (8 bit) in a dword (32 bit)
-inline uint8_t endian_32hi8 (uint_least32_t dword) {
+inline uint8_t endian_32hi8(uint_least32_t dword) {
 	return (uint8_t) (dword >> 8);
 }
 
 // Get the hi word (16bit) in a dword (32 bit)
-inline uint_least16_t endian_32hi16 (uint_least32_t dword) {
+inline uint_least16_t endian_32hi16(uint_least32_t dword) {
 	return (uint_least16_t) (dword >> 16);
 }
 
 // Get the lo byte (8 bit) in a word (16 bit)
-inline uint8_t endian_16lo8 (uint_least16_t word) {
+inline uint8_t endian_16lo8(uint_least16_t word) {
 	return (uint8_t) word;
 }
 
 // Set the hi byte (8 bit) in a word (16 bit)
-inline uint8_t endian_16hi8 (uint_least16_t word) {
+inline uint8_t endian_16hi8(uint_least16_t word) {
 	return (uint8_t) (word >> 8);
 }
 
 // Write a little-endian 16-bit word to two bytes in memory.
-inline void endian_little16 (uint8_t ptr[2], uint_least16_t word) {
+inline void endian_little16(uint8_t ptr[2], uint_least16_t word) {
 	ptr[0] = endian_16lo8 (word);
 	ptr[1] = endian_16hi8 (word);
 }
 
 // Write a little-endian 32-bit word to four bytes in memory.
-inline void endian_little32 (uint8_t ptr[4], uint_least32_t dword) {
+inline void endian_little32(uint8_t ptr[4], uint_least32_t dword) {
 	uint_least16_t word = 0;
 	ptr[0] = endian_32lo8 (dword);
 	ptr[1] = endian_32hi8 (dword);
@@ -194,6 +194,7 @@ bool WavFile::write(uint_least32_t size) {
 		}
 		dataSize += bytes;
 	}
+
 	return true;
 }
 
@@ -203,6 +204,7 @@ void WavFile::close() {
 		unsigned long int headerSize = sizeof(riffHeader)+sizeof(wavHeader)-8;
 		if (hasListInfo)
 			headerSize += sizeof(listInfo);
+
 		endian_little32(riffHdr.length, headerSize+dataSize);
 		endian_little32(wavHdr.dataChunkLen, dataSize);
 		if (file != &std::cout) {

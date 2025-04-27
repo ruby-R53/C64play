@@ -36,19 +36,19 @@
 
 class Audio_Pulse: public AudioBase {
 private:
-    pa_simple *_audioHandle;
+	pa_simple *_audioHandle;
 
-    void outOfOrder();
+	void outOfOrder();
 
 public:
-    Audio_Pulse();
-    ~Audio_Pulse();
+	Audio_Pulse();
+	~Audio_Pulse();
 
-    bool open (AudioConfig &cfg) override;
-    void close() override;
-    void reset() override {}
-    bool write(uint_least32_t size) override;
-    void pause() override {}
+	bool open (AudioConfig &cfg) override;
+	void close() override;
+	void reset() override {}
+	bool write(uint_least32_t size) override;
+	void pause() override {}
 };
 
 #endif // AUDIO_PULSE_H

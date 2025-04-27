@@ -34,16 +34,16 @@
 class codeConvert {
 private:
 #ifdef HAVE_ICONV
-    iconv_t cd;
+	iconv_t cd;
 
-    char buffer[1024];
+	char buffer[1024];
 #endif
 
 public:
-    codeConvert();
-    ~codeConvert();
+	codeConvert();
+	~codeConvert();
 
-    const char* convert(const char* src);
+	const char* convert(const char* src);
 };
 
 #endif

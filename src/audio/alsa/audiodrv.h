@@ -38,16 +38,15 @@
 #include "../AudioBase.h"
 
 
-class Audio_ALSA: public AudioBase
-{
-private:  // ------------------------------------------------------- private
+class Audio_ALSA: public AudioBase {
+private:
     snd_pcm_t *_audioHandle;
 
 private:
     void outOfOrder();
     static void checkResult(int err);
 
-public:  // --------------------------------------------------------- public
+public:
     Audio_ALSA();
     ~Audio_ALSA() override;
 

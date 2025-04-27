@@ -25,49 +25,49 @@
 int _kbhit(void);
 
 enum {
-    A_NONE = 0,
+	A_NONE = 0,
 
-    // Standard Commands
-    A_PREFIX,
-    A_SKIP,
-    A_END_LIST,
-    A_INVALID,
+	// Standard Commands
+	A_PREFIX,
+	A_SKIP,
+	A_END_LIST,
+	A_INVALID,
 
-    // Custom Commands
-    A_LEFT_ARROW,
-    A_RIGHT_ARROW,
-    A_UP_ARROW,
-    A_DOWN_ARROW,
-    A_HOME,
-    A_END,
-    A_PAUSE,
-    A_QUIT,
+	// Custom Commands
+	A_LEFT_ARROW,
+	A_RIGHT_ARROW,
+	A_UP_ARROW,
+	A_DOWN_ARROW,
+	A_HOME,
+	A_END,
+	A_PAUSE,
+	A_QUIT,
 	A_GOTO,
 	A_REPLAY,
 	A_RESTORE,
 	A_INCREASE,
 	A_DECREASE,
 
-    /* Debug */
-    A_TOGGLE_VOICE1,
-    A_TOGGLE_VOICE2,
-    A_TOGGLE_VOICE3,
-    A_TOGGLE_VOICE4,
-    A_TOGGLE_VOICE5,
-    A_TOGGLE_VOICE6,
-    A_TOGGLE_VOICE7,
-    A_TOGGLE_VOICE8,
-    A_TOGGLE_VOICE9,
+	/* Debug */
+	A_TOGGLE_VOICE1,
+	A_TOGGLE_VOICE2,
+	A_TOGGLE_VOICE3,
+	A_TOGGLE_VOICE4,
+	A_TOGGLE_VOICE5,
+	A_TOGGLE_VOICE6,
+	A_TOGGLE_VOICE7,
+	A_TOGGLE_VOICE8,
+	A_TOGGLE_VOICE9,
 
 #ifdef FEAT_SAMPLE_MUTE
-    A_TOGGLE_SAMPLE1,
-    A_TOGGLE_SAMPLE2,
-    A_TOGGLE_SAMPLE3,
+	A_TOGGLE_SAMPLE1,
+	A_TOGGLE_SAMPLE2,
+	A_TOGGLE_SAMPLE3,
 #endif
 
-    A_TOGGLE_FILTER
+	A_TOGGLE_FILTER
 };
 
-int  keyboard_decode     ();
+int  keyboard_decode	 ();
 void keyboard_enable_raw ();
 void keyboard_disable_raw();

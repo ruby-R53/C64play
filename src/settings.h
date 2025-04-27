@@ -36,18 +36,18 @@ using Setting = std::optional<T>;
 template <typename T>
 
 class Setting {
-    static_assert(std::is_scalar<T>(), "T must be a scalar type!");
+	static_assert(std::is_scalar<T>(), "T must be a scalar type!");
 
 private:
-    T m_val;
-    bool m_isSet;
+	T m_val;
+	bool m_isSet;
 
 public:
-    Setting() : m_isSet(false) {}
+	Setting() : m_isSet(false) {}
 
-    inline bool has_value() const { return m_isSet; }
-    inline T value() const { return m_val; }
-    inline Setting<T>& operator = (const T& val) {
+	inline bool has_value() const { return m_isSet; }
+	inline T value() const { return m_val; }
+	inline Setting<T>& operator = (const T& val) {
 		m_val = val;
 		m_isSet = true;
 		return *this;

@@ -22,35 +22,36 @@
 #include "null.h"
 
 Audio_Null::Audio_Null() :
-    AudioBase("NULL"),
-    isOpen(false) {}
+	AudioBase("NULL"),
+	isOpen(false) {}
 
 Audio_Null::~Audio_Null() {
-    close();
+	close();
 }
 
 bool Audio_Null::open(AudioConfig &cfg) {
-    if (isOpen) {
-        setError("Audio device already open.");
-        return false;
-    }
+	if (isOpen) {
+		setError("Audio device already open.");
+		return false;
+	}
 
-    isOpen    = true;
-    _settings = cfg;
-    return true;
+	isOpen	  = true;
+	_settings = cfg;
+	return true;
 }
 
 bool Audio_Null::write(uint_least32_t) {
-    if (!isOpen) {
-        setError("Audio device not open.");
-        return false;
-    }
-    return true;
+	if (!isOpen) {
+		setError("Audio device not open.");
+		return false;
+	}
+
+	return true;
 }
 
 void Audio_Null::close(void) {
-    if (!isOpen)
-        return;
+	if (!isOpen)
+		return;
 
-    isOpen = false;
+	isOpen = false;
 }

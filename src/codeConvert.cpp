@@ -25,43 +25,43 @@
 
 const char* codeConvert::convert(const char* src) {
 #ifdef HAVE_ICONV
-    if (cd == (iconv_t) -1)
-        return src;
+	if (cd == (iconv_t) -1)
+		return src;
 
-    ICONV_CONST char *srcPtr = const_cast<ICONV_CONST char*>(src);
-    size_t srcLeft = strlen(src);
-    char *outPtr   = buffer;
-    size_t outLeft = sizeof(buffer)-1;
+	ICONV_CONST char *srcPtr = const_cast<ICONV_CONST char*>(src);
+	size_t srcLeft = strlen(src);
+	char *outPtr   = buffer;
+	size_t outLeft = sizeof(buffer)-1;
 
-    while (srcLeft > 0) {
-        size_t ret = iconv(cd, &srcPtr, &srcLeft, &outPtr, &outLeft);
-        if (ret == (size_t) -1)
-            return src;
-    }
+	while (srcLeft > 0) {
+		size_t ret = iconv(cd, &srcPtr, &srcLeft, &outPtr, &outLeft);
+		if (ret == (size_t) -1)
+			return src;
+	}
 
-    // flush
-    iconv(cd, nullptr, &srcLeft, &outPtr, &outLeft);
+	// flush
+	iconv(cd, nullptr, &srcLeft, &outPtr, &outLeft);
 
-    // terminate buffer string
-    *outPtr = 0;
+	// terminate buffer string
+	*outPtr = 0;
 
-    return buffer;
+	return buffer;
 #else
-    return src;
+	return src;
 #endif
 }
 
 codeConvert::codeConvert() {
 #ifdef HAVE_ICONV
-    const char* encoding;
-    setlocale(LC_ALL, "");
-    encoding = nl_langinfo(CODESET);
-    cd = iconv_open(encoding, "ISO-8859-1");
+	const char* encoding;
+	setlocale(LC_ALL, "");
+	encoding = nl_langinfo(CODESET);
+	cd = iconv_open(encoding, "ISO-8859-1");
 #endif
 }
 
 codeConvert::~codeConvert() {
 #ifdef HAVE_ICONV
-    iconv_close(cd);
+	iconv_close(cd);
 #endif
 }

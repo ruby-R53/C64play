@@ -26,17 +26,17 @@
 
 class AudioConfig {
 public:
-    uint32_t sampleRate; // sample rate (Hz)
-    uint8_t  depth;      // bit depth
-    uint8_t  channels;   // audio channels
-    uint16_t bufSize;    // sample buffer size
+	uint32_t sampleRate; // sample rate (Hz)
+	uint8_t  depth;		 // bit depth
+	uint8_t  channels;	 // audio channels
+	uint16_t bufSize;	 // sample buffer size
 
 	// defaults
-    AudioConfig() :
-        sampleRate(48000),
-        depth(16),
-        channels(1),
-        bufSize(0) {}
+	AudioConfig() :
+		sampleRate(48000),
+		depth(16),
+		channels(1),
+		bufSize(0) {}
 };
 
-#endif  // AUDIOCONFIG_H
+#endif	// AUDIOCONFIG_H

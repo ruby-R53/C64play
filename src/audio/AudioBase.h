@@ -32,47 +32,47 @@
 
 class AudioBase : public IAudio {
 protected:
-    class error {
-    private:
-        const char* m_msg;
+	class error {
+	private:
+		const char* m_msg;
 
-    public:
-        error(const char* msg) : m_msg(msg) {}
-        const char* message() const { return m_msg; }
-    };
+	public:
+		error(const char* msg) : m_msg(msg) {}
+		const char* message() const { return m_msg; }
+	};
 
 private:
-    const char *_backendName;
-    std::string _errorString;
+	const char *_backendName;
+	std::string _errorString;
 
 protected:
-    AudioConfig _settings;
-    short      *_sampleBuffer;
+	AudioConfig _settings;
+	short	   *_sampleBuffer;
 
 protected:
-    void setError(const char* msg) {
-        _errorString.assign(_backendName).append(" ERROR: ").append(msg);
-    }
+	void setError(const char* msg) {
+		_errorString.assign(_backendName).append(" ERROR: ").append(msg);
+	}
 
-    void clearError() {
-        _errorString.clear();
-    }
+	void clearError() {
+		_errorString.clear();
+	}
 
 public:
-    AudioBase(const char* name) :
-        _backendName(name),
-        _sampleBuffer(nullptr) {}
-    ~AudioBase() override = default;
+	AudioBase(const char* name) :
+		_backendName(name),
+		_sampleBuffer(nullptr) {}
+	~AudioBase() override = default;
 
-    short *buffer() const override { return _sampleBuffer; }
+	short *buffer() const override { return _sampleBuffer; }
 
-    void getConfig(AudioConfig &cfg) const override {
-        cfg = _settings;
-    }
+	void getConfig(AudioConfig &cfg) const override {
+		cfg = _settings;
+	}
 
-    const char *getErrorString() const override {
-        return _errorString.c_str();
-    }
+	const char *getErrorString() const override {
+		return _errorString.c_str();
+	}
 };
 
 #endif // AUDIOBASE_H

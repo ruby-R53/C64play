@@ -30,18 +30,18 @@
 #endif
 
 SID_STRING utils::getPath(const char* id, const char* def) {
-    SID_STRING returnPath;
+	SID_STRING returnPath;
 
-    char *path = std::getenv(id);
-    if (!path) {
-        path = std::getenv("HOME");
-        if (!path)
-            throw error();
-        returnPath.append(path).append(def);
-    } else
-        returnPath.append(path);
+	char *path = std::getenv(id);
+	if (!path) {
+		path = std::getenv("HOME");
+		if (!path)
+			throw error();
+		returnPath.append(path).append(def);
+	} else
+		returnPath.append(path);
 
-    return returnPath;
+	return returnPath;
 }
 
 SID_STRING utils::getDataPath() {

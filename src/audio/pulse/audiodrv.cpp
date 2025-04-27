@@ -26,96 +26,96 @@
 #include <pulse/error.h>
 
 Audio_Pulse::Audio_Pulse() :
-    AudioBase("PULSE") {
-    outOfOrder();
+	AudioBase("PULSE") {
+	outOfOrder();
 }
 
 Audio_Pulse::~Audio_Pulse() {
-    close();
+	close();
 }
 
 void Audio_Pulse::outOfOrder() {
-    _sampleBuffer = nullptr;
-    clearError();
+	_sampleBuffer = nullptr;
+	clearError();
 }
 
 bool Audio_Pulse::open(AudioConfig &cfg) {
-    pa_sample_spec pacfg = {};
+	pa_sample_spec pacfg = {};
 
-    pacfg.channels = cfg.channels;
-    pacfg.rate     = cfg.sampleRate;
-    pacfg.format   = PA_SAMPLE_S16LE;
+	pacfg.channels = cfg.channels;
+	pacfg.rate	   = cfg.sampleRate;
+	pacfg.format   = PA_SAMPLE_S16LE;
 
-    // Set bit depth and encoding type.
-    int err;
-    _audioHandle = pa_simple_new(
-        nullptr,
-        "C64play",
-        PA_STREAM_PLAYBACK,
-        nullptr,
-        "Playing",
-        &pacfg,
-        nullptr,
-        nullptr,
-        &err
-    );
+	// Set bit depth and encoding type.
+	int err;
+	_audioHandle = pa_simple_new(
+		nullptr,
+		"C64play",
+		PA_STREAM_PLAYBACK,
+		nullptr,
+		"Playing",
+		&pacfg,
+		nullptr,
+		nullptr,
+		&err
+	);
 
-    try {
-        if (! _audioHandle) {
-            throw error(pa_strerror(err));
-        }
+	try {
+		if (! _audioHandle) {
+			throw error(pa_strerror(err));
+		}
 
 		cfg.bufSize = 4096;
 
-        try {
-            _sampleBuffer = new short[cfg.bufSize];
-        }
-        catch (std::bad_alloc const &ba) {
-            throw error("Unable to allocate memory for sample buffers!");
-        }
+		try {
+			_sampleBuffer = new short[cfg.bufSize];
+		}
+		catch (std::bad_alloc const &ba) {
+			throw error("Unable to allocate memory for sample buffers!");
+		}
 
-        _settings = cfg;
+		_settings = cfg;
 
-        return true;
-    }
-    catch(error const  &e) {
-        setError(e.message());
+		return true;
+	}
+	catch(error const  &e) {
+		setError(e.message());
 
-        if (_audioHandle)
-            pa_simple_free(_audioHandle);
+		if (_audioHandle)
+			pa_simple_free(_audioHandle);
 
-        _audioHandle = nullptr;
+		_audioHandle = nullptr;
 
-        return false;
-    }
+		return false;
+	}
 }
 
 // Close an opened audio device, free any allocated buffers and
 // reset any variables that reflect the current state.
 void Audio_Pulse::close() {
-    if (_audioHandle != nullptr) {
-        pa_simple_free(_audioHandle);
-        _audioHandle = nullptr;
-    }
+	if (_audioHandle != nullptr) {
+		pa_simple_free(_audioHandle);
+		_audioHandle = nullptr;
+	}
 
-    if (_sampleBuffer != nullptr) {
-        delete [] _sampleBuffer;
-        outOfOrder();
-    }
+	if (_sampleBuffer != nullptr) {
+		delete [] _sampleBuffer;
+		outOfOrder();
+	}
 }
 
 bool Audio_Pulse::write(uint_least32_t size) {
-    if (_audioHandle == nullptr) {
-        setError("Device not open.");
+	if (_audioHandle == nullptr) {
+		setError("Device not open.");
 
-        return false;
-    }
-
-    int err;
-	if (pa_simple_write(_audioHandle, _sampleBuffer, size * 2, &err) < 0) {
-        setError(pa_strerror(err));
 		return false;
-    }
+	}
 
-    return true;
+	int err;
+	if (pa_simple_write(_audioHandle, _sampleBuffer, size * 2, &err) < 0) {
+		setError(pa_strerror(err));
+		return false;
+	}
+
+	return true;
 }

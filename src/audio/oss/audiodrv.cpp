@@ -37,112 +37,112 @@ const char Audio_OSS::AUDIODEVICE[] = "/dev/dsp";
 #endif
 
 Audio_OSS::Audio_OSS() : AudioBase("OSS") {
-    // Reset everything.
-    outOfOrder();
+	// Reset everything.
+	outOfOrder();
 }
 
 Audio_OSS::~Audio_OSS() {
-    close();
+	close();
 }
 
 void Audio_OSS::outOfOrder() {
-    // Reset everything.
-    clearError();
-    _audiofd = -1;
+	// Reset everything.
+	clearError();
+	_audiofd = -1;
 }
 
 bool Audio_OSS::open(AudioConfig &cfg) {
-    if (_audiofd != -1) {
-        setError("Device already in use");
-        return false;
-    }
+	if (_audiofd != -1) {
+		setError("Device already in use");
+		return false;
+	}
 
-    try {
-        if (access(AUDIODEVICE, W_OK) == -1) {
-            throw error("Could not locate an audio device.");
-        }
+	try {
+		if (access(AUDIODEVICE, W_OK) == -1) {
+			throw error("Could not locate an audio device.");
+		}
 
-        if ((_audiofd = ::open(AUDIODEVICE, O_WRONLY, 0)) == (-1)) {
-            throw error("Could not open audio device.");
-        }
+		if ((_audiofd = ::open(AUDIODEVICE, O_WRONLY, 0)) == (-1)) {
+			throw error("Could not open audio device.");
+		}
 
-        int format = AFMT_S16_LE;
-        if (ioctl(_audiofd, SNDCTL_DSP_SETFMT, &format) == (-1)) {
-            throw error("Could not set sample format.");
-        }
+		int format = AFMT_S16_LE;
+		if (ioctl(_audiofd, SNDCTL_DSP_SETFMT, &format) == (-1)) {
+			throw error("Could not set sample format.");
+		}
 
-        // Set mono/stereo.
-        if (ioctl(_audiofd, SNDCTL_DSP_CHANNELS, &cfg.channels) == (-1)) {
-            throw error("Could not set mono/stereo.");
-        }
+		// Set mono/stereo.
+		if (ioctl(_audiofd, SNDCTL_DSP_CHANNELS, &cfg.channels) == (-1)) {
+			throw error("Could not set mono/stereo.");
+		}
 
-        // Verify and accept the number of channels the driver accepted.
-        switch (cfg.channels) {
-        case 1:
-        case 2:
-        break;
-        default:
-            throw error("Could not set mono/stereo.");
-        break;
-        }
+		// Verify and accept the number of channels the driver accepted.
+		switch (cfg.channels) {
+		case 1:
+		case 2:
+		break;
+		default:
+			throw error("Could not set mono/stereo.");
+		break;
+		}
 
-        // Set sample rate.
-        if (ioctl(_audiofd, SNDCTL_DSP_SPEED, &cfg.sampleRate) == (-1)) {
-            throw error("Could not set sample rate.");
-        }
+		// Set sample rate.
+		if (ioctl(_audiofd, SNDCTL_DSP_SPEED, &cfg.sampleRate) == (-1)) {
+			throw error("Could not set sample rate.");
+		}
 
-        int temp = 0;
-        ioctl(_audiofd, SNDCTL_DSP_GETBLKSIZE, &temp);
-        cfg.bufSize = (uint_least32_t) temp;
+		int temp = 0;
+		ioctl(_audiofd, SNDCTL_DSP_GETBLKSIZE, &temp);
+		cfg.bufSize = (uint_least32_t) temp;
 
-        try {
-            _sampleBuffer = new short[cfg.bufSize];
-        }
-        catch (std::bad_alloc const &ba) {
-            throw error("Unable to allocate memory for sample buffers.");
-        }
+		try {
+			_sampleBuffer = new short[cfg.bufSize];
+		}
+		catch (std::bad_alloc const &ba) {
+			throw error("Unable to allocate memory for sample buffers.");
+		}
 
-        // Setup internal Config
-        _settings = cfg;
-        return true;
-    }
-    catch(error const &e) {
-        setError(e.message());
+		// Setup internal Config
+		_settings = cfg;
+		return true;
+	}
+	catch(error const &e) {
+		setError(e.message());
 
-        if (_audiofd != -1) {
-            close ();
-            _audiofd = -1;
-        }
+		if (_audiofd != -1) {
+			close ();
+			_audiofd = -1;
+		}
 
-        perror(AUDIODEVICE);
-        return false;
-    }
+		perror(AUDIODEVICE);
+		return false;
+	}
 }
 
 // Close an opened audio device, free any allocated buffers and
 // reset any variables that reflect the current state.
 void Audio_OSS::close() {
-    if (_audiofd != -1) {
-        ::close (_audiofd);
-        delete [] _sampleBuffer;
-        outOfOrder ();
-    }
+	if (_audiofd != -1) {
+		::close (_audiofd);
+		delete [] _sampleBuffer;
+		outOfOrder ();
+	}
 }
 
 void Audio_OSS::reset() {
-    if (_audiofd != -1) {
-        ioctl (_audiofd, SNDCTL_DSP_RESET, 0);
-    }
+	if (_audiofd != -1) {
+		ioctl (_audiofd, SNDCTL_DSP_RESET, 0);
+	}
 }
 
 bool Audio_OSS::write(uint_least32_t size) {
-    if (_audiofd == -1) {
-        setError("Device not open.");
-        return false;
-    }
+	if (_audiofd == -1) {
+		setError("Device not open.");
+		return false;
+	}
 
-    ::write(_audiofd, _sampleBuffer, 2 * size);
-    return true;
+	::write(_audiofd, _sampleBuffer, 2 * size);
+	return true;
 }
 
 #endif // HAVE_OSS

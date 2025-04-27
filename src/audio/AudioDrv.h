@@ -30,19 +30,19 @@
 
 class audioDrv : public IAudio {
 private:
-    std::unique_ptr<AudioBase> audio;
+	std::unique_ptr<AudioBase> audio;
 
 public:
-    ~audioDrv() override = default;
+	~audioDrv() override = default;
 
-    bool open(AudioConfig &cfg) override;
-    void reset() override { audio->reset(); }
+	bool open(AudioConfig &cfg) override;
+	void reset() override { audio->reset(); }
 	bool write(uint_least32_t size) override { return audio->write(size); }
-    void close() override { audio->close(); }
-    void pause() override { audio->pause(); }
-    short *buffer() const override { return audio->buffer(); }
-    void getConfig(AudioConfig &cfg) const override { audio->getConfig(cfg); }
-    const char *getErrorString() const override { return audio->getErrorString(); }
+	void close() override { audio->close(); }
+	void pause() override { audio->pause(); }
+	short *buffer() const override { return audio->buffer(); }
+	void getConfig(AudioConfig &cfg) const override { audio->getConfig(cfg); }
+	const char *getErrorString() const override { return audio->getErrorString(); }
 };
 
 #endif // AUDIODRV_H
