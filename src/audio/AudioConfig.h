@@ -37,6 +37,8 @@ public:
         depth(16),
         channels(1),
         bufSize(0) {}
+
+	uint_least32_t bytesPerMillis() const { return (depth/8 * channels * sampleRate) / 1000; }
 };
 
 #endif  // AUDIOCONFIG_H

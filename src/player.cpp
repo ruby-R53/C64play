@@ -623,12 +623,12 @@ void ConsolePlayer::close() {
 // Out play loop to be externally called
 bool ConsolePlayer::play() {
 	// prepare for playback
-	uint_least32_t length = 0;
+	uint_least32_t retSize = 0;
 
     if (m_state == playerRunning) {
 		updateDisplay();
 
-		length = getBufSize();
+		const uint_least32_t length = getBufSize();
 		short *buffer = m_driver.selected->buffer(); // Fill buffer
 
 #ifdef FEAT_NEW_PLAY_API
@@ -647,10 +647,12 @@ bool ConsolePlayer::play() {
 
 			m_mixer.doMix(buffers, samples);
 		} while (!m_mixer.isFull());
-#else
-        length = m_engine.play(buffer, length);
 
-        if (!m_engine.isPlaying()) {
+		retSize = length;
+#else
+        retSize = m_engine.play(buffer, length);
+
+        if ((retSize < length) || !m_engine.isPlaying()) {
 			cerr << m_engine.error();
 			m_state = playerError;
 
@@ -663,7 +665,7 @@ bool ConsolePlayer::play() {
 
     switch (m_state) {
     case playerRunning:
-        if (!m_driver.selected->write(length)) {
+        if (!m_driver.selected->write(retSize)) {
             cerr << m_driver.selected->getErrorString();
             m_state = playerError;
 
@@ -717,10 +719,8 @@ uint_least32_t ConsolePlayer::getBufSize() {
 	else if ((m_timer.stop != 0) && (m_timer.current >= m_timer.stop)) {
         m_state = playerExit;
 
-		if (m_track.loop)
-			m_state = playerRestart;
-		else if (m_track.single)
-            return 0;
+		if (m_track.loop) { m_state = playerRestart; }
+		else if (m_track.single) { return 0; }
 
 		// Move to next track
 		++m_track.selected;
@@ -734,7 +734,7 @@ uint_least32_t ConsolePlayer::getBufSize() {
 		m_state = playerRestart;
     } else {
 		uint_least32_t remaining = m_timer.stop - m_timer.current;
-        uint_least32_t bufSize   = (remaining * m_driver.cfg.sampleRate) / 1000;
+        uint_least32_t bufSize   = remaining * m_driver.cfg.bytesPerMillis();
 
         if (bufSize < m_driver.cfg.bufSize)
             return bufSize;
@@ -748,19 +748,21 @@ void ConsolePlayer::updateDisplay() {
     const uint_least32_t milliseconds = m_engine.timeMs();
     const uint_least32_t seconds = milliseconds / 1000;
 
-	if (m_verboseLevel > 1 && !m_quietLevel)
-		refreshRegDump();
+	if (!m_quietLevel) {
+		if (m_verboseLevel > 1)
+			refreshRegDump();
 
-	if (!m_quietLevel && (seconds != (m_timer.current / 1000))) {
-		cerr << std::setw(2) << std::setfill('0')
-			 << ((seconds / 60) % 100) << ':' << std::setw(2)
-			 << std::setfill('0') << (seconds % 60) << std::flush;
+		if (seconds != (m_timer.current / 1000)) {
+			cerr << std::setw(2) << std::setfill('0')
+				 << ((seconds / 60) % 100) << ':' << std::setw(2)
+				 << std::setfill('0') << (seconds % 60) << std::flush;
 
-		// this hack has to be done because for some
-		// reason at both level 1 and 0 it appends to
-		// the timer instead of overwriting it
-		if (m_verboseLevel <= 1)
-			cerr << "\b\b\b\b\b";
+			// this hack has to be done because for some
+			// reason at both level 1 and 0 it appends to
+			// the timer instead of overwriting it
+			if (m_verboseLevel <= 1)
+				cerr << "\b\b\b\b\b";
+		}
 	}
 
 	m_timer.current = milliseconds;
