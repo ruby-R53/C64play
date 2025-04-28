@@ -1,3 +1,10 @@
+April 28, 2025:
+- C++17 is now the minimum version required for C64play to
+  compile.
+  - I mean, if the minimum version for the library is that of
+    the year 2021 then why the hell would this be able to
+	compile on compilers that still use the C++11 standard??
+
 April 26, 2025:
 - New player API support!
   - Not sure if I'll benefit much from it, but if it's new I
