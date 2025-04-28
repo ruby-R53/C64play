@@ -46,7 +46,7 @@
 
 #include "sidcxx11.h"
 
-inline void debug(MAYBE_UNUSED const TCHAR *msg, MAYBE_UNUSED const TCHAR *val) {
+inline void debug([[ maybe_unused ]] const TCHAR *msg, [[ maybe_unused ]] const TCHAR *val) {
 #ifndef NDEBUG
 	SID_COUT << msg << val << std::endl;
 #endif
@@ -449,7 +449,7 @@ SID_STRING getConfigPath() {
 	return configPath;
 }
 
-bool tryOpen(MAYBE_UNUSED iniHandler &ini) {
+bool tryOpen([[ maybe_unused ]] iniHandler &ini) {
 	return false;
 }
 

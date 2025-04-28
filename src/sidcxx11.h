@@ -35,19 +35,8 @@
 #  define UNLIKELY
 #endif
 
-#ifdef HAVE_CXX17
-#  define HAVE_CXX14
-#  define MAYBE_UNUSED [[ maybe_unused ]]
-#else
-#  define MAYBE_UNUSED
-#endif
-
-#ifdef HAVE_CXX14
-#  define HAVE_CXX11
-#endif
-
-#ifndef HAVE_CXX11
-#  error "This is not a C++11 compiler!"
+#ifndef HAVE_CXX17
+#  error "This is not a C++17 compiler!"
 #endif
 
 #endif
