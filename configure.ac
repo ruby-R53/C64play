@@ -15,12 +15,15 @@ AC_PROG_CXX
 dnl Use C++ for tests.
 AC_LANG([C++])
 
-AX_CXX_COMPILE_STDCXX([17], [noext], [optional])
-AS_IF([test $ax_cv_cxx_compile_cxx17__std_cpp17 != "yes"], [
-    AX_CXX_COMPILE_STDCXX([14], [noext], [optional])
-    AS_IF([test $ax_cv_cxx_compile_cxx14__std_cpp14 != "yes"],
-        [AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])]
-    )
+AX_CXX_COMPILE_STDCXX([20], [noext], [optional])
+ AS_IF([test $ax_cv_cxx_compile_cxx20__std_cpp20 != "yes"], [
+	 AX_CXX_COMPILE_STDCXX([17], [noext], [optional])
+	 AS_IF([test $ax_cv_cxx_compile_cxx17__std_cpp17 != "yes"], [
+		 AX_CXX_COMPILE_STDCXX([14], [noext], [optional])
+		 AS_IF([test $ax_cv_cxx_compile_cxx14__std_cpp14 != "yes"],
+			 [AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])]
+		 )
+	 ])
 ])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -34,9 +37,9 @@ dnl Audio subsystem
 AUDIO_LDFLAGS=""
 
 PKG_CHECK_MODULES(PULSE,
-    [libpulse-simple >= 1.0],
-    [AC_DEFINE([HAVE_PULSE], 1, [Define to 1 if you have libpulse-simple (-lpulse-simple).])],
-    [AC_MSG_WARN([$PULSE_PKG_ERRORS])]
+	[libpulse-simple >= 1.0],
+	[AC_DEFINE([HAVE_PULSE], 1, [Define to 1 if you have libpulse-simple (-lpulse-simple).])],
+	[AC_MSG_WARN([$PULSE_PKG_ERRORS])]
 )
 
 
@@ -45,7 +48,7 @@ AC_CHECK_HEADERS([sys/ioctl.h linux/soundcard.h machine/soundcard.h sys/soundcar
 
 # NetBSD/OpenBSD OSS audio emulation
 AS_IF([test "x$ac_cv_header_soundcard_h" = "xyes"],
-    [AUDIO_LDFLAGS="$AUDIO_LDFLAGS -lossaudio"]
+	[AUDIO_LDFLAGS="$AUDIO_LDFLAGS -lossaudio"]
 )
 
 AC_SUBST(AUDIO_LDFLAGS)

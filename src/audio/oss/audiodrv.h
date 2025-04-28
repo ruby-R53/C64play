@@ -1,8 +1,8 @@
 /*
  * This file is part of C64play, a console SID player.
  *
- * Copyright 2000-2001 Simon White
  * Copyright 2024-2025 Enki Costa
+ * Copyright 2000-2001 Simon White
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@
 #elif defined(HAVE_SOUNDCARD_H)
 #  include <soundcard.h>
 #else
-#  error Audio driver not supported.
+#  error "Audio driver not supported!"
 #endif
 
 #include "../AudioBase.h"
@@ -56,13 +56,13 @@
  */
 class Audio_OSS: public AudioBase {
 private:
-	static	 const char AUDIODEVICE[];
-	volatile int   _audiofd;
+	static const char AUDIODEVICE[];
+	int    m_audiofd;
 
-	void outOfOrder ();
+	void outOfOrder();
 
 public:
-	Audio_OSS();
+	Audio_OSS ();
 	~Audio_OSS() override;
 
 	bool open (AudioConfig &cfg) override;

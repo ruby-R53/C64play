@@ -26,6 +26,15 @@
 #  include "config.h"
 #endif
 
+#ifdef HAVE_CXX20
+#  define HAVE_CXX17
+#  define LIKELY [[ likely ]]
+#  define UNLIKELY [[ unlikely ]]
+#else
+#  define LIKELY
+#  define UNLIKELY
+#endif
+
 #ifdef HAVE_CXX17
 #  define HAVE_CXX14
 #  define MAYBE_UNUSED [[ maybe_unused ]]
