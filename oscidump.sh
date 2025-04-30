@@ -25,5 +25,6 @@ if [[ $# != 0 ]]; then
 
 	echo "Done."
 else
-	echo "Usage: $0 <tune> [c64playargs]"
+	echo "Usage: $0 <tune> [c64playargs],"
+	echo "use -ma to dump the sample channel as well"
 fi
