@@ -23,20 +23,22 @@ See what I've done down below and also how you can contribute to the project!
     - and `l` to go to the next subtune.
   - Hit `g` to jump to a specific subtune instead of repeatedly hitting `j` or `l`.
   - Hit `=` to double the playback speed of a tune.
-    - You know I actually meant `+`, but pressing shift is kinda awkward,
-	  so I just made it `=` instead.
+    - You know I actually meant `+`, but pressing shift is kinda awkward, so I just
+	  made it `=` instead.
     - You can then hit `-` to halve it;
     - Or `0` to go all the way back to the normal speed!
 
 - Other visual changes:
-  - The last row of text also shows useful keybinds instead of just suggesting
-    the user to hit a key to exit and displaying the time elapsed.
+  - The last row of text also shows useful keybinds instead of just showing which
+    key exits the program and displaying the time elapsed.
   - Changes to the color palette.
   - You can now see the filter curve and/or range value on the main UI.
     - These values get hidden if filter emulation is disabled at startup.
   - The `DigiBoost` field now only appears if a tune uses the 8580 chip.
   - A `~` prefixes a note if its frequency doesn't match one of the ones in the
     frequency table.
+	- It's rather meant to show vibrato. Just showing notes without that feels a
+	  little sketchy.
 	- Every tune seems to use a different frequency table, so don't expect it to
 	  be that accurate! Although I'm sure it'll be off by just a semitone at worst.
   - Slightly wider interface, as a result of my additions to the UI.
@@ -49,8 +51,8 @@ See what I've done down below and also how you can contribute to the project!
     ones.
   - Straightforward to use: just run `oscidump[_2SID].sh` and use the same
     arguments you'd use when playing a tune in C64play!
-	- Exception: `-ma` and `-mb` arguments. Those have special behavior. They
-	  include the sample channel on the dump if needed.
+	- Exception: `-ma` and `-mb` arguments. Those have special behavior: they
+	  include the sample channel on the dump if needed!
 
 - C64's latest ROM files
   - First, these ROM files are probably available everywhere on the internet. No
