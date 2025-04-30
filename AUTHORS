@@ -13,8 +13,8 @@ to the development of sidplayfp:
 	Stian Skjelstad   - SID status display
     Michael Hartmann  - filter curves
 
-	Enki Costa        - writing C64play on top of sidplayfp
-	                    completely dropped Windows support
+	Enki F. Costa     - writing C64play on top of sidplayfp
+	                    ditched Windows support
 
 -----------------------------------------------------------------------------
 

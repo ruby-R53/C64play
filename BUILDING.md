@@ -1,8 +1,8 @@
 ### Build requirements
 
-- autotools
-- libsidplayfp (version 2.2 or higher)
-- pod2man
+- autotools - configure script creation
+- libsidplayfp version >=2.2 - the emulation library itself
+- pod2man - documentation
 - patience
 - and a decent computer to better enjoy the emulation!
 
