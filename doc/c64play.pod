@@ -179,12 +179,14 @@ which is the default.
 =item B<--curve=>I<< <num> >>
 
 Sets the filter curve on the reSIDfp emulation engine. Ranges
-from -2.0 ("light") to 2.0 ("dark"). Defaults to 0.5.
+from -2.0 ("light") to 2.0 ("dark") for the 6581 chip and from
+0.0 to 1.0 for the 8580 one. Defaults to 0.5 on both.
 
 =item B<--range=>I<< <num> >>
 
 For libsidplayfp v2.7.0 and higher. Controls the filter range
-value for the 6581 chip under the reSIDfp emulation.
+value for the 6581 chip under the reSIDfp emulation. Same
+default as above.
 
 =item B<--no-audio>
 

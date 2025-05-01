@@ -390,43 +390,61 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 			rs->combinedWaveformsStrength(m_combinedWaveformsStrength);
 #endif
 
+			bool is6581 = (
+				(m_engCfg.defaultSidModel == SidConfig::MOS6581)
+			    && (m_engCfg.forceSidModel ||
+				   (tuneInfo->sidModel(0) != SidTuneInfo::SIDMODEL_8580))
+				|| (tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581)
+			);
+
 #ifdef FEAT_FILTER_RANGE
 			// 6581 filter range control
-			if (m_frange.has_value()) {
-				m_filter.filterRange6581 = m_frange.value();
-			}
+			if (is6581) {
+				if (m_frange.has_value()) {
+					m_filter.filterRange6581 = m_frange.value();
+				}
 
-			if ((m_filter.filterRange6581 < 0.0) || (m_filter.filterRange6581 > 1.0)) {
-				cerr << "Invalid 6581 filter range: " << m_filter.filterRange6581 << endl;
-				exit(EXIT_FAILURE);
-			}
+				if ((m_filter.filterRange6581 < 0.0)
+				    || (m_filter.filterRange6581 > 1.0)) {
+					cerr << "Invalid 6581 filter range: "
+					     << m_filter.filterRange6581 << endl;
 
-			rs->filter6581Range(m_filter.filterRange6581);
+					exit(EXIT_FAILURE);
+				}
+
+				rs->filter6581Range(m_filter.filterRange6581);
 #endif
 
-			// 6581 filter curve control
-			if (m_fcurve.has_value()) {
-				m_filter.filterCurve6581 = m_fcurve.value();
+				// 6581 filter curve control
+				if (m_fcurve.has_value()) {
+					m_filter.filterCurve6581 = m_fcurve.value();
+				}
+
+				if ((m_filter.filterCurve6581 < -2.0)
+				    || (m_filter.filterCurve6581 > 2.0)) {
+					cerr << "Invalid 6581 filter curve: "
+					     << m_filter.filterCurve6581 << endl;
+
+					exit(EXIT_FAILURE);
+				}
+
+				rs->filter6581Curve(m_filter.filterCurve6581);
+			} else {
+				// 8580 filter curve control
+				if (m_fcurve.has_value()) {
+					m_filter.filterCurve8580 = m_fcurve.value();
+				}
+
+				if ((m_filter.filterCurve8580 < 0.0)
+				    || (m_filter.filterCurve8580 > 1.0)) {
+					cerr << "Invalid 8580 filter curve: "
+					     << m_filter.filterCurve8580 << endl;
+
+					exit(EXIT_FAILURE);
+				}
+
+				rs->filter8580Curve(m_filter.filterCurve8580);
 			}
-
-			if ((m_filter.filterCurve6581 < -2.0) || (m_filter.filterCurve6581 > 2.0)) {
-				cerr << "Invalid 6581 filter curve: " << m_filter.filterCurve6581 << endl;
-				exit(EXIT_FAILURE);
-			}
-
-			rs->filter6581Curve(m_filter.filterCurve6581);
-
-			// 8580 filter curve control
-			if (m_fcurve.has_value()) {
-				m_filter.filterCurve8580 = m_fcurve.value();
-			}
-
-			if ((m_filter.filterCurve8580 < -2.0) || (m_filter.filterCurve8580 > 2.0)) {
-				cerr << "Invalid 8580 filter curve: " << m_filter.filterCurve8580 << endl;
-				exit(EXIT_FAILURE);
-			}
-
-			rs->filter8580Curve(m_filter.filterCurve8580);
 		}
 
 		catch (std::bad_alloc const &ba) {}

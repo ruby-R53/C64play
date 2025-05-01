@@ -1,3 +1,13 @@
+May 1st, 2025:
+- The filter curve value for the 6581 chip still ranges from
+  -2.0 to 2.0. However, for the 8580 it now ranges from 0.0
+  to 1.0.
+  - This is because anything beyond the 0.0-1.0 range breaks
+    that chip's sound. So it's kinda useless to leave it that
+	way.
+  - I've actually wanting to do this for a while, but only now
+    I figured out how to do so x)
+
 April 28, 2025:
 - C++17 is now the minimum version required for C64play to
   compile.
