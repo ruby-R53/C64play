@@ -9,7 +9,7 @@ B<c64play.ini> - configuration file for L<C64play(1)>.
 =head1 DESCRIPTION
 
 C64play has a configuration file formed by sections. They're names enclosed by brackets, making it easier to separate each type of setting.
-Every setting has a I<< <parameter> = <value> >> structure.
+Then, every setting has a I<< <parameter> = <value> >> structure.
 
 B<c64play.ini> has the following sections:
 

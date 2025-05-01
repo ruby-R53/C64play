@@ -36,7 +36,7 @@ contribute.
 Displays a help message, showing you the options plus a brief
 description for each of them.
 
-=item B<-h, --help-debug>
+=item B<--help-debug>
 
 Displays a help message for debugging-related options, plus a
 brief description for each.
@@ -49,11 +49,6 @@ Set sample rate for audio output, in Hz. Defaults to 48000 Hz.
 
 Flips filter emulation. If it's enabled (default), this will
 disable it and vice-versa.
-
-=item B<-o>I<< <num> >>
-
-Select starting track index number. Default is provided by the
-tune's file header.
 
 =item B<-s>
 
@@ -212,9 +207,9 @@ Neither emulate a SID chip nor use an audio device.
 =item 1-9
 
 Mute/unmute voice(s) 1-9, where each chunk of 3 voices
-correspond to a SID's voice.
+corresponds to a SID's voice.
 
-=item a-d
+=item a, s, d
 
 Mute/unmute samples from SID #1 to #3.
 
