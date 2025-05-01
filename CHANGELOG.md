@@ -7,6 +7,8 @@ May 1st, 2025:
 	way.
   - I've actually wanting to do this for a while, but only now
     I figured out how to do so x)
+- C64PLAY IS FINALLY AVAILABLE TO THE PUBLIC!!! VERSION 1.0.0
+  IS HERE!!!!
 
 April 28, 2025:
 - C++17 is now the minimum version required for C64play to
