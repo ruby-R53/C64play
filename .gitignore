@@ -3,6 +3,7 @@ autom4te.cache
 build/*
 build-aux/*
 !build-aux/config.rpath
+c64play-*.tar.gz
 configure
 configure~
 config.log
