@@ -22,7 +22,7 @@
 
 #include "keyboard.h"
 
-#include "sidcxx11.h"
+#include "sidcxx.h"
 
 // Unix console headers
 #include <cctype>
@@ -36,8 +36,8 @@
 #include <unistd.h>
 int _getch(void);
 
-#define MAX_CMDLEN 10
-#define ESC '\033'
+constexpr int  MAX_CMDLEN = 10;
+constexpr char ESC = '\033';
 
 // Special Extended Key Definitions
 enum {
@@ -132,7 +132,7 @@ static int keyboard_search(char *cmd) {
 					break;
 				}
 
-				return (a);
+				return a;
 			}
 		}
 		else if (*q == '\0') {
@@ -267,7 +267,7 @@ void keyboard_enable_raw() {
 	current.c_lflag &= ~(ECHO | ICANON | IEXTEN);
 	current.c_cc[VMIN] = 1;
 	current.c_cc[VTIME] = 0;
-	tcsetattr (infd, TCSAFLUSH, &current);
+	tcsetattr(infd, TCSAFLUSH, &current);
 }
 
 void keyboard_disable_raw() {
@@ -280,6 +280,7 @@ void keyboard_disable_raw() {
 		default:
 			close(infd);
 		}
+
 		infd = -1;
 	}
 }

@@ -32,7 +32,7 @@
 
 #include "sidlib_features.h"
 
-#include "sidcxx11.h"
+#include "sidcxx.h"
 
 using std::cout;
 using std::cerr;

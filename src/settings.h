@@ -22,7 +22,7 @@
 #ifndef SETTING_H
 #define SETTING_H
 
-#include "sidcxx11.h"
+#include "sidcxx.h"
 
 #ifdef HAVE_CXX17
 #include <optional>

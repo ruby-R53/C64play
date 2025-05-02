@@ -41,7 +41,7 @@ using std::endl;
 #include "audio/wav/WavFile.h"
 #include "ini/types.h"
 
-#include "sidcxx11.h"
+#include "sidcxx.h"
 
 #include <sidplayfp/sidbuilder.h>
 #include <sidplayfp/SidInfo.h>

@@ -60,7 +60,7 @@ const char *noteName[] = {
 const char SID6581[] = "MOS6581";
 const char SID8580[] = "CSG8580";
 
-const uint8_t tableWidth = 58;
+constexpr uint8_t tableWidth = 58;
 
 const char info_file[] = "Writing audio file";
 const char info_play[] = "Prev. [j] Pause [k] Next [l] Go to [g] Quit [q]";

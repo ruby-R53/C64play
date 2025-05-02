@@ -44,7 +44,7 @@
 #include "utils.h"
 #include "ini/dataParser.h"
 
-#include "sidcxx11.h"
+#include "sidcxx.h"
 
 inline void debug([[ maybe_unused ]] const TCHAR *msg, [[ maybe_unused ]] const TCHAR *val) {
 #ifndef NDEBUG
