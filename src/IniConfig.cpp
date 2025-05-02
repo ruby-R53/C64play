@@ -69,15 +69,17 @@ IniConfig::IniConfig() { clear(); }
 IniConfig::~IniConfig() { clear(); }
 
 void IniConfig::clear() {
+	// [Player] section
 	player_s.database.clear ();
 	player_s.playLength   = 0;				 // infinite play time
-	player_s.recordLength = (4 * 60) * 1000; // 4 minutes default for recording
+	player_s.recordLength = (4 * 60) * 1000; // 4 minutes recording time
 	player_s.kernalRom.clear();
 	player_s.basicRom.clear ();
 	player_s.chargenRom.clear();
 	player_s.verboseLevel = 0;
 	player_s.quietLevel   = 0;
 
+	// [Console] section
 	console_s.ansi			= false;
 	console_s.topLeft		= '+';
 	console_s.topRight		= '+';
@@ -88,10 +90,12 @@ void IniConfig::clear() {
 	console_s.junctionLeft	= ':';
 	console_s.junctionRight = ':';
 
+	// [Audio] section
 	audio_s.sampleRate = SidConfig::DEFAULT_SAMPLING_FREQ;
 	audio_s.channels   = 0;
 	audio_s.bitDepth   = 16;
 
+	// [Emulation] section
 	emulation_s.modelDefault = SidConfig::PAL;
 	emulation_s.modelForced  = false;
 	emulation_s.sidModel	 = SidConfig::MOS6581;
@@ -271,7 +275,8 @@ void IniConfig::readPlayer(iniHandler &ini) {
 
 	if (player_s.database.empty()) {
 		SID_STRING buffer(utils::getDataPath());
-		buffer.append(SEPARATOR).append(DIR_NAME).append(SEPARATOR).append("Songlengths.md5");
+		buffer.append(SEPARATOR).append(DIR_NAME).append(SEPARATOR)
+			  .append("Songlengths.md5");
 		if (::access(buffer.c_str(), R_OK) == 0)
 			player_s.database.assign(buffer);
 	}
@@ -295,13 +300,13 @@ void IniConfig::readConsole(iniHandler &ini) {
 	if (!ini.setSection(TEXT("Console")))
 		ini.addSection(TEXT("Console"));
 
-	readBool(ini, TEXT("ANSI"),				   console_s.ansi);
-	readChar(ini, TEXT("Top left char"),	   console_s.topLeft);
-	readChar(ini, TEXT("Top right char"),	   console_s.topRight);
+	readBool(ini, TEXT("ANSI"),                console_s.ansi);
+	readChar(ini, TEXT("Top left char"),       console_s.topLeft);
+	readChar(ini, TEXT("Top right char"),      console_s.topRight);
 	readChar(ini, TEXT("Bottom left char"),    console_s.bottomLeft);
 	readChar(ini, TEXT("Bottom right char"),   console_s.bottomRight);
-	readChar(ini, TEXT("Vertical char"),	   console_s.vertical);
-	readChar(ini, TEXT("Horizontal char"),	   console_s.horizontal);
+	readChar(ini, TEXT("Vertical char"),       console_s.vertical);
+	readChar(ini, TEXT("Horizontal char"),     console_s.horizontal);
 	readChar(ini, TEXT("Junction left char"),  console_s.junctionLeft);
 	readChar(ini, TEXT("Junction right char"), console_s.junctionRight);
 }
@@ -312,7 +317,7 @@ void IniConfig::readAudio(iniHandler &ini) {
 		ini.addSection(TEXT("Audio"));
 
 	readInt(ini, TEXT("Sample rate"), audio_s.sampleRate);
-	readInt(ini, TEXT("Channels"),	  audio_s.channels);
+    readInt(ini, TEXT("Channels"),    audio_s.channels);
 	readInt(ini, TEXT("Bit depth"),   audio_s.bitDepth);
 }
 

@@ -143,6 +143,7 @@ string trimString(const char* str, unsigned int maxLen) {
 		data.resize(maxLen - 3);
 		data.append("...");
 	}
+
 	return data;
 }
 
@@ -209,8 +210,9 @@ void ConsolePlayer::menu() {
 
 	// then the description
 	header.clear();
-	header.append("Version " VERSION ", using ").append(info.name()).append(" v")
-		  .append(info.version());
+	header.append("Version " VERSION ", using ").append(info.name())
+		  .append(" v").append(info.version());
+
 	cerr << setw(tableWidth/2 + header.length()/2) << header << endl;
 
 	const unsigned int n = tuneInfo->numberOfInfoStrings();
@@ -589,7 +591,8 @@ void ConsolePlayer::menu() {
 								 (tuneInfo->sidChips() * 3);
 #endif
 
-		cerr << " Voice   Note   PW    Control Registers     Waveform(s)" << endl;
+		cerr << " Voice   Note   PW    Control Registers     Waveform(s)"
+			 << '\n';
 
 		for (int i = 0; i < movLines; ++i) {
 			consoleTable(tableMiddle);

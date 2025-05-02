@@ -38,10 +38,6 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-// Wide-chars are not supported here yet 
-#undef SEPARATOR
-#define SEPARATOR "/"
-
 /**
  * Try loading SID tune from HVSC_BASE
  */
@@ -88,6 +84,7 @@ bool parseTime(const char *str, uint_least32_t &time) {
 		val  = atoi(str);
 		if (val < 0 || val > 99)
 			return false;
+
 		_time = (uint_least32_t) val * 60;
 
 		// parse milliseconds
@@ -112,6 +109,7 @@ bool parseTime(const char *str, uint_least32_t &time) {
 		val = atoi (sep + 1);
 		if (val < 0 || val > 59)
 			return false;
+
 		_time += (uint_least32_t) val;
 	}
 
@@ -135,9 +133,9 @@ void displayDebugArgs() {
 	out << "Debug options:" << endl
 		<< "--cpu-debug    display CPU registers and assembly dumps" << endl
 		<< "--delay=<num>  simulate C64 power-on delay (default: random)" << endl
-		<< "--no-audio	   no audio output device" << endl
-		<< "--no-sid	   no SID emulation" << endl
-		<< "--null		   no audio output device nor SID emulation" << endl;
+		<< "--no-audio     no audio output device" << endl
+		<< "--no-sid       no SID emulation" << endl
+		<< "--null         no audio output device nor SID emulation" << endl;
 }
 
 // Parse command line arguments
@@ -490,57 +488,58 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		out << "Usage: " << m_name << " [options] <file>" << endl;
 
 	out << "Options:" << endl
-		<< "--help | -h		  list options (this menu)" << endl
-		<< "--help-debug	  debug help menu" << endl
-		<< "-b<num>			  begin playback at [min:]sec[.mil] mark" << endl
-		<< "-r<num>			  set sample rate in Hz, defaults to "
+		<< "--help | -h       list options (this menu)" << endl
+		<< "--help-debug      debug help menu" << endl
+		<< "-b<num>           begin playback at [min:]sec[.mil] mark" << endl
+		<< "-r<num>           set sample rate in Hz, defaults to "
 		<< SidConfig::DEFAULT_SAMPLING_FREQ << endl
-		<< "-D<addr>		  set address of SID #2 (e.g. -ds0xd420)" << endl
-		<< "-T<addr>		  set address of SID #3 (e.g. -ts0xd440)" << endl
-		<< "-m<num|a-c>		  mute voice <num> (e.g. -m1 -m2), use" << endl
-		<< "				  'a', 'b' or 'c' for muting sample playback" << endl
-		<< "-f				  flip filter emulation - if already enabled" << endl
-		<< "				  (default), disable it and vice-versa" << endl
-		<< "-o<l|s>			  loop and/or make the tune single track" << endl
-		<< "-o<num>			  start track (default: preset)" << endl
-		<< "-d<num>			  set depth for file output: 16 for signed" << endl
-		<< "				  16-bit, and 32 for 32-bit float. Defaults" << endl
-		<< "				  to unsigned 16-bit" << endl
-		<< "-s				  use stereo output" << endl
-		<< "-m				  use mono output" << endl
-		<< "-l<num>			  set play/record length in [min:]sec[.mil]" << endl
-		<< "				  format, use 0 for infinite play time" << endl
-		<< "-<v|q>[n]		  [v]erbose or [q]uiet output. [n] is" << endl
-		<< "				  an optional level that defaults to 1" << endl
-		<< "-v[p|n][f]		  set VIC's clock to [P]AL or [N]TSC, default" << endl
-		<< "				  defined by the tune. You may also [f]orce" << endl
-		<< "				  the setting to prevent speed fixing" << endl
-		<< "-m<o|n>[f]		  set SID model to [o]ld (MOS6581) or [n]ew" << endl
-		<< "				  (CSG8580), default defined by the tune. You" << endl
-		<< "				  may [f]orce that setting as well" << endl
-		<< "--digiboost		  enable the DigiBoost hack for the 8580 chip" << endl
-		<< "-R[i|r][f]		  set resampling method, either [i]nterpolate" << endl
-		<< "				  or [r]esample. If you're using reSID, you" << endl
-		<< "				  may can enable [f]ast resampling as well" << endl
+		<< "-D<addr>          set address of SID #2 (e.g. -ds0xd420)" << endl
+		<< "-T<addr>          set address of SID #3 (e.g. -ts0xd440)" << endl
+		<< "-m<num|a-c>       mute voice <num> (e.g. -m1 -m2), use" << endl
+		<< "                  'a', 'b' or 'c' for muting sample playback" << endl
+		<< "-f                flip filter emulation - if already enabled" << endl
+		<< "                  (default), disable it and vice-versa" << endl
+		<< "-o<l|s>           loop and/or make the tune single track" << endl
+		<< "-o<num>           start track (default: preset)" << endl
+		<< "-d<num>           set depth for file output: 16 for signed" << endl
+		<< "                  16-bit, and 32 for 32-bit float. Defaults" << endl
+		<< "                  to unsigned 16-bit" << endl
+		<< "-s                use stereo output" << endl
+		<< "-m                use mono output" << endl
+		<< "-l<num>           set play/record length in [min:]sec[.mil]" << endl
+		<< "                  format, use 0 for infinite play time" << endl
+		<< "-<v|q>[n]         [v]erbose or [q]uiet output. [n] is" << endl
+		<< "                  an optional level that defaults to 1" << endl
+		<< "-v[p|n][f]        set VIC's clock to [P]AL or [N]TSC, default" << endl
+		<< "                  defined by the tune. You may also [f]orce" << endl
+		<< "                  the setting to prevent speed fixing" << endl
+		<< "-m<o|n>[f]        set SID model to [o]ld (MOS6581) or [n]ew" << endl
+		<< "                  (CSG8580), default defined by the tune. You" << endl
+		<< "                  may [f]orce that setting as well" << endl
+		<< "--digiboost       enable the DigiBoost hack for the 8580 chip" << endl
+		<< "-R[i|r][f]        set resampling method, either [i]nterpolate" << endl
+		<< "                  or [r]esample. If you're using reSID, you" << endl
+		<< "                  may can enable [f]ast resampling as well" << endl
 		<< "--curve=<double>  controls the filter curve for the reSIDfp" << endl
-		<< "				  emulation (default: 0.5, ranges from -2.0 to" << endl
-		<< "				  2.0)" << endl
-
+		<< "                  emulation (default: 0.5, ranges from -2.0 to" << endl
+		<< "                  2.0)" << endl
+		
 #ifdef FEAT_FILTER_RANGE
 		<< "--range=<double>  controls the filter range in the ReSIDfp" << endl
-		<< "				  emulation (same default, ranges from 0.0 to" << endl
-		<< "				  1.0)" << endl
 #endif
-		<< "-w[name]		  render tune to a WAV file, with the default" << endl
-		<< "				  name being <file>[subtune].wav" << endl
-		<< "--info			  add metadata to WAV file" << endl;
+		<< "                  emulation (same default, ranges from 0.0 to" << endl
+		<< "                  1.0)" << endl
+		
+		<< "-w[name]          render tune to a WAV file, with the default" << endl
+		<< "                  name being <file>[subtune].wav" << endl
+		<< "--info            add metadata to WAV file" << endl;
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
-	out << "--residfp		  use reSIDfp emulation (default)" << endl;
+	out << "--residfp         use reSIDfp emulation (default)" << endl;
 #endif
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
-	out << "--resid			  use reSID emulation" << endl;
+	out << "--resid           use reSID emulation" << endl;
 #endif
 
 	out << endl

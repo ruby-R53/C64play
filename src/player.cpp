@@ -109,6 +109,7 @@ uint8_t* loadRom(const SID_STRING &romPath, const int size) {
 
 				return buffer;
 			}
+
 			delete [] buffer;
 		}
 		catch (std::bad_alloc const &ba) {}
@@ -130,7 +131,8 @@ uint8_t* loadRom(const SID_STRING &romPath, const int size, const TCHAR defaultR
 	try {
 		SID_STRING dataPath(utils::getDataPath());
 
-		dataPath.append(SEPARATOR).append(TEXT("C64play")).append(SEPARATOR).append(defaultRom);
+		dataPath.append(SEPARATOR).append("C64play")
+				.append(SEPARATOR).append(defaultRom);
 
 		if (::access(dataPath.c_str(), R_OK) != 0) {
 			dataPath = PKGDATADIR;
@@ -181,18 +183,18 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 		IniConfig::emulation_section emulation = m_iniCfg.emulation();
 
 		// INI Configuration Settings
-		m_engCfg.forceC64Model	 = emulation.modelForced;
+		m_engCfg.forceC64Model   = emulation.modelForced;
 		m_engCfg.defaultC64Model = emulation.modelDefault;
 		m_engCfg.defaultSidModel = emulation.sidModel;
-		m_engCfg.forceSidModel	 = emulation.forceModel;
-		m_engCfg.ciaModel		 = emulation.ciaModel;
-		m_engCfg.frequency		 = audio.sampleRate;
+		m_engCfg.forceSidModel   = emulation.forceModel;
+		m_engCfg.ciaModel        = emulation.ciaModel;
+		m_engCfg.frequency       = audio.sampleRate;
 		m_engCfg.samplingMethod  = emulation.samplingMethod;
-		m_engCfg.fastSampling	 = emulation.fastSampling;
-		m_channels				 = audio.channels;
-		m_bitDepth				 = audio.bitDepth;
-		m_filter.enabled		 = emulation.filter;
-		m_filter.bias			 = emulation.bias;
+		m_engCfg.fastSampling    = emulation.fastSampling;
+		m_channels               = audio.channels;
+		m_bitDepth               = audio.bitDepth;
+		m_filter.enabled         = emulation.filter;
+		m_filter.bias            = emulation.bias;
 		m_filter.filterCurve6581 = emulation.filterCurve6581;
 
 #ifdef FEAT_FILTER_RANGE
@@ -209,13 +211,13 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 			m_engCfg.powerOnDelay = emulation.powerOnDelay;
 
 		if (!emulation.engine.empty()) {
-			if (emulation.engine.compare(TEXT("RESIDFP")) == 0) {
+			if (emulation.engine.compare("RESIDFP") == 0) {
 				m_driver.sid = EMU_RESIDFP;
 			}
-			else if (emulation.engine.compare(TEXT("RESID")) == 0) {
+			else if (emulation.engine.compare("RESID") == 0) {
 				m_driver.sid = EMU_RESID;
 			}
-			else if (emulation.engine.compare(TEXT("NONE")) == 0) {
+			else if (emulation.engine.compare("NONE") == 0) {
 				m_driver.sid = EMU_NONE;
 			}
 		}
@@ -227,10 +229,11 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 	createOutput(OUT_NULL, nullptr);
 	createSidEmu(EMU_NONE, nullptr);
 
-	uint8_t *kernalRom	= loadRom(m_iniCfg.playercfg().kernalRom, 8192, TEXT("kernal"));
-	uint8_t *basicRom	= loadRom(m_iniCfg.playercfg().basicRom, 8192, TEXT("basic"));
-	uint8_t *chargenRom = loadRom(m_iniCfg.playercfg().chargenRom, 4096, TEXT("chargen"));
+	uint8_t *kernalRom	= loadRom(m_iniCfg.playercfg().kernalRom, 8192, "kernal");
+	uint8_t *basicRom	= loadRom(m_iniCfg.playercfg().basicRom, 8192, "basic");
+	uint8_t *chargenRom = loadRom(m_iniCfg.playercfg().chargenRom, 4096, "chargen");
 	m_engine.setRoms(kernalRom, basicRom, chargenRom);
+
 	delete [] kernalRom;
 	delete [] basicRom;
 	delete [] chargenRom;
@@ -241,7 +244,8 @@ std::string ConsolePlayer::getFileName(const SidTuneInfo *tuneInfo, const char* 
 
 	if (m_outfile != nullptr) {
 		title = m_outfile;
-		if (title.compare("-") != 0 && title.find_last_of('.') == std::string::npos)
+		if (title.compare("-") != 0 &&
+			title.find_last_of('.') == std::string::npos)
 			title.append(ext);
 	} else {
 		// Generate a name for the wav file
@@ -255,6 +259,7 @@ std::string ConsolePlayer::getFileName(const SidTuneInfo *tuneInfo, const char* 
 			sstream << "[" << tuneInfo->currentSong() << "]";
 			title.append(sstream.str());
 		}
+
 		title.append(ext);
 	}
 
@@ -544,11 +549,14 @@ bool ConsolePlayer::open(void) {
 	m_engine.filter(2, m_filter.enabled);
 #endif
 
-	m_freqTable = (((m_engCfg.defaultC64Model == SidConfig::NTSC) &&
-					(m_engCfg.forceC64Model ||
-					(tuneInfo->clockSpeed() != SidTuneInfo::CLOCK_PAL))) ||
-				   (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_NTSC))
-				   ? freqTableNtsc : freqTablePal;
+	m_freqTable = (
+		(
+			(m_engCfg.defaultC64Model == SidConfig::NTSC) &&
+		    (m_engCfg.forceC64Model ||
+				(tuneInfo->clockSpeed() != SidTuneInfo::CLOCK_PAL)
+			)
+		) || (tuneInfo->clockSpeed() == SidTuneInfo::CLOCK_NTSC)
+	) ? freqTableNtsc : freqTablePal;
 
 #ifdef FEAT_NEW_PLAY_API
 	m_mixer.initialize(m_engine.installedSIDs(), m_engCfg.playback == SidConfig::STEREO);
