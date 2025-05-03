@@ -32,8 +32,6 @@ using std::endl;
 
 #include "keyboard.h"
 
-const char* ERR_SIGHANDLER = "ERROR: could not install signal handler!";
-
 // Function prototypes
 static void sighandler(int signum);
 static ConsolePlayer *g_player;
@@ -58,7 +56,7 @@ main_restart:
 	if ((signal(SIGINT, &sighandler) == SIG_ERR)
 		|| (signal(SIGABRT, &sighandler) == SIG_ERR)
 		|| (signal(SIGTERM, &sighandler) == SIG_ERR)) {
-		player.displayError(ERR_SIGHANDLER);
+		player.displayError("ERROR: could not install signal handler!");
 		goto main_error;
 	}
 
@@ -77,7 +75,7 @@ main_restart:
 	if ((signal(SIGINT,  SIG_DFL) == SIG_ERR)
 		|| (signal(SIGABRT, SIG_DFL) == SIG_ERR)
 		|| (signal(SIGTERM, SIG_DFL) == SIG_ERR)) {
-		player.displayError(ERR_SIGHANDLER);
+		player.displayError("ERROR: could not restore signal handlers!");
 		goto main_error;
 	}
 

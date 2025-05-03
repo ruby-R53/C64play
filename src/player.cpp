@@ -49,7 +49,7 @@ using std::endl;
 
 #include <unordered_map>
 
-using filter_map_t = std::unordered_map<std::string, double>;
+using filter_map_t      = std::unordered_map<std::string, double>;
 using filter_map_iter_t = std::unordered_map<std::string, double>::const_iterator;
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
@@ -86,15 +86,6 @@ uint16_t freqTableNtsc[] = {
 	0x4310, 0x4710, 0x4b50, 0x4fc0, 0x5480, 0x5980, 0x5ee0, 0x6480, 0x6a90, 0x70d0, 0x7790, 0x7ea0, // 7
 	0x8620, 0x8e20, 0x96a0, 0x9f80, 0xa900, 0xb300, 0xbdc0, 0xc900, 0xd520, 0xe1a0, 0xef20, 0xfd40, // 8
 };
-
-/* You see, this part was supposed to be the suggested filter range/curve table.
- * I decided not to implement it, because I personally don't agree with any of its
- * numbers and I'm pretty sure a lot of other SID listeners don't.
- * Everyone had a different experience when listening to these SIDs, so I don't
- * really see why it'd be a great idea to implement one universal filter parameter
- * table.
- * Plus, that thing was really really huge :(
- */
 
 uint8_t* loadRom(const SID_STRING &romPath, const int size) {
 	SID_IFSTREAM is(romPath.c_str(), std::ios::binary);
@@ -156,6 +147,7 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 
 	songlengthDB(false),
 	m_cpudebug(false)
+
 {
 	std::memset(m_registers, 0, 32*3);
 

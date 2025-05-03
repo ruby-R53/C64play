@@ -60,7 +60,7 @@ const char *noteName[] = {
 const char SID6581[] = "MOS6581";
 const char SID8580[] = "CSG8580";
 
-constexpr uint8_t tableWidth = 58;
+constexpr uint_least8_t tableWidth = 58;
 
 const char info_file[] = "Writing audio file";
 const char info_play[] = "Prev. [j] Pause [k] Next [l] Go to [g] Quit [q]";
@@ -138,6 +138,7 @@ const char* getCia(SidConfig::cia_model_t ciaModel) {
 
 string trimString(const char* str, unsigned int maxLen) {
 	string data(str);
+
 	// avoid too long file names
 	if (data.length() > maxLen) {
 		data.resize(maxLen - 3);
@@ -210,8 +211,8 @@ void ConsolePlayer::menu() {
 
 	// then the description
 	header.clear();
-	header.append("Version " VERSION ", using ").append(info.name())
-		  .append(" v").append(info.version());
+	header.append("Version " VERSION ", using ")
+		  .append(info.name()).append(" v").append(info.version());
 
 	cerr << setw(tableWidth/2 + header.length()/2) << header << endl;
 
