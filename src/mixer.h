@@ -26,8 +26,13 @@
 #define MIXER_H
 
 #include <stdint.h>
-
 #include <vector>
+
+#include "sidcxx.h"
+
+#if defined(HAVE_CXX20) && defined(__cpp_lib_math_constants)
+# include <numbers>
+#endif
 
 /**
  * This class implements the mixer.
@@ -36,8 +41,13 @@ class Mixer {
 private:
 	static constexpr int_least32_t SCALE_FACTOR = 1 << 16;
 
+#if defined(HAVE_CXX20) && defined(__cpp_lib_math_constants)
+	static constexpr double SQRT_2 = std::numbers::sqrt2;
+	static constexpr double SQRT_3 = std::numbers::sqrt3;
+#else
 	static constexpr double SQRT_2 = 1.41421356237;
 	static constexpr double SQRT_3 = 1.73205080757;
+#endif
 
 	static constexpr int_least32_t SCALE[3] = {
 		// 1 chip, no scale

@@ -26,9 +26,12 @@
 #endif
 
 #ifdef HAVE_ICONV
-#include <clocale>
-#include <iconv.h>
-#include <langinfo.h>
+# include <clocale>
+# ifdef __FreeBSD__ // workaround for https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=275969
+#  define LIBICONV_PLUG
+# endif
+# include <iconv.h>
+# include <langinfo.h>
 #endif
 
 class codeConvert {

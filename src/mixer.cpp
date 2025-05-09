@@ -26,8 +26,6 @@
 #include <cassert>
 #include <cstring>
 
-#include "sidcxx.h"
-
 void Mixer::initialize(unsigned int chips, bool stereo) {
 	assert((chips >= 1) && (chips <= 3));
 	m_channels = stereo ? 2 : 1;
