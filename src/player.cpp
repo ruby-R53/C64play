@@ -613,7 +613,7 @@ bool ConsolePlayer::open(void) {
 }
 
 void ConsolePlayer::close() {
-	stop();
+	m_engine.stop();
 	if (m_state == playerExit) { // Natural finish
 		if (m_driver.file)
 			cerr << (char) 7; // Ring bell when done
@@ -718,6 +718,7 @@ void ConsolePlayer::stop() {
 
 
 uint_least32_t ConsolePlayer::getBufSize() {
+	// get audio configuration
 	const uint_least32_t bytesPerMillis =
 		(m_driver.cfg.depth / 8 *
 		 m_driver.cfg.channels *
@@ -853,7 +854,11 @@ void ConsolePlayer::decodeKeys() {
 
 		case A_RESTORE:
 			m_speed.current = 1;
+#ifdef FEAT_NEW_PLAY_API
+			m_mixer.setFastForward(1);
+#else
 			m_engine.fastForward(100);
+#endif
 		break;
 
 		case A_HOME:
