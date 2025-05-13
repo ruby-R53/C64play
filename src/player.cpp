@@ -351,7 +351,7 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
 
 	default:
 		cerr << "[" << m_name << "]" << " ERROR: " << m_channels
-			 << " audio channels not supported" << endl;
+			 << " audio channels not supported!" << endl;
 
 		return false;
 	}
@@ -387,7 +387,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 			rs->combinedWaveformsStrength(m_combinedWaveformsStrength);
 #endif
 
-			bool is6581 = (
+			const bool is6581 = (
 				(m_engCfg.defaultSidModel == SidConfig::MOS6581)
 			    && (m_engCfg.forceSidModel ||
 				   (tuneInfo->sidModel(0) != SidTuneInfo::SIDMODEL_8580))
@@ -558,6 +558,7 @@ bool ConsolePlayer::open(void) {
 	// forwarding to the start position
 	m_driver.selected = &m_driver.null;
 #ifdef FEAT_NEW_PLAY_API
+	m_mixer.clear();
 	m_mixer.setFastForward(m_speed.current);
 #else
 	m_engine.fastForward(100 * m_speed.current);
@@ -613,7 +614,9 @@ bool ConsolePlayer::open(void) {
 }
 
 void ConsolePlayer::close() {
+#ifndef FEAT_NEW_PLAY_API
 	m_engine.stop();
+#endif
 	if (m_state == playerExit) { // Natural finish
 		if (m_driver.file)
 			cerr << (char) 7; // Ring bell when done
@@ -655,15 +658,19 @@ bool ConsolePlayer::play() {
 		m_engine.buffers(buffers);
 
 		do {
+			// play for 2K cycles first
 			int samples = m_engine.play(2000);
 			
-			if (samples < 0) UNLIKELY {
+			if (samples < 0) UNLIKELY { // exit on error
 				cerr << m_engine.error();
 				m_state = playerError;
 				return false;
 			}
-
-			m_mixer.doMix(buffers, samples);
+			else if (!buffer) UNLIKELY
+				break;
+			else if (samples > 0)
+				m_mixer.doMix(buffers, samples);
+			else break;
 		} while (!m_mixer.isFull());
 
 		retSize = length;
@@ -703,7 +710,9 @@ bool ConsolePlayer::play() {
 		if (m_quietLevel < 3)
 			cerr << '\n';
 
+#ifndef FEAT_NEW_PLAY_API
 		m_engine.stop();
+#endif
 		break;
 	}
 
@@ -713,7 +722,9 @@ bool ConsolePlayer::play() {
 
 void ConsolePlayer::stop() {
 	m_state = playerStopped;
+#ifndef FEAT_NEW_PLAY_API
 	m_engine.stop();
+#endif
 }
 
 
