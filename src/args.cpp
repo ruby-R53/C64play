@@ -195,7 +195,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
 			// set sample rate
 			else if (argv[i][1] == 'r') {
-				if (argv[i][2] == '\0')
+				if (argv[i][2] == '\0') // user didn't provide anything?
 					err = true;
 
 				m_engCfg.frequency = (uint32_t) atoi(argv[i]+2);
@@ -226,7 +226,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
 			// set bit depth
 			else if (argv[i][1] == 'd') {
-				if (argv[i][2] == '\0') // user didn't provide anything?
+				if (argv[i][2] == '\0')
 					err = true;
 				{
 					uint_least8_t precision = atoi(&argv[i][2]);
@@ -330,8 +330,10 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 				} else {
 					m_verboseLevel = atoi(&argv[i][2]);
 				}
-				m_engCfg.forceC64Model = ((argv[i][((argv[i][2] == 'f') ? 
-										 2 : 3)] == 'f') ?	true : false);
+				m_engCfg.forceC64Model = (
+					(argv[i][((argv[i][2] == 'f') ? 2 : 3)] == 'f') ?
+						true : false
+				);
 			}
 
 			// set power-on delay
@@ -456,10 +458,11 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 			return -1;
 		}
 		if (!m_timer.valid) {
-			m_timer.length = m_driver.file ? m_iniCfg.playercfg().recordLength
-										   : m_iniCfg.playercfg().playLength;
+			m_timer.length = m_driver.file ?
+				m_iniCfg.playercfg().recordLength
+				: m_iniCfg.playercfg().playLength;
 
-			songlengthDB  = false;
+			songlengthDB = false;
 			if (hvscBase) {
 				if (tryOpenDatabase(hvscBase)) {
 					songlengthDB = true;

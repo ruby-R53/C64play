@@ -71,7 +71,7 @@ IniConfig::~IniConfig() { clear(); }
 void IniConfig::clear() {
 	// [Player] section
 	player_s.database.clear ();
-	player_s.playLength   = 0;				 // infinite play time
+	player_s.playLength   = 0;				 // infinite play time!
 	player_s.recordLength = (4 * 60) * 1000; // 4 minutes recording time
 #ifdef FEAT_NEW_PLAY_API
 	player_s.fadeoutLen   = 0; // no fade out by default
@@ -125,7 +125,7 @@ void IniConfig::clear() {
 // static helpers
 const TCHAR* readKey(iniHandler &ini, const TCHAR *key) {
 	const TCHAR* value = ini.getValue(key);
-	if (value == nullptr) { // Doesn't exist, add it
+	if (value == nullptr) { // Doesn't exist? Add it!
 		ini.addValue(key, TEXT(""));
 		debug(TEXT("Key doesn't exist: "), key);
 	}
@@ -353,6 +353,7 @@ void IniConfig::readEmulation(iniHandler &ini) {
 
 	readBool(ini, TEXT("Force Video Mode"), emulation_s.modelForced);
 	readBool(ini, TEXT("DigiBoost"), emulation_s.digiboost);
+
 	{
 		SID_STRING str = readString(ini, TEXT("CIA Model"));
 		if (!str.empty()) {

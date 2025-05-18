@@ -1,5 +1,5 @@
 /*
- * This file is part of C64play, a SID player engine.
+ * This file is part of C64play, a console player for SID tunes.
  *
  * Copyright 2025 Enki Costa
  * Copyright 2014-2015 Leandro Nini

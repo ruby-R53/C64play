@@ -187,7 +187,7 @@ private:
         Audio_Null  null;     // Used for everything
     } m_driver;
 
-    struct m_timer_t { // secs
+    struct m_timer_t { // milliseconds
         uint_least32_t start;
 		uint_least32_t current;
         uint_least32_t stop;
