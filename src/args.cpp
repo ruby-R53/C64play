@@ -255,10 +255,12 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
 #ifdef FEAT_NEW_PLAY_API
 			else if (argv[i][1] == 'F') {
-				if (argv[i][3] == '\0')
+				if (argv[i][2] == '\0')
 					err = true;
 
-				m_fadeoutLen = ((uint_least32_t) atoi(&argv[i][2]) * 1000);
+				m_fadeoutLen = (uint_least32_t) atoi(&argv[i][2]) * 1000;
+				// convert to milliseconds too so that it matches
+				// plaercfg().fadeoutLen's output
 			}
 #endif
 
@@ -450,7 +452,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 	// and set default lengths in case it's not found in there.
 	{	// Time of 0 provided for wav generation?
 		if (m_driver.file && m_timer.valid && !m_timer.length) {
-			displayError("ERROR: can't use -t0 if recording!");
+			displayError("ERROR: can't use -l0 if recording!");
 			return -1;
 		}
 		if (!m_timer.valid) {
@@ -540,7 +542,7 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		<< "                  2.0)" << endl
 		
 #ifdef FEAT_FILTER_RANGE
-		<< "--range=<double>  controls the filter range in the ReSIDfp" << endl
+		<< "--range=<double>  controls the filter range in the reSIDfp" << endl
 #endif
 		<< "                  emulation (same default, ranges from 0.0 to" << endl
 		<< "                  1.0)" << endl

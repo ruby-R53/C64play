@@ -28,7 +28,6 @@ src/mixer.cpp \
 src/mixer.h \
 src/player.cpp \
 src/player.h \
-src/settings.h \
 src/sidcxx.h \
 src/sidlib_features.h \
 src/utils.cpp \

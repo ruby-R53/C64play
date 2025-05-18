@@ -15,6 +15,18 @@ May 17/18, 2025:
     capitalization rules.
   - Changed "version" to "model".
 
+- `settings.h` is now gone!
+  - I overlooked its \<C++17 part and since the program
+    requires \>C++17 to work I totally nuked it.
+    As it turns out, the file got so damn small that I just
+    decided to merge its contents to the only file that
+    includes it, `player.h`. The end.
+
+- Fix broken `-F` parameter
+  - It'd only work if you specified 2 digits. That's because
+    my code was checking for the 3rd character of that argument
+    and not the 2nd one. Stupidity.
+
 - This is currently what we'll get in version 1.1.0!
 
 May 1st, 2025:

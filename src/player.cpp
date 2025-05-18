@@ -29,6 +29,7 @@
 #include <iomanip>
 #include <fstream>
 #include <sstream>
+#include <memory>
 #include <new>
 #include <unordered_map>
 
@@ -87,21 +88,19 @@ uint16_t freqTableNtsc[] = {
 	0x8620, 0x8e20, 0x96a0, 0x9f80, 0xa900, 0xb300, 0xbdc0, 0xc900, 0xd520, 0xe1a0, 0xef20, 0xfd40, // 8
 };
 
-uint8_t* loadRom(const SID_STRING &romPath, const int size) {
+std::unique_ptr<uint8_t[]> loadRom(const SID_STRING &romPath, const int size) {
 	SID_IFSTREAM is(romPath.c_str(), std::ios::binary);
 
 	if (is.is_open()) {
 		try {
-			uint8_t *buffer = new uint8_t[size];
+			std::unique_ptr<uint8_t[]> buffer(new uint8_t[size]);
 
-			is.read((char*)buffer, size);
+			is.read((char*)buffer.get(), size);
 			if (!is.fail()) {
 				is.close();
 
 				return buffer;
 			}
-
-			delete [] buffer;
 		}
 		catch (std::bad_alloc const &ba) {}
 	}
@@ -110,10 +109,11 @@ uint8_t* loadRom(const SID_STRING &romPath, const int size) {
 }
 
 
-uint8_t* loadRom(const SID_STRING &romPath, const int size, const TCHAR defaultRom[]) {
+std::unique_ptr<uint8_t[]> loadRom(const SID_STRING &romPath, const int size, const TCHAR defaultRom[]) {
 	// Try to load given ROM
 	if (!romPath.empty()) {
-		uint8_t* buffer = loadRom(romPath, size);
+		std::unique_ptr<uint8_t[]> buffer = loadRom(romPath, size);
+
 		if (buffer)
 			return buffer;
 	}
@@ -221,14 +221,10 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 	createOutput(OUT_NULL, nullptr);
 	createSidEmu(EMU_NONE, nullptr);
 
-	uint8_t *kernalRom	= loadRom(m_iniCfg.playercfg().kernalRom, 8192, "kernal");
-	uint8_t *basicRom	= loadRom(m_iniCfg.playercfg().basicRom, 8192, "basic");
-	uint8_t *chargenRom = loadRom(m_iniCfg.playercfg().chargenRom, 4096, "chargen");
-	m_engine.setRoms(kernalRom, basicRom, chargenRom);
-
-	delete [] kernalRom;
-	delete [] basicRom;
-	delete [] chargenRom;
+	std::unique_ptr<uint8_t[]> kernalRom  = loadRom(m_iniCfg.playercfg().kernalRom, 8192, "kernal");
+	std::unique_ptr<uint8_t[]> basicRom	  = loadRom(m_iniCfg.playercfg().basicRom, 8192, "basic");
+	std::unique_ptr<uint8_t[]> chargenRom = loadRom(m_iniCfg.playercfg().chargenRom, 4096, "chargen");
+	m_engine.setRoms(kernalRom.get(), basicRom.get(), chargenRom.get());
 }
 
 std::string ConsolePlayer::getFileName(const SidTuneInfo *tuneInfo, const char* ext) {
@@ -652,16 +648,13 @@ bool ConsolePlayer::play() {
 
 #ifdef FEAT_NEW_PLAY_API
         // fadeout
-		// Convert it to milliseconds first so we can work with it
-        if (m_timer.stop > m_fadeoutLen) LIKELY {
-            const uint_least32_t timeleft = m_timer.stop - m_timer.current;
+		const uint_least32_t timeleft = m_timer.stop - m_timer.current;
 
-            if (timeleft <= m_fadeoutLen) UNLIKELY {
-                double a = (double) timeleft / m_fadeoutLen;
-                double v = a / (1. + (1.-a) * 0.25);
-                m_mixer.setVolume(Mixer::VOLUME_MAX * v);
-            }
-        }
+		if (timeleft <= m_fadeoutLen) LIKELY {
+			double a = (double) timeleft / m_fadeoutLen;
+			double v = a / (1. + (1.-a) * 0.25);
+			m_mixer.setVolume(Mixer::VOLUME_MAX * v);
+		}
 #endif
 
 		const  uint_least32_t length = getBufSize();

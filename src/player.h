@@ -29,6 +29,7 @@
 
 #include <string>
 #include <bitset>
+#include <optional>
 
 #include <sidplayfp/SidTune.h>
 #include <sidplayfp/sidplayfp.h>
@@ -40,13 +41,15 @@
 #include "audio/AudioConfig.h"
 #include "audio/null/null.h"
 #include "IniConfig.h"
-#include "settings.h"
 
 #ifdef FEAT_NEW_PLAY_API
 # include <mixer.h>
 #endif
 
 #include "sidlib_features.h"
+
+template <typename T>
+using Setting = std::optional<T>;
 
 typedef enum {
 	black,
