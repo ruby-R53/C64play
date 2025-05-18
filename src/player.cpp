@@ -24,16 +24,22 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <new>
+#include <unordered_map>
+
+#include <unistd.h>
+
+#include <sidplayfp/sidbuilder.h>
+#include <sidplayfp/SidInfo.h>
+#include <sidplayfp/SidTuneInfo.h>
 
 using std::cerr;
 using std::endl;
-
-#include <unistd.h>
 
 #include "utils.h"
 #include "keyboard.h"
@@ -42,12 +48,6 @@ using std::endl;
 #include "ini/types.h"
 
 #include "sidcxx.h"
-
-#include <sidplayfp/sidbuilder.h>
-#include <sidplayfp/SidInfo.h>
-#include <sidplayfp/SidTuneInfo.h>
-
-#include <unordered_map>
 
 using filter_map_t      = std::unordered_map<std::string, double>;
 using filter_map_iter_t = std::unordered_map<std::string, double>::const_iterator;
@@ -560,6 +560,7 @@ bool ConsolePlayer::open(void) {
 #ifdef FEAT_NEW_PLAY_API
 	m_mixer.clear();
 	m_mixer.setFastForward(m_speed.current);
+	m_mixer.setVolume(Mixer::VOLUME_MAX);
 #else
 	m_engine.fastForward(100 * m_speed.current);
 #endif
@@ -590,7 +591,7 @@ bool ConsolePlayer::open(void) {
 	}
 
 	// Set up the play timer
-	m_timer.stop = m_timer.length;
+	m_timer.stop = m_timer.length + (m_fadeoutLen * 1000);
 
 	if (m_timer.valid) { // Length relative to start
 		if (m_timer.stop > 0)
@@ -649,8 +650,23 @@ bool ConsolePlayer::play() {
 	if (m_state == playerRunning) LIKELY {
 		updateDisplay();
 
-		const uint_least32_t length = getBufSize();
-		short *buffer = m_driver.selected->buffer(); // Fill buffer
+#ifdef FEAT_NEW_PLAY_API
+        // fadeout
+		// Convert it to milliseconds first so we can work with it
+        const uint_least32_t fadeoutTime = m_fadeoutLen * 1000;
+        if (fadeoutTime && (m_timer.stop > fadeoutTime)) UNLIKELY {
+            const uint_least32_t timeleft = m_timer.stop - m_timer.current;
+
+            if (timeleft <= fadeoutTime) UNLIKELY {
+                double a = (double) timeleft / fadeoutTime;
+                double v = a / (1. + (1.-a) * 0.25);
+                m_mixer.setVolume(Mixer::VOLUME_MAX * v);
+            }
+        }
+#endif
+
+		const  uint_least32_t length = getBufSize();
+		short* buffer = m_driver.selected->buffer(); // Fill buffer
 
 #ifdef FEAT_NEW_PLAY_API
 		m_mixer.begin(buffer, length);
@@ -666,6 +682,8 @@ bool ConsolePlayer::play() {
 				m_state = playerError;
 				return false;
 			}
+			// in case we have `-b` set, don't play
+			// until we reach the specified timestamp
 			else if (!buffer) UNLIKELY
 				break;
 			else if (samples > 0)

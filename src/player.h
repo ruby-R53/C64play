@@ -24,8 +24,11 @@
 #define PLAYER_H
 
 #ifdef HAVE_CONFIG_H
-#  include "config.h"
+# include "config.h"
 #endif
+
+#include <string>
+#include <bitset>
 
 #include <sidplayfp/SidTune.h>
 #include <sidplayfp/sidplayfp.h>
@@ -39,14 +42,11 @@
 #include "IniConfig.h"
 #include "settings.h"
 
-#include "sidlib_features.h"
-
 #ifdef FEAT_NEW_PLAY_API
 # include <mixer.h>
 #endif
 
-#include <string>
-#include <bitset>
+#include "sidlib_features.h"
 
 typedef enum {
 	black,
@@ -117,9 +117,10 @@ private:
     sidplayfp         m_engine;
     SidConfig         m_engCfg;
     SidTune           m_tune;
-	player_state_t    m_state;
-    const char*       m_outfile;
     std::string       m_filename;
+    const char*       m_outfile;
+
+	player_state_t    m_state;
 
     IniConfig       m_iniCfg;
     SidDatabase     m_database;
@@ -191,6 +192,10 @@ private:
         bool           valid;
         bool           starting;
     } m_timer;
+
+#ifdef FEAT_NEW_PLAY_API
+	uint_least32_t  m_fadeoutLen;
+#endif
 
     struct m_track_t {
         uint16_t first;

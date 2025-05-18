@@ -150,6 +150,10 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 	m_driver.file	= false;
 	m_driver.info	= false;
 
+#ifdef FEAT_NEW_PLAY_API
+	m_fadeoutLen = m_iniCfg.playercfg().fadeoutLen / 1000;
+#endif
+
 	m_mute_channel.reset();
 
 	int  infile = 0;
@@ -248,6 +252,15 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
 				m_timer.valid = true;
 			}
+
+#ifdef FEAT_NEW_PLAY_API
+			else if (argv[i][1] == 'F') {
+				if (argv[i][3] == '\0')
+					err = true;
+
+				m_fadeoutLen = (uint_least32_t) atoi(&argv[i][2]);
+			}
+#endif
 
 			// Resampling options
 			else if (argv[i][1] == 'R') {
@@ -508,6 +521,8 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		<< "-m                use mono output" << endl
 		<< "-l<num>           set play/record length in [min:]sec[.mil]" << endl
 		<< "                  format, use 0 for infinite play time" << endl
+		<< "-F<secs>          set fade out time in <secs>, use 0 to disable" << endl
+		<< "                  in case you have a non-looping tune (default)" << endl
 		<< "-<v|q>[n]         [v]erbose or [q]uiet output. [n] is" << endl
 		<< "                  an optional level that defaults to 1" << endl
 		<< "-v[p|n][f]        set VIC's clock to [P]AL or [N]TSC, default" << endl

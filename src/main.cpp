@@ -56,7 +56,7 @@ main_restart:
 	if ((signal(SIGINT, &sighandler) == SIG_ERR)
 		|| (signal(SIGABRT, &sighandler) == SIG_ERR)
 		|| (signal(SIGTERM, &sighandler) == SIG_ERR)) {
-		player.displayError("ERROR: could not install signal handler!");
+		player.displayError("ERROR: could not install the signal handler!");
 		goto main_error;
 	}
 
@@ -75,7 +75,7 @@ main_restart:
 	if ((signal(SIGINT,  SIG_DFL) == SIG_ERR)
 		|| (signal(SIGABRT, SIG_DFL) == SIG_ERR)
 		|| (signal(SIGTERM, SIG_DFL) == SIG_ERR)) {
-		player.displayError("ERROR: could not restore signal handlers!");
+		player.displayError("ERROR: could not restore the signal handlers!");
 		goto main_error;
 	}
 

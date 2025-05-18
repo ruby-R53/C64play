@@ -118,6 +118,11 @@ And use I<<num>> to make playback start at a specific subtune from
 Set play time, in [min:]sec[.mil] format. Use 0 for infinite play time,
 which is the default if the Songlength DB is absent.
 
+=item B<-F>I<< <secs> >>
+
+Set fade out time, in seconds. Use 0 to disable it, in case you want to
+play a non-looping tune (this is the default).
+
 =item B<-v>I<< <n|p>[f] >>
 
 Set or [f]orce a video signal for the VIC chip.
@@ -254,8 +259,8 @@ Go to first/last subtune.
 
 =item B<HVSC_BASE>
 
-The path to the HVSC base directory. If specified, Songlengths.md5 will be
-loaded from there and you can use relative paths to SID tunes as well.
+The path to the HVSC base directory. If specified, Songlengths.md5 will
+be loaded from there and you can use relative paths to SID tunes as well.
 
 =back
 
@@ -285,8 +290,8 @@ C64's character generator ROM file.
 
 =head1 BUGS
 
-You can report bugs to L<https://github.com/ruby-R53/C64play/issues/>, that
-would be appreciated!
+You can report bugs to L<https://github.com/ruby-R53/C64play/issues/>,
+that would be appreciated!
 
 
 =head1 SEE ALSO
@@ -296,7 +301,8 @@ L<c64play.ini(5)> - manual page for the configuration file.
 
 =head1 NOTES
 
-Check L<c64play.ini> for more details like search paths and configuration stuff.
+Check L<c64play.ini> for more details like search paths and configuration
+stuff.
 
 
 =head1 AUTHORS
@@ -325,7 +331,7 @@ Wrote the reSIDfp emulation engine as a fork of reSID 0.16.
 
 =item The VICE team
 
-Large part of the emulation is based on the VICE's code.
+Large part of the emulation is based on VICE's code!
 
 =item André Fachat
 
@@ -333,7 +339,8 @@ Wrote the original reloc65 utility.
 
 =item Michael Schwendt
 
-Wrote the original SidTune library and MD5 class (based on work by L. Peter Deutsch).
+Wrote the original SidTune library and MD5 class (based on work by L.
+Peter Deutsch).
 
 =item Mikko Kilponen
 

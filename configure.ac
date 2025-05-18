@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([C64play], [1.0.1], [], [], [https://github.com/ruby-R53/C64play])
+AC_INIT([C64play], [1.1.0a], [], [], [https://github.com/ruby-R53/C64play])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
@@ -27,7 +27,6 @@ AM_ICONV
 AM_CONDITIONAL([USE_ICONV], [test "x$am_cv_func_iconv" = "xyes"])
 
 dnl Audio subsystem
-
 AUDIO_LDFLAGS=""
 
 PKG_CHECK_MODULES(PULSE,

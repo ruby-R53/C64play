@@ -8,7 +8,8 @@ B<c64play.ini> - configuration file for L<C64play(1)>.
 
 =head1 DESCRIPTION
 
-C64play has a configuration file formed by sections. They're names enclosed by brackets, making it easier to separate each type of setting.
+C64play has a configuration file formed by sections. They're names
+enclosed by brackets, making it easier to separate each type of setting.
 Then, every setting has a I<< <parameter> = <value> >> structure.
 
 B<c64play.ini> has the following sections:
@@ -21,9 +22,11 @@ B<[Audio]> - Audio output settings
 
 B<[Emulation]> - Emulation parameters
 
-If a setting is specified more than once, the last mention of it will be used by the program.
+If a setting is specified more than once, the last mention of it will be
+used by the program.
 
-And, if any of those settings are outside of their section, it will be ignored.
+And, if any of those settings are outside of their section, it will be
+ignored.
 
 =head2 [Player]
 
@@ -33,24 +36,35 @@ And, if any of those settings are outside of their section, it will be ignored.
 
 Full path for the Songlength database.
 
-By default, the program will look for F<DOCUMENTS/Songlengths.md5> under the HVSC
-path, if $HVSC_BASE is set.
+By default, the program will look for F<DOCUMENTS/Songlengths.md5> under
+the HVSC path, if $HVSC_BASE is set.
 
 If this variable is not set, C64play will try
 F<$PREFIX/share/C64play/Songlengths.md5> instead.
 
-=item B<Default play time>=I<MM:SS.mmm>
+=item B<Default Play Time>=I<MM:SS.mmm>
 
-Default play time if Songlengths.md5 isn't found. Defaults to 0, which means infinite play time.
+Default play time if Songlengths.md5 isn't found. Defaults to 0, which
+means infinite play time.
 
-=item B<Default record time>=I<MM:SS.mmm>
+=item B<Default Record Time>=I<MM:SS.mmm>
 
-Default recording time when recording to WAV if Songlengths.md5 isn't found. Defaults to 4 minutes.
+Default recording time when recording to WAV if Songlengths.md5 isn't
+found. Defaults to 4 minutes.
+
+=item B<Fade Out Time>=I<seconds>
+
+Default fade out time, for either playback or recording. Use 0 to disable
+it, in case you mostly play non-looping tunes (this is the default).
 
 =item B<Kernal ROM>=I<< <path> >>
 
-Full path for the Kernal ROM file. Out of all the 3 ROM files, this is the most important one, and thus should be provided as some tunes may not play without it.
-By default, the program will look for a file named F<kernal> under the following places:
+Full path for the Kernal ROM file. Out of all the 3 ROM files, this is
+the most important one, and thus should be provided as some tunes may not
+play without it.
+
+By default, the program will look for a file named F<kernal> under the
+following places:
 
 =over
 
@@ -70,15 +84,19 @@ if not found in any of the directories above.
 
 =item B<BASIC ROM>=I<< <path> >>
 
-Full path for the BASIC ROM file. This is mostly useful for playing tunes made in BASIC.
+Full path for the BASIC ROM file. This is mostly useful for playing tunes
+made in BASIC.
 
-By default the program will look for a file named F<basic> under the same locations as above.
+By default the program will look for a file named F<basic> under the same
+locations as above.
 
 =item B<Chargen ROM>=I<< <path> >>
 
-Full path for the Character generator ROM file. Almost useless for actually playing tunes, but included for completeness.
+Full path for the Character generator ROM file. Almost useless for 
+actually playing tunes, but included for completeness.
 
-By default the program will look for a file named F<chargen> under the same locations as above too.
+By default the program will look for a file named F<chargen> under the
+same locations as above too.
 
 =item B<Verboseness>=I<< <num> >>
 
@@ -90,11 +108,14 @@ As for B<Verboseness>,
 
 use 1 for a detailed output (addresses and SID details);
 
-2 for a more detailed one (register dumps, displaying the notes being played and waveforms + control registers being used);
+2 for a more detailed one (register dumps, displaying the notes being
+played and waveforms + control registers being used);
 
-and 3 for an even more detailed output (dump even more registers, displaying mostly filter-related info).
+and 3 for an even more detailed output (dump even more registers,
+displaying mostly filter-related info).
 
-It works the same way on B<Quietness>, except that it reduces the amount of output instead.
+It works the same way on B<Quietness>, except that it reduces the amount
+of output instead.
 
 I might try merging those into one single setting in a future release.
 
@@ -107,38 +128,38 @@ I might try merging those into one single setting in a future release.
 
 =item B<ANSI>=I<true|false>
 
-Use ANSI escape sequences to provide a fancier output (it adds colors and hides the
-console cursor).
+Use ANSI escape sequences to provide a fancier output (it adds colors and
+hides the console cursor).
 
-=item B<Top left char>=I<< <char> >>
+=item B<Top Left Char>=I<< <char> >>
 
 Character for the top left corner.
 
-=item B<Top right char>=I<< <char> >>
+=item B<Top Right Char>=I<< <char> >>
 
 Character for the top right corner.
 
-=item B<Bottom left char>=I<< <char> >>
+=item B<Bottom Left Char>=I<< <char> >>
 
 Character for the bottom left corner.
 
-=item B<Bottom right char>=I<< <char> >>
+=item B<Bottom Right Char>=I<< <char> >>
 
 Character for the bottom right corner.
 
-=item B<Vertical char>=I<< <char> >>
+=item B<Vertical Char>=I<< <char> >>
 
 Character for vertical lines.
 
-=item B<Horizontal char>=I<< <char> >>
+=item B<Horizontal Char>=I<< <char> >>
 
 Character for horizontal lines.
 
-=item B<Junction left char>=I<< <char> >>
+=item B<Junction Left Char>=I<< <char> >>
 
 Character for junctions on the left.
 
-=item B<Junction right char>=I<< <char> >>
+=item B<Junction Right Char>=I<< <char> >>
 
 Character for junctions on the right.
 
@@ -149,7 +170,7 @@ Character for junctions on the right.
 
 =over
 
-=item B<Sample rate>=I<< <number> >>
+=item B<Sample Rate>=I<< <number> >>
 
 Playback sample rate in Hz. Defaults to 48000.
 
@@ -164,7 +185,7 @@ Use 2 for stereo playback.
 If not specified, C64play will use mono playback on single-SID tunes
 and stereo playback on 2- or 3SID ones.
 
-=item B<Bit depth>=I<< <16|32> >>
+=item B<Bit Depth>=I<< <16|32> >>
 
 Number of bits per sample, used for WAV rendering only.
 
@@ -178,7 +199,7 @@ Number of bits per sample, used for WAV rendering only.
 
 Set the SID emulation engine. Defaults to RESIDFP.
 
-=item B<Video mode>=I<< <PAL|NTSC|OLD_NTSC|DREAN> >>
+=item B<Video Mode>=I<< <PAL|NTSC|OLD_NTSC|DREAN> >>
 
 Default video signal to use if not specified by tune:
 
@@ -192,62 +213,64 @@ and DREAN for the Argentinian PAL-N model.
 
 Defaults to PAL.
 
-=item B<Force video mode>=I<true|false>
+=item B<Force Video Mode>=I<true|false>
 
 Use the same video mode even if the tune specifies one.
 
-=item B<CIA version>=I<< <MOS6526|MOS8521> >>
+=item B<CIA Model>=I<< <MOS6526|MOS8521> >>
 
 Select which CIA chip to emulate, the old MOS 6526 or the newer MOS 8521.
 
-=item B<SID version>=I<< <MOS6581|MOS8580> >>
+=item B<SID Model>=I<< <MOS6581|MOS8580> >>
 
 Default SID chip model, the old MOS 6581 or the newer MOS 8580.
 
-=item B<Force SID version>=I<true|false>
+=item B<Force SID Model>=I<true|false>
 
 Use the same version of the SID chip even if the tune specifies one.
 
 =item B<DigiBoost>=I<true|false>
 
-Enable DigiBoost, a hack for the 8580 SID chip to make digi samples originally meant for the 6581 audible.
+Enable DigiBoost, a hack for the 8580 SID chip to make digi samples
+originally meant for the 6581 audible.
 
-=item B<Filter emulation>=I<true|false>
+=item B<Filter Emulation>=I<true|false>
 
 Enable/disable the emulation of the SID filter.
 
-=item B<Filter bias>=I<< <number> >>
+=item B<Filter Bias>=I<< <number> >>
 
 Controls the SID's bias under the reSID emulation.
 Ranges from 0.0 ("dark") to 1.0 ("light"), defaults to 0.5.
 
-=item B<6581 filter curve>=I<< <number> >>
+=item B<6581 Filter Curve>=I<< <number> >>
 
 Controls the SID's filter curve on reSIDfp's emulation.
 Ranges from -2.0 ("bright") to 2.0 ("dark"), defaults to 0.5.
 
-=item B<6581 filter range>=I<< <number> >>
+=item B<6581 Filter Range>=I<< <number> >>
 
 Controls the filter's uCox parameter for the 6581 chip on reSIDfp's
 emulation.
 Ranges from 0.0 ("dark") to 1.0 ("bright"), defaults to 0.5.
 
-=item B<8580 filter curve>=I<< <number> >>
+=item B<8580 Filter Curve>=I<< <number> >>
 
 Controls the filter curve for the 8580 model on reSIDfp's
 emulation. 
 Ranges from 0.0 ("light") to 1.0 ("dark"), defaults to 0.5.
 
-=item B<Combined wave strength>=I<< <AVERAGE|WEAK|STRONG> >>
+=item B<Combined Wave Strength>=I<< <AVERAGE|WEAK|STRONG> >>
 
 Controls the combined waveforms strength on reSIDfp's
 emulation. Defaults to AVERAGE.
 
-=item B<Power-on delay>=I<< <number> >>
+=item B<Power-On Delay>=I<< <number> >>
 
 Simulates the C64's power-on delay in CPU cycles.
 
-If <number> is higher than 8191, that delay will be randomly generated, and that's the default.
+If <number> is higher than 8191, that delay will be randomly generated,
+and that's the default.
 
 =item B<Resampling>=I<< <INTERPOLATE|RESAMPLE> >>
 
@@ -257,7 +280,7 @@ I<INTERPOLATE> for a speedier output;
 
 I<RESAMPLE> for a more accurate one at the cost of hardware resources.
 
-=item B<reSID's fast sampling>=I<< <true|false> >>
+=item B<reSID's Fast Sampling>=I<< <true|false> >>
 
 Enable reSID's fast resampling.
 
@@ -296,7 +319,7 @@ Wrote the reSIDfp emulation engine as a fork of reSID 0.16.
 
 =item The VICE team
 
-Large part of the emulation is based on the VICE's code.
+Large part of the emulation is based on VICE's code!
 
 =item André Fachat
 
@@ -304,7 +327,8 @@ Wrote the original reloc65 utility.
 
 =item Michael Schwendt
 
-Wrote the original SidTune library and MD5 class (based on work by L. Peter Deutsch).
+Wrote the original SidTune library and MD5 class (based on work by L.
+Peter Deutsch).
 
 =item Mikko Kilponen
 

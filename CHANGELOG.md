@@ -1,3 +1,22 @@
+May 17/18, 2025:
+- Trying to implement fade out for tunes!
+  - You can leave a default on the configuration file or also
+    set that fade out time in the command line. It's set in
+    seconds, and a value of 0 disables it, in case you wanna
+    play a non-looping tune.
+    - That value of 0 is actually the default, too.
+
+- Fix broken `-b`
+  - The thing would throw a segfault whenever you specified
+    the start time. It was the mixer's fault.
+
+- Changes to the configuration file
+  - The words are now capitalized following English
+    capitalization rules.
+  - Changed "version" to "model".
+
+- This is currently what we'll get in version 1.1.0!
+
 May 1st, 2025:
 - The filter curve value for the 6581 chip still ranges from
   -2.0 to 2.0. However, for the 8580 it now ranges from 0.0
@@ -42,7 +61,7 @@ April 24, 2025:
     `updateDisplay()` function in `updateTimer()` and the
 	already existing `refreshRegDump()`. And that fixed the
 	`-l0` and missing SLDB entry problems. However···
-  - The damn display throws unprocessed data onto the screeen.
+  - The damn display throws unprocessed data onto the screen.
     Could it be that my refresh rate was set way too fast?
 	Well, I did notice that if a tune has a very high speed
 	(like the ones that use Digi samples) the bug gets worse.

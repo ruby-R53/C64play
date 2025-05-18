@@ -14,7 +14,7 @@ bin_PROGRAMS = \
 src/c64play
 
 #=========================================================
-# C64play
+# C64play source files to be included in our tarball
 
 src_c64play_SOURCES = \
 src/IniConfig.cpp \

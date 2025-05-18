@@ -73,6 +73,9 @@ void IniConfig::clear() {
 	player_s.database.clear ();
 	player_s.playLength   = 0;				 // infinite play time
 	player_s.recordLength = (4 * 60) * 1000; // 4 minutes recording time
+#ifdef FEAT_NEW_PLAY_API
+	player_s.fadeoutLen   = 0; // no fade out by default
+#endif
 	player_s.kernalRom.clear();
 	player_s.basicRom.clear ();
 	player_s.chargenRom.clear();
@@ -282,10 +285,16 @@ void IniConfig::readPlayer(iniHandler &ini) {
 	}
 
 	int time;
-	if (readTime(ini, TEXT("Default play time"), time))
+	if (readTime(ini, TEXT("Default Play Time"), time))
 		player_s.playLength = time;
-	if (readTime(ini, TEXT("Default record time"), time))
+
+	if (readTime(ini, TEXT("Default Record Time"), time))
 		player_s.recordLength = time;
+
+#ifdef FEAT_NEW_PLAY_API
+	if (readTime(ini, TEXT("Fade Out Length"), time))
+		player_s.fadeoutLen = time;
+#endif
 
 	player_s.kernalRom	= readString(ini, TEXT("Kernal ROM"));
 	player_s.basicRom	= readString(ini, TEXT("BASIC ROM"));
@@ -301,14 +310,14 @@ void IniConfig::readConsole(iniHandler &ini) {
 		ini.addSection(TEXT("Console"));
 
 	readBool(ini, TEXT("ANSI"),                console_s.ansi);
-	readChar(ini, TEXT("Top left char"),       console_s.topLeft);
-	readChar(ini, TEXT("Top right char"),      console_s.topRight);
-	readChar(ini, TEXT("Bottom left char"),    console_s.bottomLeft);
-	readChar(ini, TEXT("Bottom right char"),   console_s.bottomRight);
-	readChar(ini, TEXT("Vertical char"),       console_s.vertical);
-	readChar(ini, TEXT("Horizontal char"),     console_s.horizontal);
-	readChar(ini, TEXT("Junction left char"),  console_s.junctionLeft);
-	readChar(ini, TEXT("Junction right char"), console_s.junctionRight);
+	readChar(ini, TEXT("Top Left Char"),       console_s.topLeft);
+	readChar(ini, TEXT("Top Right Char"),      console_s.topRight);
+	readChar(ini, TEXT("Bottom Left Char"),    console_s.bottomLeft);
+	readChar(ini, TEXT("Bottom Right Char"),   console_s.bottomRight);
+	readChar(ini, TEXT("Vertical Char"),       console_s.vertical);
+	readChar(ini, TEXT("Horizontal Char"),     console_s.horizontal);
+	readChar(ini, TEXT("Junction Left Char"),  console_s.junctionLeft);
+	readChar(ini, TEXT("Junction Right Char"), console_s.junctionRight);
 }
 
 
@@ -316,9 +325,9 @@ void IniConfig::readAudio(iniHandler &ini) {
 	if (!ini.setSection(TEXT("Audio")))
 		ini.addSection(TEXT("Audio"));
 
-	readInt(ini, TEXT("Sample rate"), audio_s.sampleRate);
+	readInt(ini, TEXT("Sample Rate"), audio_s.sampleRate);
     readInt(ini, TEXT("Channels"),    audio_s.channels);
-	readInt(ini, TEXT("Bit depth"),   audio_s.bitDepth);
+	readInt(ini, TEXT("Bit Depth"),   audio_s.bitDepth);
 }
 
 
@@ -329,7 +338,7 @@ void IniConfig::readEmulation(iniHandler &ini) {
 	emulation_s.engine = readString(ini, TEXT("Engine"));
 
 	{
-		SID_STRING str = readString(ini, TEXT("Video mode"));
+		SID_STRING str = readString(ini, TEXT("Video Mode"));
 		if (!str.empty()) {
 			if (str.compare(TEXT("PAL")) == 0)
 				emulation_s.modelDefault = SidConfig::PAL;
@@ -342,10 +351,10 @@ void IniConfig::readEmulation(iniHandler &ini) {
 		}
 	}
 
-	readBool(ini, TEXT("Force video mode"), emulation_s.modelForced);
+	readBool(ini, TEXT("Force Video Mode"), emulation_s.modelForced);
 	readBool(ini, TEXT("DigiBoost"), emulation_s.digiboost);
 	{
-		SID_STRING str = readString(ini, TEXT("CIA version"));
+		SID_STRING str = readString(ini, TEXT("CIA Model"));
 		if (!str.empty()) {
 			if (str.compare(TEXT("MOS6526")) == 0)
 				emulation_s.ciaModel = SidConfig::MOS6526;
@@ -355,7 +364,7 @@ void IniConfig::readEmulation(iniHandler &ini) {
 	}
 
 	{
-		SID_STRING str = readString(ini, TEXT("SID version"));
+		SID_STRING str = readString(ini, TEXT("SID Model"));
 		if (!str.empty()) {
 			if (str.compare(TEXT("MOS6581")) == 0)
 				emulation_s.sidModel = SidConfig::MOS6581;
@@ -364,20 +373,20 @@ void IniConfig::readEmulation(iniHandler &ini) {
 		}
 	}
 
-	readBool(ini, TEXT("Force SID version"), emulation_s.forceModel);
+	readBool(ini, TEXT("Force SID Model"), emulation_s.forceModel);
 
-	readBool(ini, TEXT("Filter emulation"), emulation_s.filter);
+	readBool(ini, TEXT("Filter Emulation"), emulation_s.filter);
 
-	readDouble(ini, TEXT("Filter bias"), emulation_s.bias);
-	readDouble(ini, TEXT("6581 filter curve"), emulation_s.filterCurve6581);
+	readDouble(ini, TEXT("Filter Bias"), emulation_s.bias);
+	readDouble(ini, TEXT("6581 Filter Curve"), emulation_s.filterCurve6581);
 #ifdef FEAT_FILTER_RANGE
-	readDouble(ini, TEXT("6581 filter range"), emulation_s.filterRange6581);
+	readDouble(ini, TEXT("6581 Filter Range"), emulation_s.filterRange6581);
 #endif
-	readDouble(ini, TEXT("8580 filter curve"), emulation_s.filterCurve8580);
+	readDouble(ini, TEXT("8580 Filter Curve"), emulation_s.filterCurve8580);
 
 #ifdef FEAT_CW_STRENGTH
 	{
-		SID_STRING str = readString(ini, TEXT("Combined wave strength"));
+		SID_STRING str = readString(ini, TEXT("Combined Wave Strength"));
 		if (!str.empty()) {
 			if (str.compare(TEXT("AVERAGE")) == 0)
 				emulation_s.combinedWaveformsStrength = SidConfig::AVERAGE;
@@ -389,7 +398,7 @@ void IniConfig::readEmulation(iniHandler &ini) {
 	}
 #endif
 
-	readInt(ini, TEXT("Power-on delay"), emulation_s.powerOnDelay);
+	readInt(ini, TEXT("Power-On Delay"), emulation_s.powerOnDelay);
 
 	{
 		SID_STRING str = readString(ini, TEXT("Resampling"));
@@ -401,7 +410,7 @@ void IniConfig::readEmulation(iniHandler &ini) {
 		}
 	}
 
-	readBool(ini, TEXT("reSID's fast sampling"), emulation_s.fastSampling);
+	readBool(ini, TEXT("reSID's Fast Sampling"), emulation_s.fastSampling);
 }
 
 class iniError {
