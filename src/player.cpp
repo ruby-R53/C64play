@@ -583,7 +583,10 @@ bool ConsolePlayer::open(void) {
 	}
 
 	// Set up the play timer, account for fade out time
-	m_timer.stop = m_timer.length + m_fadeoutLen;
+	m_timer.stop = m_timer.length;
+#ifdef FEAT_NEW_PLAY_API
+	m_timer.stop += m_fadeoutLen;
+#endif
 
 	if (m_timer.valid) { // Length relative to start
 		if (m_timer.stop > 0)
@@ -644,12 +647,14 @@ bool ConsolePlayer::play() {
 
 #ifdef FEAT_NEW_PLAY_API
         // fade the tune out!
-		const uint_least32_t timeleft = m_timer.stop - m_timer.current;
+		if (m_fadeoutLen && (m_timer.stop > m_fadeoutLen)) UNLIKELY {
+			const uint_least32_t timeleft = m_timer.stop - m_timer.current;
 
-		if (timeleft <= m_fadeoutLen) LIKELY {
-			double a = (double) timeleft / m_fadeoutLen;
-			double v = a / (1. + (1.-a) * 0.25);
-			m_mixer.setVolume(Mixer::VOLUME_MAX * v);
+			if (timeleft <= m_fadeoutLen) {
+				double a = (double) timeleft / m_fadeoutLen;
+				double v = a / (1. + (1.-a) * 0.25);
+				m_mixer.setVolume(Mixer::VOLUME_MAX * v);
+			}
 		}
 #endif
 

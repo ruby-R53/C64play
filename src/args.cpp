@@ -75,7 +75,7 @@ bool parseTime(const char *str, uint_least32_t &time) {
 	uint_least32_t _time;
 	uint_least32_t milliseconds = 0;
 
-	char *sep = (char *) strstr (str, ":");
+	char *sep = (char*) strstr(str, ":");
 	if (!sep) { // User gave seconds
 		_time = atoi(str);
 	} else { // Read in [mm:]ss[.mmm] format
@@ -249,6 +249,8 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 			else if (argv[i][1] == 'l') {
 				if (!parseTime(&argv[i][2], m_timer.length))
 					err = true;
+				else if (argv[i][2] == '0')
+					m_fadeoutLen = 0;
 
 				m_timer.valid = true;
 			}
