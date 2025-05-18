@@ -249,8 +249,10 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 			else if (argv[i][1] == 'l') {
 				if (!parseTime(&argv[i][2], m_timer.length))
 					err = true;
+#ifdef FEAT_NEW_PLAY_API
 				else if (argv[i][2] == '0')
 					m_fadeoutLen = 0;
+#endif
 
 				m_timer.valid = true;
 			}
