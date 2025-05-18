@@ -358,7 +358,7 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
 
 // Create SID emulation
 bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
-	// Remove old driver and emulation
+	// Remove the old driver and emulation
 	if (m_engCfg.sidEmulation) {
 		sidbuilder *builder   = m_engCfg.sidEmulation;
 		m_engCfg.sidEmulation = nullptr;
@@ -478,8 +478,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 	}
 
 #ifndef FEAT_FILTER_DISABLE
-	if (m_engCfg.sidEmulation) {
-		// set up SID filter
+	if (m_engCfg.sidEmulation) { // set the SID filter up
 		m_engCfg.sidEmulation->filter(m_filter.enabled);
 	}
 #endif
@@ -583,7 +582,7 @@ bool ConsolePlayer::open(void) {
 			m_timer.length = length;
 	}
 
-	// Set up the play timer
+	// Set up the play timer, account for fade out time
 	m_timer.stop = m_timer.length + m_fadeoutLen;
 
 	if (m_timer.valid) { // Length relative to start
@@ -644,7 +643,7 @@ bool ConsolePlayer::play() {
 		updateDisplay();
 
 #ifdef FEAT_NEW_PLAY_API
-        // fadeout
+        // fade the tune out!
 		const uint_least32_t timeleft = m_timer.stop - m_timer.current;
 
 		if (timeleft <= m_fadeoutLen) LIKELY {
@@ -740,10 +739,11 @@ void ConsolePlayer::stop() {
 
 uint_least32_t ConsolePlayer::getBufSize() {
 	// get audio configuration
-	const uint_least32_t bytesPerMillis =
-		(m_driver.cfg.depth / 8 *
-		 m_driver.cfg.channels *
-		 m_driver.cfg.sampleRate) / 1000;
+	const uint_least32_t bytesPerMillis = (
+		m_driver.cfg.depth / 8 *
+		m_driver.cfg.channels *
+		m_driver.cfg.sampleRate
+	) / 1000;
 
 	// Switch audio drivers.
 	if (m_timer.starting && (m_timer.current >= m_timer.start)) UNLIKELY {
@@ -756,7 +756,6 @@ uint_least32_t ConsolePlayer::getBufSize() {
 #else
 		m_engine.fastForward(100);
 #endif
-		m_speed.current = 1;
 
 		if (m_cpudebug)
 			m_engine.debug(true, nullptr);
