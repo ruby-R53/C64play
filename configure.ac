@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([C64play], [1.1.0a], [], [], [https://github.com/ruby-R53/C64play])
+AC_INIT([C64play], [1.1.0b], [], [], [https://github.com/ruby-R53/C64play])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
