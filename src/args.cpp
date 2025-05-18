@@ -151,7 +151,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 	m_driver.info	= false;
 
 #ifdef FEAT_NEW_PLAY_API
-	m_fadeoutLen = m_iniCfg.playercfg().fadeoutLen / 1000;
+	m_fadeoutLen = m_iniCfg.playercfg().fadeoutLen;
 #endif
 
 	m_mute_channel.reset();
@@ -258,7 +258,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 				if (argv[i][3] == '\0')
 					err = true;
 
-				m_fadeoutLen = (uint_least32_t) atoi(&argv[i][2]);
+				m_fadeoutLen = ((uint_least32_t) atoi(&argv[i][2]) * 1000);
 			}
 #endif
 

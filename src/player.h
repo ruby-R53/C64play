@@ -194,7 +194,7 @@ private:
     } m_timer;
 
 #ifdef FEAT_NEW_PLAY_API
-	uint_least32_t  m_fadeoutLen;
+	uint_least32_t m_fadeoutLen;
 #endif
 
     struct m_track_t {

@@ -1,5 +1,5 @@
 /*
- * This file is part of C64play, a SID player engine.
+ * This file is part of C64play, a console player for SID tunes.
  *
  * Copyright 2025 Enki Costa
  * Copyright 2025 Leandro Nini <drfiemost@users.sourceforge.net>
@@ -24,36 +24,9 @@
 
 #include "sidcxx.h"
 
-#ifdef HAVE_CXX17
 #include <optional>
 
 template <typename T>
 using Setting = std::optional<T>;
-
-#else
-#include <type_traits>
-
-template <typename T>
-
-class Setting {
-	static_assert(std::is_scalar<T>(), "T must be a scalar type!");
-
-private:
-	T m_val;
-	bool m_isSet;
-
-public:
-	Setting() : m_isSet(false) {}
-
-	inline bool has_value() const { return m_isSet; }
-	inline T value() const { return m_val; }
-	inline Setting<T>& operator = (const T& val) {
-		m_val = val;
-		m_isSet = true;
-		return *this;
-	}
-};
-
-#endif // HAVE_CXX17
 
 #endif // SETTING_H
