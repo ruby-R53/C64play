@@ -496,9 +496,6 @@ createSidEmu_error:
 
 bool ConsolePlayer::open(void) {
 	if ((m_state & ~playerFast) == playerRestart) {
-		if (m_quietLevel < 2)
-			cerr << '\n';
-
 		if (m_state & playerFast)
 			m_driver.selected->reset();
 
@@ -715,6 +712,9 @@ bool ConsolePlayer::play() {
 			decodeKeys();
 
 		return true;
+
+	case playerFastRestart:
+		break;
 
 	default:
 		if (m_quietLevel < 3)

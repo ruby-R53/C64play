@@ -27,6 +27,11 @@ May 17/18, 2025:
     my code was checking for the 3rd character of that argument
     and not the 2nd one. Stupidity.
 
+- The player now doesn't throw a new line whenever a tune is
+  about to change
+  - This makes it look cleaner, especially for me who makes PSG
+    views by screen recording the program.
+
 - This is currently what we'll get in version 1.1.0!
 
 May 1st, 2025:
