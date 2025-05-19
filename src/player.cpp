@@ -828,10 +828,11 @@ void ConsolePlayer::displayError(const char *error) {
 void ConsolePlayer::decodeKeys() {
 	while (_kbhit()) {
 		const int action = keyboard_decode();
-		if (action == A_INVALID)
-			continue;
 
 		switch (action) {
+		case A_INVALID:
+			continue;
+
 		case A_RIGHT_ARROW:
 			m_state = playerFastRestart;
 			if (!m_track.single) {
@@ -901,8 +902,8 @@ void ConsolePlayer::decodeKeys() {
 
 		case A_PAUSE:
 			if (m_state == playerPaused) {
-				cerr << "\b\b\b\b\b\b\b\b";
 				// wipe every character out here
+				cerr << "\b\b\b\b\b\b\b\b";
 				cerr << "        ";
 				cerr << "\b\b\b\b\b\b\b\b";
 				m_state = playerRunning;
