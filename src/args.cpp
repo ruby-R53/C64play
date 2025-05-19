@@ -252,6 +252,8 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 #ifdef FEAT_NEW_PLAY_API
 				else if (argv[i][2] == '0')
 					m_fadeoutLen = 0;
+				// so that the fade out time doesn't get added
+				// to the tune's actual duration
 #endif
 
 				m_timer.valid = true;
@@ -456,7 +458,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
 	// If user provided no time then load songlength database
 	// and set default lengths in case it's not found in there.
-	{	// Time of 0 provided for wav generation?
+	{	// Time of 0 provided for WAV generation?
 		if (m_driver.file && m_timer.valid && !m_timer.length) {
 			displayError("ERROR: can't use -l0 if recording!");
 			return -1;
@@ -547,25 +549,20 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		<< "--curve=<double>  controls the filter curve for the reSIDfp" << endl
 		<< "                  emulation (default: 0.5, ranges from -2.0 to" << endl
 		<< "                  2.0)" << endl
-		
 #ifdef FEAT_FILTER_RANGE
 		<< "--range=<double>  controls the filter range in the reSIDfp" << endl
 #endif
 		<< "                  emulation (same default, ranges from 0.0 to" << endl
 		<< "                  1.0)" << endl
-		
 		<< "-w[name]          render tune to a WAV file, with the default" << endl
 		<< "                  name being <file>[subtune].wav" << endl
 		<< "--info            add metadata to WAV file" << endl;
-
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 	out << "--residfp         use reSIDfp emulation (default)" << endl;
 #endif
-
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 	out << "--resid           use reSID emulation" << endl;
 #endif
-
 	out << endl
 		<< "Home page: " PACKAGE_URL;
 }

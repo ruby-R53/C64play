@@ -717,7 +717,10 @@ bool ConsolePlayer::play() {
 
 		return true;
 
-	case playerFastRestart:
+	case playerFastRestart: // don't add a new line here
+#ifndef FEAT_NEW_PLAY_API
+		m_engine.stop();
+#endif
 		break;
 
 	default:
