@@ -578,19 +578,19 @@ bool ConsolePlayer::open(void) {
 	if (!m_timer.valid) {
 		const int_least32_t length = m_database.lengthMs(m_tune);
 
-		if (length > 0) {
+		if (length > 0)
 			m_timer.length = length;
-			m_timer.valid = true;
-		}
 	}
 
 	// Set up the play timer, also account for the fade out time
 	m_timer.stop = m_timer.length;
 #ifdef FEAT_NEW_PLAY_API
-	if (m_timer.valid && (m_timer.length > 0))
-		m_timer.stop += m_fadeoutLen;
-		// don't add it if we don't know the tune's
-		// duration
+	if (m_timer.length == 0)
+		m_fadeoutLen = 0;
+	
+	m_timer.stop += m_fadeoutLen;
+	// don't add it if we don't know the tune's
+	// duration
 #endif
 
 	if (m_timer.valid) { // Length relative to start
