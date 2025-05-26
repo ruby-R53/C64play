@@ -310,13 +310,19 @@ void ConsolePlayer::menu() {
 	cerr << " Duration     : ";
 	consoleColor(white, false);
 	if (m_timer.stop) {
+#ifdef FEAT_NEW_PLAY_API
 		const uint_least32_t seconds = (m_timer.stop - m_fadeoutLen) / 1000;
+#else
+		const uint_least32_t seconds = m_timer.stop / 1000;
 		cerr << setw(2) << setfill('0') << ((seconds / 60) % 100)
 			 << ':' << setw(2) << setfill('0') << (seconds % 60)
 			 << '.' << setw(3) << m_timer.stop % 1000;
+#endif
 
+#ifdef FEAT_NEW_PLAY_API
 		if (m_fadeoutLen != 0)
 			cerr << " (+" << (m_fadeoutLen / 1000) << "s fade out)";
+#endif
 	}
 	else if (m_timer.valid)
 		cerr << "Infinite";
