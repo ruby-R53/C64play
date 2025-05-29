@@ -634,12 +634,6 @@ void ConsolePlayer::refreshRegDump() {
 	// Moves cursor for updating the displays
 	cerr << "\x1b[" << movLines << "F";
 
-	const color_t ctrl_on  = (m_iniCfg.console().control_on);
-	const color_t ctrl_off = (m_iniCfg.console().control_off);
-
-	const color_t wave_on  = (m_iniCfg.console().wave_on);
-	const color_t wave_off = (m_iniCfg.console().wave_off);
-
 	for (uint_least8_t j = 0; j < tuneInfo->sidChips(); ++j) {
 		uint8_t* registers = m_registers[j];
 		uint8_t  oldCtl[3] = { registers[0x04],
@@ -672,28 +666,28 @@ void ConsolePlayer::refreshRegDump() {
 
 				// - control registers -
 				// gate changed ?
-				consoleColor((oldCtl[i] & 0x01) ? ctrl_on : ctrl_off);
+				consoleColor((oldCtl[i] & 0x01) ? m_iniCfg.console().control_on : m_iniCfg.console().control_off);
 				// gate on ?
 				cerr << ((registers[0x04 + i * 0x07] & 0x01) ? "GATE" : "gate")
 
 					 << " ";
 
 				// sync changed ?
-				consoleColor((oldCtl[i] & 0x02) ? ctrl_on : ctrl_off);
+				consoleColor((oldCtl[i] & 0x02) ? m_iniCfg.console().control_on : m_iniCfg.console().control_off);
 				// sync on ?
 				cerr << ((registers[0x04 + i * 0x07] & 0x02) ? "SYNC" : "sync")
 
 					 << " ";
 
 				// ring changed ?
-				consoleColor((oldCtl[i] & 0x04) ? ctrl_on : ctrl_off);
+				consoleColor((oldCtl[i] & 0x04) ? m_iniCfg.console().control_on : m_iniCfg.console().control_off);
 				// ring on ?
 				cerr << ((registers[0x04 + i * 0x07] & 0x04) ? "RING" : "ring")
 
 					 << " ";
 
 				// test changed ?
-				consoleColor((oldCtl[i] & 0x08) ? ctrl_on : ctrl_off);
+				consoleColor((oldCtl[i] & 0x08) ? m_iniCfg.console().control_on : m_iniCfg.console().control_off);
 				// test on ?
 				cerr << ((registers[0x04 + i * 0x07] & 0x08) ? "TEST" : "test")
 
@@ -701,28 +695,28 @@ void ConsolePlayer::refreshRegDump() {
 
 				// - waveform registers -
 				// triangle changed ?
-				consoleColor((oldCtl[i] & 0x10) ? wave_on : wave_off);
+				consoleColor((oldCtl[i] & 0x10) ? m_iniCfg.console().wave_on : m_iniCfg.console().wave_off);
 				// triangle on ?
 				cerr << ((registers[0x04 + i * 0x07] & 0x10) ? "TRI" : "___")
 
 					 << " ";
 
 				// sawtooth changed ?
-				consoleColor((oldCtl[i] & 0x20) ? wave_on : wave_off);
+				consoleColor((oldCtl[i] & 0x20) ? m_iniCfg.console().wave_on : m_iniCfg.console().wave_off);
 				// sawtooth on ?
 				cerr << ((registers[0x04 + i * 0x07] & 0x20) ? "SAW" : "___")
 
 					 << " ";
 
 				// pulse changed ?
-				consoleColor((oldCtl[i] & 0x40) ? wave_on : wave_off);
+				consoleColor((oldCtl[i] & 0x40) ? m_iniCfg.console().wave_on : m_iniCfg.console().wave_off);
 				// pulse on ?
 				cerr << ((registers[0x04 + i * 0x07] & 0x40) ? "PUL" : "___")
 
 					 << " ";
 
 				// noise changed ?
-				consoleColor((oldCtl[i] & 0x80) ? wave_on : wave_off);
+				consoleColor((oldCtl[i] & 0x80) ? m_iniCfg.console().wave_on : m_iniCfg.console().wave_off);
 				// noise on ?
 				cerr << ((registers[0x04 + i * 0x07] & 0x80) ? "NOI" : "___")
 
