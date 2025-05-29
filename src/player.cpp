@@ -186,7 +186,11 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 		m_channels               = audio.channels;
 		m_bitDepth               = audio.bitDepth;
 		m_filter.enabled         = emulation.filter;
+
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 		m_filter.bias            = emulation.bias;
+#endif
+
 		m_filter.filterCurve6581 = emulation.filterCurve6581;
 
 #ifdef FEAT_FILTER_RANGE

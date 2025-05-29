@@ -120,16 +120,18 @@ void IniConfig::clear() {
     console_s.info_text     = white;
     console_s.file_label    = bright_green;
     console_s.file_text     = white;
-	console_s.addr_label    = bright_yellow;
+	console_s.addr_label    = bright_magenta;
 	console_s.addr_text     = white;
-	console_s.chip_label    = bright_magenta;
+	console_s.chip_label    = bright_yellow;
 	console_s.chip_text     = white;
 	console_s.rom_label     = bright_magenta;
 	console_s.rom_text      = white;
     console_s.note          = cyan;
     console_s.control_on    = green;
     console_s.control_off   = yellow;
-	console_s.waves         = blue;
+	console_s.wave_on       = green;
+	console_s.wave_off      = blue;
+	console_s.misc_regs     = yellow;
 
 	// [Audio] section
 	audio_s.sampleRate = SidConfig::DEFAULT_SAMPLING_FREQ;
@@ -145,7 +147,10 @@ void IniConfig::clear() {
 	emulation_s.filter		 = true;
 	emulation_s.engine.clear();
 
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 	emulation_s.bias			= 0.5;
+#endif
+
 	emulation_s.filterCurve6581 = 0.5;
 #ifdef FEAT_FILTER_RANGE
 	emulation_s.filterRange6581 = 0.5;
@@ -385,6 +390,11 @@ void IniConfig::readConsole(iniHandler &ini) {
     readColor(ini, TEXT("Chip Text Color"),       console_s.chip_text);
     readColor(ini, TEXT("ROM Label Color"),       console_s.rom_label);
     readColor(ini, TEXT("ROM Text Color"),        console_s.rom_text);
+    readColor(ini, TEXT("Control On Color"),      console_s.control_on);
+    readColor(ini, TEXT("Control Off Color"),     console_s.control_off);
+    readColor(ini, TEXT("Wave On Color"),         console_s.wave_on);
+    readColor(ini, TEXT("Wave Off Color"),        console_s.wave_off);
+    readColor(ini, TEXT("Misc Registers Color"),  console_s.misc_regs);
 }
 
 void IniConfig::readAudio(iniHandler &ini) {
@@ -444,7 +454,10 @@ void IniConfig::readEmulation(iniHandler &ini) {
 
 	readBool(ini, TEXT("Filter Emulation"), emulation_s.filter);
 
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 	readDouble(ini, TEXT("Filter Bias"), emulation_s.bias);
+#endif
+
 	readDouble(ini, TEXT("6581 Filter Curve"), emulation_s.filterCurve6581);
 #ifdef FEAT_FILTER_RANGE
 	readDouble(ini, TEXT("6581 Filter Range"), emulation_s.filterRange6581);
@@ -477,7 +490,9 @@ void IniConfig::readEmulation(iniHandler &ini) {
 		}
 	}
 
+#ifdef HAVE_RESIDFP_BUILDERS_RESID_H
 	readBool(ini, TEXT("reSID's Fast Sampling"), emulation_s.fastSampling);
+#endif
 }
 
 class iniError {

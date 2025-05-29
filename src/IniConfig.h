@@ -77,7 +77,9 @@ public:
         color_t note;
         color_t control_on;
         color_t control_off;
-		color_t waves;
+		color_t wave_on;
+		color_t wave_off;
+		color_t misc_regs;
 	};
 
 	struct audio_section { // [Audio] section
@@ -95,7 +97,9 @@ public:
 		SidConfig::cia_model_t		 ciaModel;
 		bool						 digiboost;
 		bool						 filter;
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 		double						 bias;
+#endif
 		double						 filterCurve6581;
 
 #ifdef FEAT_FILTER_RANGE
