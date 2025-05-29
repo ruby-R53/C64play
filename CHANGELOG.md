@@ -1,3 +1,25 @@
+May 29, 2025:
+- The UI colors are now customizable!
+  - That was an old idea of mine, and only now it's been
+    implemented in sidplayfp; which I then stole the
+    implementation of and adapted to my player :)
+
+- Changes to the configuration file to follow the lib's changes
+  - reSID-related entries now won't be created if libsidplayfp
+    v3 is being used. No reSID whatsoever, now we got
+    reSIDfpII. I wonder what new stuff will come with it, as
+    there's currently no reSIDfpII-related code in both
+    sidplayfp and my player.
+
+- I'm now considering to bring Windows support back
+  - I mean, I do have a Windows 11 VM lying around, but I'm
+    kinda lazy to reimplement that all over again···
+  - This also makes me unsure whether I should keep the next
+    release set to version 1.1.0 or if I should already try
+    making version 2.0.0, which will feature Windows support.
+    Let's give it some more time. At least I don't have to
+    worry about any bugs in this \*nix version.
+
 May 17/18, 2025:
 - Trying to implement fade out for tunes!
   - You can leave a default on the configuration file or also

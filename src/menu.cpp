@@ -621,20 +621,20 @@ void ConsolePlayer::menu() {
 }
 
 void ConsolePlayer::refreshRegDump() {
-	const SidTuneInfo* tuneInfo = m_tune.getInfo();
+	// get number of lines to go back when refreshing
 	const unsigned int movLines = (m_verboseLevel > 2) ?
 #ifdef FEAT_NEW_PLAY_API
 								  (m_engine.installedSIDs() * 6 + 1):
 								  (m_engine.installedSIDs() * 3 + 1);
 #else
-								  (tuneInfo->sidChips() * 6 + 1):
-								  (tuneInfo->sidChips() * 3 + 1);
+								  (m_tune.getInfo()->sidChips() * 6 + 1):
+								  (m_tune.getInfo()->sidChips() * 3 + 1);
 #endif
 
 	// Moves cursor for updating the displays
 	cerr << "\x1b[" << movLines << "F";
 
-	for (uint_least8_t j = 0; j < tuneInfo->sidChips(); ++j) {
+	for (uint_least8_t j = 0; j < m_tune.getInfo()->sidChips(); ++j) {
 		uint8_t* registers = m_registers[j];
 		uint8_t  oldCtl[3] = { registers[0x04],
 							   registers[0x0b],
@@ -734,7 +734,7 @@ void ConsolePlayer::refreshRegDump() {
 		consoleTable(end);
 
 	else if (m_verboseLevel > 2) {
-		for (int j = 0; j < tuneInfo->sidChips(); ++j) {
+		for (int j = 0; j < m_tune.getInfo()->sidChips(); ++j) {
 			uint8_t* registers = m_registers[j];
 			string miscInfo;
 			miscInfo.reserve(tableWidth);
@@ -744,7 +744,7 @@ void ConsolePlayer::refreshRegDump() {
 			consoleTable(middle);
 
 			// number each SID chip if needed
-			if (tuneInfo->sidChips() > 1) {
+			if (m_tune.getInfo()->sidChips() > 1) {
 				cerr << " SID #" << (j + 1) << ":  " << miscInfo << '\n';
 			} else
 				cerr << setw(tableWidth/2 + miscInfo.length()/2) << miscInfo << '\n';
@@ -754,7 +754,7 @@ void ConsolePlayer::refreshRegDump() {
 			// master volume display
 			consoleColor(m_iniCfg.console().misc_regs);
 			cerr << hex
-                 << ((tuneInfo->sidChips() >= 2) ? "            " : "        ")
+                 << ((m_tune.getInfo()->sidChips() >= 2) ? "            " : "        ")
 				 << "$" << (registers[0x18] & 0x0f);
 
 			// the filters!
