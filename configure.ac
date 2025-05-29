@@ -48,13 +48,15 @@ AC_SUBST(AUDIO_LDFLAGS)
 
 PKG_CHECK_MODULES(SIDPLAYFP, [libsidplayfp >= 2.2.0])
 
-# hack?
-saveCPPFLAGS=$CPPFLAGS
-CPPFLAGS="$CPPFLAGS $C64PLAY_CFLAGS"
+# check for builders
+PKG_CHECK_VAR([SIDPLAYFP_PREFIX], [libsidplayfp], [prefix])
 
-AC_CHECK_HEADERS([sidplayfp/builders/residfp.h sidplayfp/builders/resid.h])
-
-CPPFLAGS=$saveCPPFLAGS
+AC_CHECK_FILE([$SIDPLAYFP_PREFIX/include/sidplayfp/builders/residfp.h],
+    [AC_DEFINE([HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H], [1], [residfp builder])])
+AC_CHECK_FILE([$SIDPLAYFP_PREFIX/include/sidplayfp/builders/residfpII.h],
+    [AC_DEFINE([HAVE_SIDPLAYFP_BUILDERS_RESIDFPII_H], [1], [residfpII builder])])
+AC_CHECK_FILE([$SIDPLAYFP_PREFIX/include/sidplayfp/builders/resid.h],
+    [AC_DEFINE([HAVE_SIDPLAYFP_BUILDERS_RESID_H], [1], [resid builder])])
 
 AC_MSG_CHECKING([for debugging])
 AC_ARG_ENABLE(debug, [AS_HELP_STRING([--enable-debug], [compile for debugging @<:@no/yes, default=no@:>@])],

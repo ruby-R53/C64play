@@ -1,7 +1,9 @@
 /*
  * This file is part of C64play, a console player for SID tunes.
  *
- * Copyright 2024-2025 Enki Costa
+ * Copyright 2025 Enki Costa
+ * Copyright 2011-2025 Leandro Nini
+ * Copyright 2000-2001 Simon White
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,27 +20,33 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef SIDLIB_FEATURES_H
-#define SIDLIB_FEATURES_H
+#ifndef UIDEFINES_H
+#define UIDEFINES_H
 
-#include <sidplayfp/sidplayfp.h>
+typedef enum {
+    black,
+    red,
+    green,
+    yellow,
+    blue,
+    magenta,
+    cyan,
+    white,
+    bright_black,
+    bright_red,
+    bright_green,
+    bright_yellow,
+    bright_blue,
+    bright_magenta,
+    bright_cyan,
+    bright_white
+} color_t;
 
-#if (LIBSIDPLAYFP_VERSION_MAJ >= 2 && LIBSIDPLAYFP_VERSION_MIN >= 7) || LIBSIDPLAYFP_VERSION_MAJ > 2
-#  define FEAT_FILTER_RANGE
-#  define FEAT_CW_STRENGTH
-#endif
+typedef enum {
+    start,
+    middle,
+    separator,
+    end
+} table_t;
 
-#if LIBSIDPLAYFP_VERSION_MAJ > 2 || (LIBSIDPLAYFP_VERSION_MAJ == 2 && LIBSIDPLAYFP_VERSION_MIN >= 10)
-#  define FEAT_SAMPLE_MUTE
-#  define FEAT_FILTER_DISABLE
-#endif
-
-#if LIBSIDPLAYFP_VERSION_MAJ > 2 || (LIBSIDPLAYFP_VERSION_MAJ == 2 && LIBSIDPLAYFP_VERSION_MIN >= 14)
-#  define FEAT_NEW_PLAY_API
-#endif
-
-#if LIBSIDPLAYFP_VERSION_MAJ >= 3
-#  define FEAT_NO_CREATE
-#endif
-
-#endif
+#endif // UIDEFINES_H

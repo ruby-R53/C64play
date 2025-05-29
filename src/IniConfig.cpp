@@ -46,6 +46,25 @@
 
 #include "sidcxx.h"
 
+const TCHAR* colors[16] = {
+    TEXT("black"),
+    TEXT("red"),
+    TEXT("green"),
+    TEXT("yellow"),
+    TEXT("blue"),
+    TEXT("magenta"),
+    TEXT("cyan"),
+    TEXT("white"),
+    TEXT("bright black"),
+    TEXT("bright red"),
+    TEXT("bright green"),
+    TEXT("bright yellow"),
+    TEXT("bright blue"),
+    TEXT("bright magenta"),
+    TEXT("bright cyan"),
+    TEXT("bright white")
+};
+
 inline void debug([[ maybe_unused ]] const TCHAR *msg, [[ maybe_unused ]] const TCHAR *val) {
 #ifndef NDEBUG
 	SID_COUT << msg << val << std::endl;
@@ -82,7 +101,7 @@ void IniConfig::clear() {
 	player_s.verboseLevel = 0;
 	player_s.quietLevel   = 0;
 
-	// [Console] section
+	// [Console] section, characters
 	console_s.ansi			= false;
 	console_s.topLeft		= '+';
 	console_s.topRight		= '+';
@@ -92,6 +111,25 @@ void IniConfig::clear() {
 	console_s.horizontal	= '-';
 	console_s.junctionLeft	= ':';
 	console_s.junctionRight = ':';
+
+	// and colors
+   	console_s.decorations   = bright_white;
+    console_s.title         = bright_white;
+	console_s.versions      = white;
+    console_s.info_label    = bright_cyan;
+    console_s.info_text     = white;
+    console_s.file_label    = bright_green;
+    console_s.file_text     = white;
+	console_s.addr_label    = bright_yellow;
+	console_s.addr_text     = white;
+	console_s.chip_label    = bright_magenta;
+	console_s.chip_text     = white;
+	console_s.rom_label     = bright_magenta;
+	console_s.rom_text      = white;
+    console_s.note          = cyan;
+    console_s.control_on    = green;
+    console_s.control_off   = yellow;
+	console_s.waves         = blue;
 
 	// [Audio] section
 	audio_s.sampleRate = SidConfig::DEFAULT_SAMPLING_FREQ;
@@ -215,6 +253,21 @@ void readChar(iniHandler &ini, const TCHAR *key, char &ch) {
 		ch = c;
 }
 
+bool readColor(iniHandler &ini, const TCHAR *key, color_t &ch) {
+    SID_STRING str = readString(ini, key);
+    if (str.empty())
+        return false;
+
+    for (int i = 0; i < 16; ++i) {
+        if (str.compare(colors[i]) == 0) {
+            ch = static_cast<color_t>(i);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool readTime(iniHandler &ini, const TCHAR *key, int &value) {
 	SID_STRING str = readString(ini, key);
 	if (str.empty())
@@ -318,8 +371,21 @@ void IniConfig::readConsole(iniHandler &ini) {
 	readChar(ini, TEXT("Horizontal Char"),     console_s.horizontal);
 	readChar(ini, TEXT("Junction Left Char"),  console_s.junctionLeft);
 	readChar(ini, TEXT("Junction Right Char"), console_s.junctionRight);
-}
 
+	readColor(ini, TEXT("Decoration Color"),      console_s.decorations);
+    readColor(ini, TEXT("Title Color"),           console_s.title);
+	readColor(ini, TEXT("Version Color"),         console_s.versions);
+    readColor(ini, TEXT("Info Label Color"),      console_s.info_label);
+    readColor(ini, TEXT("Info Text Color"),       console_s.info_text);
+    readColor(ini, TEXT("File Label Color"),      console_s.file_label);
+    readColor(ini, TEXT("File Text Color"),       console_s.file_text);
+    readColor(ini, TEXT("Addresses Label Color"), console_s.addr_label);
+    readColor(ini, TEXT("Addresses Text Color"),  console_s.addr_text);
+    readColor(ini, TEXT("Chip Label Color"),      console_s.chip_label);
+    readColor(ini, TEXT("Chip Text Color"),       console_s.chip_text);
+    readColor(ini, TEXT("ROM Label Color"),       console_s.rom_label);
+    readColor(ini, TEXT("ROM Text Color"),        console_s.rom_text);
+}
 
 void IniConfig::readAudio(iniHandler &ini) {
 	if (!ini.setSection(TEXT("Audio")))

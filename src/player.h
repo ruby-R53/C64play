@@ -47,27 +47,10 @@
 #endif
 
 #include "sidlib_features.h"
+#include "uidefs.h"
 
 template <typename T>
 using Setting = std::optional<T>;
-
-typedef enum {
-	black,
-	red,
-	green,
-	yellow,
-	blue,
-	magenta,
-	cyan,
-	white
-} color_t;
-
-typedef enum {
-	tableStart,
-	tableMiddle,
-	tableSeparator,
-	tableEnd
-} table_t;
 
 typedef enum {
     playerError = 0,
@@ -215,7 +198,7 @@ private:
 
 private:
     // Console
-    void consoleColor  (color_t color, bool bold);
+    void consoleColor  (color_t color);
     void consoleTable  (table_t table);
     void consoleRestore(void);
 

@@ -27,6 +27,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <cstring>
 
 #include <new>
 
@@ -114,7 +115,6 @@ bool Audio_OSS::open(AudioConfig &cfg) {
 			m_audiofd = -1;
 		}
 
-		perror(AUDIODEVICE);
 		return false;
 	}
 }
@@ -141,8 +141,11 @@ bool Audio_OSS::write(uint_least32_t size) {
 		return false;
 	}
 
-	::write(m_audiofd, _sampleBuffer, 2 * size);
-	return true;
+	if (::write(m_audiofd, _sampleBuffer, 2 * size) < 0) {
+		setError(strerror(errno));
+		return false;
+	} else
+		return true;
 }
 
 #endif // HAVE_OSS

@@ -375,9 +375,11 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 			ReSIDfpBuilder *rs = new ReSIDfpBuilder(RESIDFP_ID);
 
 			m_engCfg.sidEmulation = rs;
+#ifndef FEAT_NO_CREATE
 			if (!rs->getStatus()) goto createSidEmu_error;
 			rs->create(m_engine.info().maxsids());
 			if (!rs->getStatus()) goto createSidEmu_error;
+#endif
 
 #ifdef FEAT_CW_STRENGTH
 			rs->combinedWaveformsStrength(m_combinedWaveformsStrength);
@@ -390,9 +392,9 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 				|| (tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581)
 			);
 
-#ifdef FEAT_FILTER_RANGE
 			// 6581 filter range control
 			if (is6581) {
+#ifdef FEAT_FILTER_RANGE
 				if (m_frange.has_value()) {
 					m_filter.filterRange6581 = m_frange.value();
 				}
@@ -439,8 +441,8 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 				rs->filter8580Curve(m_filter.filterCurve8580);
 			}
 		}
-
 		catch (std::bad_alloc const &ba) {}
+
 		break;
 	}
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
@@ -459,6 +461,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 			rs->bias(m_filter.bias);
 		}
 		catch (std::bad_alloc const &ba) {}
+
 		break;
 	}
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESID_H

@@ -26,6 +26,7 @@
 #include "ini/iniHandler.h"
 
 #include "sidlib_features.h"
+#include "uidefs.h"
 
 #include <sidplayfp/sidplayfp.h>
 #include <sidplayfp/SidConfig.h>
@@ -59,6 +60,24 @@ public:
 		char horizontal;
 		char junctionLeft;
 		char junctionRight;
+
+		color_t decorations;
+        color_t title;
+		color_t versions;
+        color_t info_label;
+        color_t info_text;
+        color_t file_label;
+        color_t file_text;
+		color_t addr_label;
+		color_t addr_text;
+		color_t chip_label;
+		color_t chip_text;
+		color_t rom_label;
+		color_t rom_text;
+        color_t note;
+        color_t control_on;
+        color_t control_off;
+		color_t waves;
 	};
 
 	struct audio_section { // [Audio] section
