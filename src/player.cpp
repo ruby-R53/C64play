@@ -492,12 +492,14 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 
 	return true;
 
+#ifndef FEAT_NO_CREATE
 createSidEmu_error:
 	displayError(m_engCfg.sidEmulation->error());
 	delete m_engCfg.sidEmulation;
 	m_engCfg.sidEmulation = nullptr;
 
 	return false;
+#endif
 }
 
 bool ConsolePlayer::open(void) {
