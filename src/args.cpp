@@ -260,7 +260,7 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 
 				m_fadeoutLen = (uint_least32_t) atoi(&argv[i][2]) * 1000;
 				// convert to milliseconds too so that it matches
-				// plaercfg().fadeoutLen's output
+				// playercfg().fadeoutLen's output
 			}
 #endif
 

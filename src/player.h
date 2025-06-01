@@ -148,8 +148,10 @@ private:
     struct m_filter_t {
         bool        enabled;
 
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
         // Filter parameter for reSID
         double      bias;
+#endif
 
         // Filter parameters for reSIDfp
         double      filterCurve6581;
