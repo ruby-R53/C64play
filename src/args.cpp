@@ -275,7 +275,9 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 					err = true;
 				}
 
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 				m_engCfg.fastSampling = ((argv[i][3] == 'f') ? true : false);
+#endif
 			}
 
 			// SID model + audio layout options
@@ -363,18 +365,24 @@ int ConsolePlayer::args(int argc, const char *argv[]) {
 			}
 
 			else if (strncmp(&argv[i][1], "-info", 5) == 0) {
-				m_driver.info	= true;
+				m_driver.info = true;
 			}
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 			else if (std::strcmp(&argv[i][1], "-residfp") == 0) {
-				m_driver.sid	= EMU_RESIDFP;
+				m_driver.sid = EMU_RESIDFP;
 			}
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFPII_H
+			else if (std::strcmp(&argv[i][1], "-residfpII") == 0) {
+				m_driver.sid = EMU_RESIDFPII;
+			}
+#endif // HAVE_SIDPLAYFP_BUILDERS_RESIDFPII_H
+
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 			else if (std::strcmp(&argv[i][1], "-resid") == 0) {
-				m_driver.sid	= EMU_RESID;
+				m_driver.sid = EMU_RESID;
 			}
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESID_H
 
@@ -553,6 +561,9 @@ void ConsolePlayer::displayArgs (const char *arg) {
 		<< "--info            add metadata to WAV file" << endl;
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
 	out << "--residfp         use reSIDfp emulation (default)" << endl;
+#endif
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFPII_H
+	out << " --residfp2       use reSIDfpII emulation" << endl;
 #endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 	out << "--resid           use reSID emulation" << endl;

@@ -54,12 +54,17 @@ using filter_map_t      = std::unordered_map<std::string, double>;
 using filter_map_iter_t = std::unordered_map<std::string, double>::const_iterator;
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
-#  include <sidplayfp/builders/residfp.h>
+# include <sidplayfp/builders/residfp.h>
 const char ConsolePlayer::RESIDFP_ID[] = "ReSIDfp";
 #endif
 
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFPII_H
+# include <sidplayfp/builders/residfpII.h>
+const char ConsolePlayer::RESIDFPII_ID[] = "ReSIDfpII";
+#endif
+
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
-#  include <sidplayfp/builders/resid.h>
+# include <sidplayfp/builders/resid.h>
 const char ConsolePlayer::RESID_ID[] = "ReSID";
 #endif
 
@@ -182,7 +187,9 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 		m_engCfg.ciaModel        = emulation.ciaModel;
 		m_engCfg.frequency       = audio.sampleRate;
 		m_engCfg.samplingMethod  = emulation.samplingMethod;
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 		m_engCfg.fastSampling    = emulation.fastSampling;
+#endif
 		m_channels               = audio.channels;
 		m_bitDepth               = audio.bitDepth;
 		m_filter.enabled         = emulation.filter;
@@ -210,11 +217,12 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 			if (emulation.engine.compare("RESIDFP") == 0) {
 				m_driver.sid = EMU_RESIDFP;
 			}
-#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
+			else if (emulation.engine.compare("RESIDFPII") == 0) {
+				m_driver.sid = EMU_RESIDFPII;
+			}
 			else if (emulation.engine.compare("RESID") == 0) {
 				m_driver.sid = EMU_RESID;
 			}
-#endif
 			else if (emulation.engine.compare("NONE") == 0) {
 				m_driver.sid = EMU_NONE;
 			}
@@ -372,6 +380,13 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 		delete builder;
 	}
 
+	const bool is6581 = (
+		(m_engCfg.defaultSidModel == SidConfig::MOS6581)
+		&& (m_engCfg.forceSidModel ||
+		   (tuneInfo->sidModel(0) != SidTuneInfo::SIDMODEL_8580))
+		|| (tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581)
+	);
+
 	// Now set it up
 	switch (emu) {
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
@@ -390,13 +405,6 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 #ifdef FEAT_CW_STRENGTH
 			rs->combinedWaveformsStrength(m_combinedWaveformsStrength);
 #endif
-
-			const bool is6581 = (
-				(m_engCfg.defaultSidModel == SidConfig::MOS6581)
-			    && (m_engCfg.forceSidModel ||
-				   (tuneInfo->sidModel(0) != SidTuneInfo::SIDMODEL_8580))
-				|| (tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581)
-			);
 
 			// 6581 filter range control
 			if (is6581) {
@@ -452,6 +460,57 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 		break;
 	}
 #endif // HAVE_SIDPLAYFP_BUILDERS_RESIDFP_H
+
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFPII_H
+	case EMU_RESIDFPII:
+	{
+		try {
+			ReSIDfpIIBuilder *rs = new ReSIDfpIIBuilder(RESIDFPII_ID);
+
+			m_engCfg.sidEmulation = rs;
+			rs->combinedWaveformsStrength(m_combinedWaveformsStrength);
+
+			if (is6581) {
+				if (m_fcurve.has_value()) {
+					m_filter.filterCurve6581 = m_fcurve.value();
+				}
+
+				if ((m_filter.filterCurve6581 < 0.0) || (m_filter.filterCurve6581 > 1.0)) {
+					cerr << "Invalid 6581 filter curve: "
+						 << m_filter.filterCurve6581 << endl;
+					exit(EXIT_FAILURE);
+				}
+
+				if (m_frange.has_value()) {
+					m_filter.filterRange6581 = m_frange.value();
+				}
+
+				if ((m_frange.value() < 0.0) || (m_frange.value() > 1.0)) {
+					cerr << "Invalid 6581 filter range: "
+						 << m_filter.filterRange6581 << endl;
+					exit(EXIT_FAILURE);
+				}
+
+				rs->filter6581Curve(m_filter.filterCurve6581);
+				rs->filter6581Range(m_filter.filterRange6581);
+			} else {
+				if (m_fcurve.has_value()) {
+					m_filter.filterCurve8580 = m_fcurve.value();
+				}
+
+				if ((m_filter.filterCurve8580 < 0.0) || (m_filter.filterCurve8580 > 1.0)) {
+					cerr << "Invalid 8580 filter curve: "
+						 << m_filter.filterCurve8580 << endl;
+					exit(EXIT_FAILURE);
+				}
+
+				rs->filter8580Curve(m_filter.filterCurve8580);
+			}
+		}
+		catch (std::bad_alloc const &ba) {}
+		break;
+	}
+#endif // HAVE_SIDPLAYFP_BUILDERS_RESIDFPII_H
 
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 	case EMU_RESID:
