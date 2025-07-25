@@ -220,9 +220,11 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 			else if (emulation.engine.compare("RESIDFPII") == 0) {
 				m_driver.sid = EMU_RESIDFPII;
 			}
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 			else if (emulation.engine.compare("RESID") == 0) {
 				m_driver.sid = EMU_RESID;
 			}
+#endif
 			else if (emulation.engine.compare("NONE") == 0) {
 				m_driver.sid = EMU_NONE;
 			}
