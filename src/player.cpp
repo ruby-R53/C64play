@@ -217,9 +217,11 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 			if (emulation.engine.compare("RESIDFP") == 0) {
 				m_driver.sid = EMU_RESIDFP;
 			}
+#ifdef HAVE_SIDPLAYFP_BUILDERS_RESIDFPII_H
 			else if (emulation.engine.compare("RESIDFPII") == 0) {
 				m_driver.sid = EMU_RESIDFPII;
 			}
+#endif
 #ifdef HAVE_SIDPLAYFP_BUILDERS_RESID_H
 			else if (emulation.engine.compare("RESID") == 0) {
 				m_driver.sid = EMU_RESID;
@@ -240,6 +242,7 @@ ConsolePlayer::ConsolePlayer(const char * const name) :
 	std::unique_ptr<uint8_t[]> kernalRom  = loadRom(m_iniCfg.playercfg().kernalRom, 8192, "kernal");
 	std::unique_ptr<uint8_t[]> basicRom	  = loadRom(m_iniCfg.playercfg().basicRom, 8192, "basic");
 	std::unique_ptr<uint8_t[]> chargenRom = loadRom(m_iniCfg.playercfg().chargenRom, 4096, "chargen");
+
 	m_engine.setRoms(kernalRom.get(), basicRom.get(), chargenRom.get());
 }
 
@@ -386,10 +389,11 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 		(m_engCfg.defaultSidModel == SidConfig::MOS6581) &&
 		(m_engCfg.forceSidModel ||
 #ifdef FEAT_NEW_SID_MODEL
-		 m_engine.info().sidModel(0) == SidTuneInfo::SIDMODEL_6581)
+		 m_engine.info().sidModel(0) == SidTuneInfo::SIDMODEL_6581
 #else
-		 tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581)
+		 tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581
 #endif
+		)
 	);
 
 	// Now set it up
@@ -753,6 +757,7 @@ bool ConsolePlayer::play() {
 			if (samples < 0) UNLIKELY { // exit on error
 				cerr << m_engine.error();
 				m_state = playerError;
+
 				return false;
 			}
 			// in case we have `-b` set, don't play

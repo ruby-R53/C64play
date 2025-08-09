@@ -26,9 +26,7 @@
 #include <cassert>
 #include <cstring>
 
-Mixer::Mixer() : m_rand(257254) {
-	setVolume(VOLUME_MAX);
-}
+Mixer::Mixer() : m_rand(257254) { setVolume(VOLUME_MAX); }
 
 void Mixer::initialize(unsigned int chips, bool stereo) {
 	assert((chips >= 1) && (chips <= 3));
@@ -42,10 +40,12 @@ void Mixer::initialize(unsigned int chips, bool stereo) {
 		m_mix[0] = stereo ? &Mixer::stereo_OneChip : &Mixer::template mono<1>;
 		if (stereo) m_mix[1] = &Mixer::stereo_OneChip;
 		break;
+
 	case 2:
 		m_mix[0] = stereo ? &Mixer::stereo_ch1_TwoChips : &Mixer::template mono<2>;
 		if (stereo) m_mix[1] = &Mixer::stereo_ch2_TwoChips;
 		break;
+
 	case 3:
 		m_mix[0] = stereo ? &Mixer::stereo_ch1_ThreeChips : &Mixer::template mono<3>;
 		if (stereo) m_mix[1] = &Mixer::stereo_ch2_ThreeChips;
