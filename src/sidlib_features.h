@@ -39,6 +39,7 @@
 
 #if LIBSIDPLAYFP_VERSION_MAJ >= 3
 #  define FEAT_NO_CREATE
+#  define FEAT_NEW_SID_MODEL
 #endif
 
 #endif

@@ -383,10 +383,13 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 	}
 
 	const bool is6581 = (
-		(m_engCfg.defaultSidModel == SidConfig::MOS6581)
-		&& (m_engCfg.forceSidModel ||
-		   (tuneInfo->sidModel(0) != SidTuneInfo::SIDMODEL_8580))
-		|| (tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581)
+		(m_engCfg.defaultSidModel == SidConfig::MOS6581) &&
+		(m_engCfg.forceSidModel ||
+#ifdef FEAT_NEW_SID_MODEL
+		 m_engine.info().sidModel(0) == SidTuneInfo::SIDMODEL_6581)
+#else
+		 tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581)
+#endif
 	);
 
 	// Now set it up

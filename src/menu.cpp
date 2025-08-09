@@ -468,6 +468,7 @@ void ConsolePlayer::menu() {
 				case Chip::MOS6581:
 					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
 					break;
+
 				case Chip::CSG8580:
 					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve8580) << endl;
 					break;
@@ -480,6 +481,7 @@ void ConsolePlayer::menu() {
 				case Chip::MOS6581:
 					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve6581) << endl;
 					break;
+
 				case Chip::CSG8580:
 					cerr << (m_fcurve.has_value() ? m_fcurve.value() : m_filter.filterCurve8580) << endl;
 					break;

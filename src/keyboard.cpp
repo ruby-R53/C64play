@@ -52,54 +52,66 @@ enum {
 
 static char keytable[] = {
 	// Linux Special Keys
-	ESC,'[','C',0,			A_RIGHT_ARROW,
-	ESC,'[','D',0,			A_LEFT_ARROW,
-	ESC,'[','A',0,			A_UP_ARROW,
-	ESC,'[','B',0,			A_DOWN_ARROW,
+	ESC,'[','C',0,     A_RIGHT_ARROW,
+	ESC,'[','D',0,     A_LEFT_ARROW,
+	ESC,'[','A',0,     A_UP_ARROW,
+	ESC,'[','B',0,     A_DOWN_ARROW,
 	// Hmm, in console there is:
-	ESC,'[','1','~',0,		A_HOME,
-	ESC,'[','4','~',0,		A_END,
+	ESC,'[','1','~',0, A_HOME,
+	ESC,'[','4','~',0, A_END,
 	// But in X it's:
-	ESC,'[','H',0,			A_HOME,
-	ESC,'[','F',0,			A_END,
+	ESC,'[','H',0,     A_HOME,
+	ESC,'[','F',0,     A_END,
 
-	ESC,'[','1','0',0,		A_INVALID,
-	ESC,'[','2','0',0,		A_INVALID,
+	ESC,'[','1','0',0, A_INVALID,
+	ESC,'[','2','0',0, A_INVALID,
 
 	/* debug keys. Just use the cursor keys on Linux to move in the song */
-	'1',0,					A_TOGGLE_VOICE1,
-	'2',0,					A_TOGGLE_VOICE2,
-	'3',0,					A_TOGGLE_VOICE3,
-	'4',0,					A_TOGGLE_VOICE4,
-	'5',0,					A_TOGGLE_VOICE5,
-	'6',0,					A_TOGGLE_VOICE6,
-	'7',0,					A_TOGGLE_VOICE7,
-	'8',0,					A_TOGGLE_VOICE8,
-	'9',0,					A_TOGGLE_VOICE9,
+	'1',0,             A_TOGGLE_VOICE1,
+	'2',0,             A_TOGGLE_VOICE2,
+	'3',0,             A_TOGGLE_VOICE3,
+	'4',0,             A_TOGGLE_VOICE4,
+	'5',0,             A_TOGGLE_VOICE5,
+	'6',0,             A_TOGGLE_VOICE6,
+	'7',0,             A_TOGGLE_VOICE7,
+	'8',0,             A_TOGGLE_VOICE8,
+	'9',0,             A_TOGGLE_VOICE9,
 
 #ifdef FEAT_SAMPLE_MUTE
-	'a',0,					A_TOGGLE_SAMPLE1,
-	's',0,					A_TOGGLE_SAMPLE2,
-	'd',0,					A_TOGGLE_SAMPLE3,
+	'a',0,             A_TOGGLE_SAMPLE1,
+	's',0,             A_TOGGLE_SAMPLE2,
+	'd',0,             A_TOGGLE_SAMPLE3,
+
+	'A',0,             A_TOGGLE_SAMPLE1,
+	'S',0,             A_TOGGLE_SAMPLE2,
+	'D',0,             A_TOGGLE_SAMPLE3,
 #endif
 
-	'f',0,					A_TOGGLE_FILTER,
+	'f',0,             A_TOGGLE_FILTER,
+	'F',0,             A_TOGGLE_FILTER,
 
-	// General Keys
-	'p',0,					A_PAUSE,
+	// General Player Keys
+	'p',0,             A_PAUSE,
+	'j',0,             A_LEFT_ARROW,
+	'k',0,             A_PAUSE,
+	'l',0,             A_RIGHT_ARROW,
+	'q',0,             A_QUIT,
+	'g',0,             A_GOTO,
+	'r',0,             A_REPLAY,
 
-	// new keys
-	'j',0,					A_LEFT_ARROW,
-	'k',0,					A_PAUSE,
-	'l',0,					A_RIGHT_ARROW,
-	'q',0,					A_QUIT,
-	'g',0,					A_GOTO,
-	'r',0,					A_REPLAY,
-	'0',0,					A_RESTORE,
-	'=',0,					A_INCREASE, // '=' because hitting shift is annoying
-	'-',0,					A_DECREASE,
+	'P',0,             A_PAUSE,
+	'J',0,             A_LEFT_ARROW,
+	'K',0,             A_PAUSE,
+	'L',0,             A_RIGHT_ARROW,
+	'Q',0,             A_QUIT,
+	'G',0,             A_GOTO,
+	'R',0,             A_REPLAY,
 
-	0,						A_END_LIST
+	'0',0,             A_RESTORE,
+	'=',0,             A_INCREASE, // '=' because hitting shift is annoying
+	'-',0,             A_DECREASE,
+
+	0,                 A_END_LIST
 };
 
 
