@@ -1,3 +1,15 @@
+September 4th, 2025:
+- Start implementing the adjustment of the song's length in
+  case the user has forced a different video signal.
+  - I've been actually wanting to implement this for a while
+    already, but just couldn't figure this out.
+    Thanks for making that pull request to sidplayfp, @yxkale.
+  - It still doesn't work well with tunes without a specified
+    video signal, so that's why I'd say it's a little
+    incomplete.
+    - Should I even bother with this now, tho'? Sounds a little
+      complicated detail to add anyway.
+
 May 29, 2025:
 - The UI colors are now customizable!
   - That was an old idea of mine, and only now it's been

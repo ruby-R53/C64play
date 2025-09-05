@@ -327,7 +327,8 @@ bool ConsolePlayer::createOutput(OUTPUTS driver, const SidTuneInfo *tuneInfo) {
 		return false;
 	}
 
-	uint_least8_t tuneChannels = (tuneInfo && (tuneInfo->sidChips() > 1)) ? 2 : 1;
+	uint_least8_t tuneChannels =
+		(tuneInfo && (tuneInfo->sidChips() > 1)) ? 2 : 1;
 
 	// Configure with user settings
 	m_driver.cfg.sampleRate = m_engCfg.frequency;
@@ -386,14 +387,13 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 	}
 
 	const bool is6581 = (
-		(m_engCfg.defaultSidModel == SidConfig::MOS6581) &&
-		(m_engCfg.forceSidModel ||
+		((m_engCfg.defaultSidModel == SidConfig::MOS6581) &&
+		m_engCfg.forceSidModel) ||
 #ifdef FEAT_NEW_SID_MODEL
-		 m_engine.info().sidModel(0) == SidTuneInfo::SIDMODEL_6581
+		 (m_engine.info().sidModel(0) == SidTuneInfo::SIDMODEL_6581)
 #else
-		 tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581
+		 (tuneInfo->sidModel(0) == SidTuneInfo::SIDMODEL_6581)
 #endif
-		)
 	);
 
 	// Now set it up
@@ -405,6 +405,7 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 			ReSIDfpBuilder *rs = new ReSIDfpBuilder(RESIDFP_ID);
 
 			m_engCfg.sidEmulation = rs;
+
 #ifndef FEAT_NO_CREATE
 			if (!rs->getStatus()) goto createSidEmu_error;
 			rs->create(m_engine.info().maxsids());
@@ -484,7 +485,8 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 					m_filter.filterCurve6581 = m_fcurve.value();
 				}
 
-				if ((m_filter.filterCurve6581 < 0.0) || (m_filter.filterCurve6581 > 1.0)) {
+				if ((m_filter.filterCurve6581 < 0.0) ||
+						(m_filter.filterCurve6581 > 1.0)) {
 					cerr << "Invalid 6581 filter curve: "
 						 << m_filter.filterCurve6581 << endl;
 					exit(EXIT_FAILURE);
@@ -507,7 +509,8 @@ bool ConsolePlayer::createSidEmu(SIDEMUS emu, const SidTuneInfo *tuneInfo) {
 					m_filter.filterCurve8580 = m_fcurve.value();
 				}
 
-				if ((m_filter.filterCurve8580 < 0.0) || (m_filter.filterCurve8580 > 1.0)) {
+				if ((m_filter.filterCurve8580 < 0.0) ||
+						(m_filter.filterCurve8580 > 1.0)) {
 					cerr << "Invalid 8580 filter curve: "
 						 << m_filter.filterCurve8580 << endl;
 					exit(EXIT_FAILURE);
@@ -622,7 +625,7 @@ bool ConsolePlayer::open(void) {
 	) ? freqTableNtsc : freqTablePal;
 
 #ifdef FEAT_NEW_PLAY_API
-	m_mixer.initialize(m_engine.installedSIDs(), m_engCfg.playback == SidConfig::STEREO);
+	m_mixer.initialize(m_engine.installedSIDs(),m_engCfg.playback == SidConfig::STEREO);
 #endif
 
 	// Start the player. Do this by fast
@@ -655,21 +658,33 @@ bool ConsolePlayer::open(void) {
 	// As yet we don't have a required songlength
 	// so try the songlength database or keep the default
 	if (!m_timer.valid) {
-		const int_least32_t length = m_database.lengthMs(m_tune);
+		int_least32_t length = m_database.lengthMs(m_tune);
 
-		if (length > 0)
+		if (length > 0) {
+			// if the user forced a different timing,
+			// adjust the tune's length accordingly
+			if (m_engCfg.forceC64Model) {
+				length *= (tuneInfo->clockSpeed() != SidTuneInfo::CLOCK_PAL)
+					? 60 : 50;
+				length /= (m_engCfg.defaultC64Model == SidConfig::NTSC ||
+						m_engCfg.defaultC64Model == SidConfig::OLD_NTSC)
+					? 60 : 50;
+			}
+
 			m_timer.length = length;
+		}
 	}
 
 	// Set up the play timer, also account for the fade out time
 	m_timer.stop = m_timer.length;
+
 #ifdef FEAT_NEW_PLAY_API
+	// don't add it if we don't know the tune's
+	// duration
 	if (m_timer.length == 0)
 		m_fadeoutLen = 0;
 	
 	m_timer.stop += m_fadeoutLen;
-	// don't add it if we don't know the tune's
-	// duration
 #endif
 
 	if (m_timer.valid) { // Length relative to start
